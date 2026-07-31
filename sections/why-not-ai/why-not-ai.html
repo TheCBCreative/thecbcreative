@@ -1,5 +1,5 @@
 <section class="why-not-ai" id="why-not-ai">
-  <div class="why-not-ai__left">
+  <div class="why-not-ai__left" data-reveal>
     <p class="eyebrow">
       <span class="eyebrow__line"></span>
       {{eyebrow}}
@@ -8,16 +8,16 @@
     <p>{{intro}}</p>
   </div>
 
-  <div class="why-not-ai__faq">
+  <div class="why-not-ai__faq" data-reveal>
     <p>{{body}}</p>
     <hr class="divider">
 
-    {{#each faq}}<div class="faq-row">
+    {{#each faq}}<div class="faq-row" data-reveal>
       <h3>{{question}}</h3>
       <p>{{answer}}</p>
     </div>
     {{/each}}
   </div>
 
-  <p class="why-not-ai__closing">{{closing}}</p>
+  <p class="why-not-ai__closing" data-reveal>{{closing}}</p>
 </section>

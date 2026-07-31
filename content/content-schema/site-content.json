@@ -3,14 +3,26 @@
     "name": "The CB Creative",
     "url": "https://thecbcreative.com",
     "logo": {
-      "light": "/content/images/logos/cb-creative-nav-light.svg",
-      "darkBg": "/content/images/logos/cb-creative-nav-dark-bg.svg",
-      "favicon": "/content/images/logos/favicon.svg"
+      "horizontal": {
+        "onDark": "/content/images/logos/logo-horizontal-on-dark.svg",
+        "onLight": "/content/images/logos/logo-horizontal-on-light.svg"
+      },
+      "stacked": {
+        "onDark": "/content/images/logos/logo-stacked-on-dark.svg",
+        "onLight": "/content/images/logos/logo-stacked-on-light.svg"
+      },
+      "mark": {
+        "onDark": "/content/images/logos/logo-mark-on-dark.svg",
+        "onLight": "/content/images/logos/logo-mark-on-light.svg"
+      },
+      "favicon": "/content/images/logos/favicon.svg",
+      "socialShare": "/content/images/logos/social-share.png"
     }
   },
 
   "nav": {
     "links": [
+      { "label": "Home", "href": "/" },
       { "label": "About", "href": "/#about" },
       { "label": "Services", "href": "/#services" },
       { "label": "Portfolio", "href": "/portfolio.html" },
@@ -42,8 +54,8 @@
             { "label": "Explore Services", "href": "#services", "style": "link" }
           ],
           "images": {
-            "main": { "src": "/content/images/hero/cb_hero_image.jpg", "alt": "" },
-            "accent": { "src": "/content/images/hero/hero.png", "alt": "" }
+            "main": { "src": "/content/images/hero/hero-main.png", "alt": "Cait Burke working at a standing desk, laptop open" },
+            "accent": { "src": "/content/images/hero/hero-accent.png", "alt": "Laptop, coffee, and notebook styled on a couch" }
           }
         },
 
@@ -69,14 +81,14 @@
         "services": {
           "eyebrow": "Services",
           "headline": "How we can partner",
-          "intro": "We take a holistic approach to your digital presence, uniting modern brand design with clean, custom-coded infrastructure.",
+          "intro": "I take a holistic approach to your digital presence, uniting modern brand design with clean, custom-coded infrastructure.",
           "cards": [
             {
               "number": "01.",
               "title": "Custom Website",
               "description": "Complete ground-up design and development. Hand-crafted specifically for your business to establish authority and convert visitors.",
               "variant": "photo",
-              "image": { "src": "/content/images/services/01_custom.jpg", "alt": "Custom website design and development for small businesses" }
+              "image": { "src": "/content/images/services/services-01-custom-v2.png", "alt": "Hands typing on a laptop beside a steaming cup of coffee" }
             },
             {
               "number": "02.",
@@ -90,22 +102,23 @@
               "title": "Landing Pages",
               "description": "Laser-focused single-page campaigns built around specific product launches, local marketing initiatives, or advertising targets.",
               "variant": "photo",
-              "image": { "src": "/content/images/services/03_landing.png", "alt": "Landing page design for product launches and marketing campaigns" }
+              "image": { "src": "/content/images/services/services-03-landing-v2.png", "alt": "Tablet and phone styled on a wooden desk beside a steaming mug" }
             }
           ]
         },
 
         "portfolioTeaser": {
           "eyebrow": "Portfolio",
-          "headline": "Real client work, coming soon.",
+          "headline": "Real client work, {emphasis}.",
+          "headlineEmphasis": "coming soon",
           "body": "I'm building out a collection of recent projects — check back soon.",
           "cta": { "label": "View Portfolio →", "href": "/portfolio.html" }
         },
 
         "quote": {
           "quote": "Your business deserves a website that works as hard as you do.",
-          "attribution": "— Cait Burke, CB Creative",
-          "backgroundImage": null
+          "attribution": "— Cait Burke, Founder",
+          "backgroundImage": "/content/images/quote/quote-bg-forest.png"
         },
 
         "whyNotAI": {
@@ -162,7 +175,7 @@
               "category": "Custom Website · Redesign · Med Spa",
               "title": "Med Spa Redesign",
               "description": "A calm, editorial redesign and full custom build for a boutique medical spa.",
-              "image": { "src": "/content/images/portfolio/02_redesign.png", "alt": "Med Spa Redesign — coming soon" },
+              "image": { "src": "/content/images/portfolio/portfolio-medspa.png", "alt": "Close-up of a facial treatment — Med Spa Redesign, coming soon" },
               "href": null
             }
           ],

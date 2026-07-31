@@ -1,27 +1,193 @@
 /* ---- Navigation (common component) ---- */
 
 .nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  height: var(--nav-height);
+  box-sizing: border-box;
+  padding: 0 var(--gutter-desktop);
+  border-bottom: 1px solid rgba(28, 31, 22, 0.1);
+  box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.22);
+}
+
+/* Translucent overlay layer, separated so opacity/blur don't affect the
+   logo/links sitting on top of it. Default = dark overlay for sitting on
+   top of the hero photo. .nav--light = frosted cream, for sections with
+   no photo behind the nav (portfolio, contact). */
+.nav::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(to bottom, rgba(28, 31, 22, 0.88), rgba(28, 31, 22, 0));
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+}
+
+.nav--light::before {
+  background: var(--color-paper);
+  opacity: 0.82;
+}
+
+.nav__logo {
+  display: block;
+  line-height: 0;
+}
+
+.nav__logo img {
+  height: 64px;
+  width: auto;
 }
 
 .nav__links ul {
   display: flex;
+  gap: 40px;
   list-style: none;
+}
+
+.nav__links a {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 6px;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--color-paper);
+  transition: color 0.2s ease;
+}
+
+.nav--light .nav__links a {
+  color: var(--color-ink);
+}
+
+.nav__links a:hover {
+  color: var(--color-sage);
+}
+
+.nav__links a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--color-sage);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+}
+
+.nav__links a[aria-current='page'] {
+  color: var(--color-sage);
+}
+
+.nav--light .nav__links a[aria-current='page'] {
+  color: var(--color-forest);
+}
+
+.nav__links a[aria-current='page']::after {
+  background: var(--color-sage);
+  transform: scaleX(1);
+}
+
+.nav--light .nav__links a[aria-current='page']::after {
+  background: var(--color-forest);
 }
 
 .nav__hamburger {
   display: none;
+  flex-direction: column;
+  gap: 5px;
   background: none;
   border: none;
+  padding: 4px;
+  cursor: pointer;
+}
+
+.nav__hamburger span {
+  display: block;
+  width: 22px;
+  height: 1px;
+  background: var(--color-paper);
+  transition: background 0.2s ease, transform 0.3s ease, opacity 0.2s ease;
+}
+
+.nav--light .nav__hamburger span {
+  background: var(--color-ink);
+}
+
+/* Morph into an X when the mobile menu is open. */
+.nav__hamburger[aria-expanded='true'] span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.nav__hamburger[aria-expanded='true'] span:nth-child(2) {
+  opacity: 0;
+}
+
+.nav__hamburger[aria-expanded='true'] span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
 }
 
 .mobile-menu {
   display: none;
   flex-direction: column;
+  gap: 40px;
+  position: fixed;
+  top: var(--nav-height-mobile);
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 99;
+  background: var(--color-ink);
+  padding: var(--space-lg) var(--gutter-mobile);
 }
 
 .mobile-menu.open {
   display: flex;
+}
+
+/* The nav's drop shadow is meant to lift it off the hero photo behind it —
+   with the mobile menu open, that same shadow bleeds onto the menu's solid
+   background and reads as a gap. Suppress it while the menu is open. */
+.nav:has(~ .mobile-menu.open) {
+  box-shadow: none;
+}
+
+.mobile-menu a {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--fs-body-sm);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--color-paper);
+}
+
+@media (max-width: 768px) {
+  .nav {
+    height: var(--nav-height-mobile);
+    padding: 0 var(--gutter-mobile);
+  }
+
+  .nav__logo img {
+    height: 42px;
+  }
+
+  .nav__links {
+    display: none;
+  }
+
+  .nav__hamburger {
+    display: flex;
+  }
 }

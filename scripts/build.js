@@ -119,7 +119,10 @@ function renderNav(activeHref, light) {
   const template = read('common/navigation/navigation.html');
   const context = {
     siteName: content.site.name,
-    logoLight: content.site.logo.light,
+    // "light" nav (frosted, sits over a plain cream section) needs the
+    // ink-colored logo; the default dark-overlay nav (sits over the hero
+    // photo) needs the cream logo for contrast.
+    logoSrc: light ? content.site.logo.horizontal.onLight : content.site.logo.horizontal.onDark,
     light,
     links: content.nav.links.map((link) => ({
       ...link,
@@ -133,7 +136,7 @@ function renderFooter() {
   const template = read('common/footer/footer.html');
   const context = {
     siteName: content.site.name,
-    logoDarkBg: content.site.logo.darkBg,
+    logoDarkBg: content.site.logo.horizontal.onDark,
     copyright: content.footer.copyright,
   };
   return render(template, context);
@@ -146,19 +149,44 @@ function renderFooter() {
 const FAVICON_DIR = '/content/images/logos';
 
 function renderDocument({ title, description, canonical, cssHref, scriptSrc, bodyHtml }) {
+  const ogImage = `${content.site.url}${content.site.logo.socialShare}`;
   return `<!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>document.documentElement.classList.remove('no-js');</script>
   <title>${escapeHtml(title)}</title>
   <meta name="description" content="${attr(description)}">
   <link rel="canonical" href="${attr(canonical)}">
 
+  <!-- Favicon / browser tab icon -->
   <link rel="icon" type="image/svg+xml" href="${FAVICON_DIR}/favicon.svg">
-  <link rel="apple-touch-icon" sizes="180x180" href="${FAVICON_DIR}/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="${FAVICON_DIR}/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="${FAVICON_DIR}/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="${FAVICON_DIR}/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="${FAVICON_DIR}/icon-512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="${FAVICON_DIR}/apple-touch-icon.png">
+  <link rel="shortcut icon" href="${FAVICON_DIR}/favicon.ico">
+
+  <!-- Open Graph / Twitter Card — the preview card shown when this link is
+       shared over text, Messenger, Slack, iMessage, etc. -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="${attr(content.site.name)}">
+  <meta property="og:title" content="${attr(title)}">
+  <meta property="og:description" content="${attr(description)}">
+  <meta property="og:url" content="${attr(canonical)}">
+  <meta property="og:image" content="${attr(ogImage)}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${attr(title)}">
+  <meta name="twitter:description" content="${attr(description)}">
+  <meta name="twitter:image" content="${attr(ogImage)}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Cormorant+Garamond:ital,wght@1,400&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="${attr(cssHref)}">
 </head>
@@ -198,7 +226,7 @@ function buildHome() {
   const s = page.sections;
 
   const rendered = {
-    nav: renderNav(null, false),
+    nav: renderNav('/', false),
     footer: renderFooter(),
     hero: renderSection('hero', {
       ...s.hero,
@@ -206,7 +234,10 @@ function buildHome() {
     }),
     about: renderSection('about', s.about),
     services: renderSection('services', s.services),
-    portfolioTeaser: renderSection('portfolio-teaser', s.portfolioTeaser),
+    portfolioTeaser: renderSection('portfolio-teaser', {
+      ...s.portfolioTeaser,
+      renderedHeadline: headlineHtml(s.portfolioTeaser.headline, s.portfolioTeaser.headlineEmphasis),
+    }),
     quote: renderSection('quote', s.quote),
     whyNotAI: renderSection('why-not-ai', {
       ...s.whyNotAI,
@@ -296,8 +327,9 @@ function buildContact() {
 // ---------------------------------------------------------------------------
 
 const BRAND_CSS = 'common/styles/brand.css';
-const COMMON_CSS = ['common/navigation/navigation.css', 'common/footer/footer.css'];
-const COMMON_JS = ['common/navigation/navigation.js', 'common/footer/footer.js'];
+const BASE_CSS = 'common/styles/base.css';
+const COMMON_CSS = ['common/navigation/navigation.css', 'common/footer/footer.css', 'common/reveal/reveal.css'];
+const COMMON_JS = ['common/navigation/navigation.js', 'common/footer/footer.js', 'common/reveal/reveal.js'];
 
 function sectionAssetPaths(name, ext) {
   return `sections/${name}/${name}.${ext}`;
@@ -305,6 +337,7 @@ function sectionAssetPaths(name, ext) {
 
 const homeCss = [
   BRAND_CSS,
+  BASE_CSS,
   ...COMMON_CSS,
   ...HOME_SECTIONS.map((n) => sectionAssetPaths(n, 'css')),
   'pages/home/home.css',
@@ -315,10 +348,10 @@ const homeJs = [
   'pages/home/home.js',
 ];
 
-const portfolioCss = [BRAND_CSS, ...COMMON_CSS, 'pages/portfolio/portfolio.css'];
+const portfolioCss = [BRAND_CSS, BASE_CSS, ...COMMON_CSS, 'pages/portfolio/portfolio.css'];
 const portfolioJs = [...COMMON_JS, 'pages/portfolio/portfolio.js'];
 
-const contactCss = [BRAND_CSS, ...COMMON_CSS, 'pages/contact/contact.css'];
+const contactCss = [BRAND_CSS, BASE_CSS, ...COMMON_CSS, 'pages/contact/contact.css'];
 const contactJs = [...COMMON_JS, 'pages/contact/contact.js'];
 
 // ---------------------------------------------------------------------------

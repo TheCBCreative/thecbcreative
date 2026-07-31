@@ -1,5 +1,108 @@
 /* ---- About (section component) ---- */
 
-.about { }
-.about__media { position: relative; }
-.about__list { list-style: none; }
+.about {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xl);
+  padding: var(--space-xl) var(--gutter-desktop);
+  background: var(--color-ink);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0px 28px 26px 0px rgba(0, 0, 0, 0.25);
+}
+
+.about__media {
+  position: relative;
+  width: 40%;
+  flex-shrink: 0;
+  height: 460px;
+}
+
+.about__plate {
+  position: absolute;
+  left: -24px;
+  top: 60px;
+  width: 84%;
+  height: 90%;
+  background: var(--color-forest);
+}
+
+.about__portrait {
+  position: absolute;
+  left: 40px;
+  top: 0;
+  width: 84%;
+  height: 90%;
+  object-fit: cover;
+  box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.2), -20px 20px 32px -4px rgba(0, 0, 0, 0.4);
+}
+
+.about__content {
+  width: 56%;
+}
+
+.about__content h2 {
+  font-size: var(--fs-section-headline);
+  color: var(--color-paper);
+  margin-bottom: var(--space-lg);
+}
+
+.about__content p {
+  font-size: var(--fs-body-sm);
+  color: var(--color-muted-on-dark);
+  line-height: var(--lh-body-loose);
+  max-width: 44em;
+  margin-bottom: var(--space-md);
+}
+
+.about__list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md) var(--space-xl);
+}
+
+.about__list li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+  font-size: 0.8125rem;
+  color: var(--color-muted-on-dark);
+}
+
+@media (max-width: 768px) {
+  .about {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-lg);
+    padding: var(--space-lg) var(--gutter-mobile);
+  }
+
+  .about__media {
+    width: 100%;
+    height: 340px;
+  }
+
+  .about__plate {
+    left: auto;
+    right: 5%;
+    top: 40px;
+    width: 80%;
+  }
+
+  .about__portrait {
+    left: 0;
+    width: 82%;
+  }
+
+  .about__content {
+    width: 100%;
+  }
+
+  .about__content h2 {
+    font-size: var(--fs-section-headline-mobile);
+  }
+
+  .about__list {
+    grid-template-columns: 1fr;
+  }
+}

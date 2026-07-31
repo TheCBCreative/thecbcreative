@@ -1,4 +1,74 @@
 /* ---- Why Not AI (section component) ---- */
 
-.why-not-ai { }
-.faq-row { }
+.why-not-ai {
+  background: var(--color-ink);
+  padding: var(--space-lg) var(--gutter-desktop);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+}
+
+.why-not-ai__left h2 {
+  font-style: italic;
+  font-size: 2.75rem;
+  color: var(--color-paper);
+  margin: var(--space-xs) 0 var(--space-sm);
+}
+
+.why-not-ai__left p {
+  font-size: var(--fs-body-sm);
+  color: var(--color-muted-on-dark);
+  line-height: 1.5;
+  max-width: 30em;
+}
+
+.why-not-ai__faq > p {
+  font-size: var(--fs-body-sm);
+  color: var(--color-muted-on-dark);
+  line-height: 1.5;
+  margin-bottom: var(--space-sm);
+}
+
+.faq-row {
+  padding: 6px 0;
+}
+
+.faq-row h3 {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 1rem;
+  color: var(--color-paper);
+  margin-bottom: 2px;
+}
+
+.faq-row p {
+  font-size: 0.875rem;
+  color: var(--color-muted-on-dark);
+  line-height: 1.4;
+}
+
+.why-not-ai__closing {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.625rem;
+  color: var(--color-paper);
+  margin-top: var(--space-sm);
+}
+
+@media (max-width: 768px) {
+  .why-not-ai {
+    grid-template-columns: 1fr;
+    padding: var(--space-2xl) var(--gutter-mobile);
+    gap: var(--space-md);
+  }
+
+  .why-not-ai__left h2 {
+    font-size: var(--fs-section-headline-mobile);
+  }
+
+  .why-not-ai__closing {
+    font-size: 1.375rem;
+  }
+}

@@ -1,4 +1,112 @@
 /* ---- Quote (section component) ---- */
 
-.quote { position: relative; text-align: center; }
-.quote__bg { position: absolute; inset: 0; }
+.quote {
+  position: relative;
+  text-align: center;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl) var(--gutter-desktop);
+  overflow: hidden;
+}
+
+.quote__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-color: var(--color-ink);
+  /* Gradient fallback shows if the photo is ever missing; the inline
+     background-image (set from backgroundImage in the content schema)
+     paints over it. */
+  background-image: linear-gradient(160deg, var(--color-forest), var(--color-ink));
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* Slow Ken Burns drift so the photo feels alive rather than static. */
+  animation: quote-bg-zoom 22s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes quote-bg-zoom {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.12);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quote__bg {
+    animation: none;
+  }
+}
+
+.quote__bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--color-ink);
+  opacity: 0.75;
+  box-shadow: inset 0px -6px 20px 0px rgba(0, 0, 0, 0.25), inset 0px 8px 24px 0px rgba(0, 0, 0, 0.35);
+}
+
+.quote blockquote {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+}
+
+.quote p {
+  font-family: var(--font-serif-accent);
+  font-weight: 400;
+  font-style: italic;
+  font-size: var(--fs-quote);
+  line-height: 1.3;
+  color: var(--color-paper);
+  margin-bottom: var(--space-lg);
+}
+
+.quote cite {
+  display: block;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-caption);
+  text-transform: uppercase;
+  font-style: normal;
+  color: var(--color-sage);
+}
+
+@media (max-width: 768px) {
+  .quote {
+    min-height: 320px;
+    padding: var(--space-lg) var(--gutter-mobile);
+    /* Hard edges (vs. the soft blurred seams elsewhere) so the section
+       reads as a recessed frame rather than a blend. */
+    border-top: 1px solid rgba(246, 243, 236, 0.2);
+    border-bottom: 1px solid rgba(246, 243, 236, 0.2);
+  }
+
+  .quote p {
+    font-size: 1.75rem;
+  }
+
+  /* Deepen and wrap the inset shadow on all sides so the section reads as
+     sunken into the page — like you could reach into it. */
+  .quote__bg::after {
+    box-shadow:
+      inset 0 16px 32px rgba(0, 0, 0, 0.5),
+      inset 0 -16px 32px rgba(0, 0, 0, 0.5),
+      inset 16px 0 28px rgba(0, 0, 0, 0.35),
+      inset -16px 0 28px rgba(0, 0, 0, 0.35);
+  }
+
+  /* The ambient 22s loop (desktop) is replaced by a scroll-tied zoom on
+     mobile instead — see reveal.js — so it's a deliberate scroll effect
+     like the service cards, not just a passive background animation. */
+  .quote__bg {
+    animation: none;
+  }
+}

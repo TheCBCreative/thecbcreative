@@ -1,0 +1,269 @@
+/* ==========================================================================
+   base.css — shared component primitives
+   Buttons, eyebrows, dividers, numbered markers used across nav, footer,
+   and every homepage section. Reference brand.css tokens only.
+   ========================================================================== */
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  color: var(--color-ink);
+  background: var(--color-paper);
+  line-height: var(--lh-body);
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* Nav is fixed/out-of-flow (see navigation.css), so every page's content
+   needs top padding to clear it — except the home page, which wants its
+   hero photo to bleed up behind the translucent nav (see pages/home/home.css). */
+main#main-content {
+  padding-top: var(--nav-height);
+}
+
+@media (max-width: 768px) {
+  main#main-content {
+    padding-top: var(--nav-height-mobile);
+  }
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  line-height: var(--lh-headline);
+}
+
+h1, h2 {
+  letter-spacing: 5px;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 1000;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  padding: 12px 20px;
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-caption);
+  text-transform: uppercase;
+}
+
+.skip-link:focus {
+  left: 12px;
+  top: 12px;
+}
+
+/* ---- Eyebrow (small caps label + accent line) ---- */
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-family: var(--font-sans) !important;
+  font-weight: 500 !important;
+  font-size: var(--fs-label) !important;
+  letter-spacing: var(--ls-label) !important;
+  text-transform: uppercase;
+  margin-bottom: var(--space-md);
+}
+
+.eyebrow__line {
+  display: inline-block;
+  width: 18px;
+  height: 1px;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+/* Eyebrow color context: dark sections use sage, light sections use forest */
+.hero .eyebrow,
+.portfolio-teaser .eyebrow,
+.why-not-ai .eyebrow,
+.about .eyebrow {
+  color: var(--color-sage);
+}
+
+.services .eyebrow {
+  color: var(--color-forest);
+}
+
+/* ---- Divider ---- */
+
+.divider {
+  border: none;
+  height: 1px;
+  width: 48px;
+  background: var(--color-border);
+  margin: var(--space-lg) 0;
+}
+
+.why-not-ai .divider {
+  background: rgba(246, 243, 236, 0.2);
+  width: 100%;
+  max-width: none;
+  margin: var(--space-sm) 0;
+}
+
+.about .divider {
+  background: rgba(246, 243, 236, 0.2);
+}
+
+/* ---- Numbered markers (about list, service cards) ---- */
+
+.num {
+  font-family: var(--font-serif-accent);
+  font-style: italic;
+  color: var(--color-sage);
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+
+/* ---- Buttons ---- */
+
+.btn {
+  display: inline-block;
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-button);
+  text-transform: uppercase;
+  text-decoration: none;
+  text-align: center;
+  padding: 18px 36px;
+  border: 1px solid transparent;
+  transition: color 0.35s ease, border-color 0.2s ease;
+  cursor: pointer;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--color-ink);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s ease;
+}
+
+.btn:hover::before {
+  transform: scaleX(1);
+}
+
+.btn--primary,
+.btn--outline {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  border-color: var(--color-ink);
+}
+
+.btn--primary:hover,
+.btn--outline:hover {
+  color: var(--color-paper);
+  border-color: var(--color-sage);
+}
+
+.btn--link {
+  padding: 18px 0;
+  color: var(--color-paper);
+  border: none;
+  position: relative;
+}
+
+.btn--link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 12px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.4;
+  transition: opacity 0.2s ease;
+}
+
+.btn--link:hover::after {
+  opacity: 1;
+}
+
+.btn--full {
+  display: block;
+  width: 100%;
+}
+
+.text-link {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-button);
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--color-sage);
+  border-bottom: 1px solid rgba(147, 168, 118, 0.4);
+  padding-bottom: 4px;
+  transition: border-color 0.2s ease;
+}
+
+.text-link:hover {
+  border-color: var(--color-sage);
+}
+
+/* ---- Section transitions ----
+   A soft blurred band straddling the seam between stacked homepage
+   sections, so hard background-color/photo edges (e.g. cream -> ink)
+   blend rather than cut sharply. Purely decorative — no pointer events. */
+
+.about,
+.services,
+.portfolio-teaser,
+.quote,
+.why-not-ai,
+.cta {
+  position: relative;
+}
+
+.about::before,
+.services::before,
+.portfolio-teaser::before,
+.quote::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  left: 0;
+  right: 0;
+  height: 120px;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 40%, black 60%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, black 40%, black 60%, transparent);
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* ---- Layout helpers ---- */
+
+.section-inner {
+  max-width: var(--page-max-width);
+  margin: 0 auto;
+}
