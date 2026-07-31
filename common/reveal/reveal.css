@@ -48,6 +48,30 @@
   transition-delay: 0.16s;
 }
 
+.field:nth-child(2) {
+  transition-delay: 0.08s;
+}
+
+.field:nth-child(3) {
+  transition-delay: 0.16s;
+}
+
+.field:nth-child(4) {
+  transition-delay: 0.24s;
+}
+
+.field:nth-child(5) {
+  transition-delay: 0.32s;
+}
+
+.field:nth-child(6) {
+  transition-delay: 0.4s;
+}
+
+.form > .btn--full {
+  transition-delay: 0.48s;
+}
+
 /* No motion for anyone who's asked for it, and no invisible content if JS
    never runs (script removes .no-js from <html> as soon as it executes). */
 @media (prefers-reduced-motion: reduce) {

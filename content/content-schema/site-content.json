@@ -195,6 +195,7 @@
           "eyebrow": "Contact",
           "headline": "Let's {emphasis}.",
           "headlineEmphasis": "connect",
+          "backgroundImage": "/content/images/quote/quote-bg-forest.webp",
           "body": "Have a project in mind or just curious what a new site could do for your business? I'd love to hear from you. Feel free to share inspiration links or screenshots — the more context the better.",
           "details": [
             "Based in Snoqualmie, WA",
@@ -204,11 +205,11 @@
         },
         "form": {
           "fields": [
-            { "id": "name", "label": "Your Name", "type": "text", "placeholder": "Jane Smith", "required": true },
-            { "id": "business", "label": "Business Name", "type": "text", "placeholder": "Smith & Co.", "required": false },
-            { "id": "email", "label": "Email", "type": "email", "placeholder": "jane@smithco.com", "required": true },
+            { "id": "name", "label": "Your Name", "type": "text", "placeholder": "Jane Smith", "required": true, "autocomplete": "name" },
+            { "id": "business", "label": "Business Name", "type": "text", "placeholder": "Smith & Co.", "required": false, "autocomplete": "organization" },
+            { "id": "email", "label": "Email", "type": "email", "placeholder": "jane@smithco.com", "required": true, "autocomplete": "email" },
             { "id": "message", "label": "Tell me about your project", "type": "textarea", "placeholder": "What are you looking for?", "required": true },
-            { "id": "links", "label": "Inspiration Links", "type": "text", "placeholder": "Pinterest boards, websites you love, etc.", "required": false }
+            { "id": "links", "label": "Inspiration Links", "type": "text", "placeholder": "Pinterest boards, websites you love, etc.", "required": false, "autocomplete": "off" }
           ],
           "upload": {
             "id": "fileInput",

@@ -105,10 +105,14 @@ function headlineHtml(template, emphasisText) {
 
 function fieldControlHtml(field) {
   const requiredAttr = field.required ? ' required' : '';
+  // autocomplete helps both AT (announces the field's purpose) and sighted
+  // users (browser/password-manager autofill) — worth setting explicitly
+  // rather than leaving it to the browser to guess from the label text.
+  const autocompleteAttr = field.autocomplete ? ` autocomplete="${attr(field.autocomplete)}"` : '';
   if (field.type === 'textarea') {
-    return `<textarea id="${attr(field.id)}" name="${attr(field.id)}" placeholder="${attr(field.placeholder)}"${requiredAttr}></textarea>`;
+    return `<textarea id="${attr(field.id)}" name="${attr(field.id)}" placeholder="${attr(field.placeholder)}"${requiredAttr}${autocompleteAttr}></textarea>`;
   }
-  return `<input type="${attr(field.type)}" id="${attr(field.id)}" name="${attr(field.id)}" placeholder="${attr(field.placeholder)}"${requiredAttr}>`;
+  return `<input type="${attr(field.type)}" id="${attr(field.id)}" name="${attr(field.id)}" placeholder="${attr(field.placeholder)}"${requiredAttr}${autocompleteAttr}>`;
 }
 
 // ---------------------------------------------------------------------------

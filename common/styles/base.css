@@ -12,6 +12,13 @@ html {
 }
 
 body {
+  /* Browsers apply an 8px default margin on body — this was never reset,
+     so every full-bleed element on the site has had a ~8px cream sliver on
+     all four edges the whole time (most visible against a dark full-bleed
+     photo, like the contact page, but this was very likely also the root
+     cause of the long-standing "white border on the right side" issue
+     noticed earlier on the homepage). */
+  margin: 0;
   font-family: var(--font-sans);
   font-weight: 300;
   color: var(--color-ink);
@@ -41,6 +48,28 @@ img {
 
 a {
   color: inherit;
+}
+
+/* Visible keyboard-focus ring, sitewide — the browser default outline still
+   works without this, but a branded ring in sage is easier to spot against
+   both the dark and light sections. :focus-visible (not :focus) so it only
+   shows for keyboard/AT navigation, not on every mouse click. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-sage);
+  outline-offset: 3px;
+}
+
+/* Sage only passes contrast (3:1 non-text minimum) against the dark ink
+   sections it was designed for — against the site's light/paper sections
+   it drops to ~2.3:1. Swap to forest (10.8:1 on paper) anywhere the focus
+   ring lands on a light background instead. */
+.services :focus-visible,
+.contact :focus-visible,
+.nav--light :focus-visible {
+  outline-color: var(--color-forest);
 }
 
 h1, h2, h3 {
@@ -97,7 +126,8 @@ h1, h2 {
 .hero .eyebrow,
 .portfolio-teaser .eyebrow,
 .why-not-ai .eyebrow,
-.about .eyebrow {
+.about .eyebrow,
+.contact__info .eyebrow {
   color: var(--color-sage);
 }
 
@@ -122,8 +152,61 @@ h1, h2 {
   margin: var(--space-sm) 0;
 }
 
-.about .divider {
+.about .divider,
+.contact__info .divider {
   background: rgba(var(--color-paper-rgb), 0.2);
+}
+
+/* ---- Photo panel with Ken Burns zoom ----
+   A full-bleed background photo that slowly zooms (see @keyframes below),
+   clipped by a static frame (.photo-bg) so the zoom and the dark vignette
+   overlay (::after) never move — only the photo itself does. Originated on
+   the homepage quote section; reused wherever a panel wants a "living"
+   photo behind its text instead of a flat image. Parent needs
+   position: relative (and usually overflow: hidden) for this to fill it. */
+.photo-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background-color: var(--color-ink);
+}
+
+.photo-bg__photo {
+  position: absolute;
+  inset: 0;
+  /* Gradient fallback shows if the photo is ever missing; the inline
+     background-image set per-usage paints over it. */
+  background-image: linear-gradient(160deg, var(--color-forest), var(--color-ink));
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  animation: photo-bg-zoom 10s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes photo-bg-zoom {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.18);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .photo-bg__photo {
+    animation: none;
+  }
+}
+
+.photo-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--color-ink);
+  opacity: 0.75;
+  box-shadow: inset 0px -6px 20px 0px rgba(0, 0, 0, 0.25), inset 0px 8px 24px 0px rgba(0, 0, 0, 0.35);
 }
 
 /* ---- Numbered markers (about list, service cards) ---- */

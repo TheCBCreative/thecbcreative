@@ -11,40 +11,9 @@
   overflow: hidden;
 }
 
-/* Static frame — clips the zooming photo below and holds the fixed vignette
-   shadow (::after) and the mobile border, so neither the shadow nor the
-   section edge ever moves or scales, only the photo inside does. */
-.quote__bg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  background-color: var(--color-ink);
-}
-
-.quote__bg-photo {
-  position: absolute;
-  inset: 0;
-  /* Gradient fallback shows if the photo is ever missing; the inline
-     background-image (set from backgroundImage in the content schema)
-     paints over it. */
-  background-image: linear-gradient(160deg, var(--color-forest), var(--color-ink));
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  /* Ken Burns drift so the photo feels alive rather than static. */
-  animation: quote-bg-zoom 10s ease-in-out infinite alternate;
-  will-change: transform;
-}
-
-@keyframes quote-bg-zoom {
-  from {
-    transform: scale(1);
-  }
-  to {
-    transform: scale(1.18);
-  }
-}
+/* .quote__bg / .quote__bg-photo carry the shared .photo-bg / .photo-bg__photo
+   classes too (see base.css) — that's where the zoom/frame/vignette
+   mechanics live. Only quote-specific extras stay here. */
 
 /* Two soft, independently-drifting light/mist blobs layered over the photo
    for extra atmosphere and movement beyond the slow background zoom —
@@ -90,19 +59,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .quote__bg-photo,
   .quote__bg-fog {
     animation: none;
   }
-}
-
-.quote__bg::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--color-ink);
-  opacity: 0.75;
-  box-shadow: inset 0px -6px 20px 0px rgba(0, 0, 0, 0.25), inset 0px 8px 24px 0px rgba(0, 0, 0, 0.35);
 }
 
 .quote blockquote {

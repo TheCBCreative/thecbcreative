@@ -24,6 +24,8 @@
      translucent tint instead of re-deriving/hardcoding the same triplet. */
   --color-paper-rgb: 246, 243, 236;
   --color-ink-rgb: 28, 31, 22;
+  --color-sage-rgb: 147, 168, 118;
+  --color-forest-rgb: 47, 58, 31;
 
   /* ---- Motion ---- */
   /* Signature "ease out, settle" curve used for every scroll-reveal and

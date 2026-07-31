@@ -4,20 +4,28 @@
   <section class="contact">
 
     <!-- ============ INFO PANEL ============ -->
-    <div class="contact__info" data-reveal>
-      <p class="eyebrow">
-        <span class="eyebrow__line"></span>
-        {{info.eyebrow}}
-      </p>
-      <h1>{{{info.renderedHeadline}}}</h1>
-      <p>{{info.body}}</p>
+    <!-- Static — the whole .contact section is pinned to the viewport
+         height (see contact.css), so this panel never needs to move or
+         scroll at all. Only the form panel beside it scrolls internally. -->
+    <div class="contact__info">
+      <div class="photo-bg" aria-hidden="true">
+        <div class="photo-bg__photo" style="background-image: url('{{info.backgroundImage}}');"></div>
+      </div>
+      <div class="contact__info-content" data-reveal>
+        <p class="eyebrow">
+          <span class="eyebrow__line"></span>
+          {{info.eyebrow}}
+        </p>
+        <h1>{{{info.renderedHeadline}}}</h1>
+        <p>{{info.body}}</p>
 
-      <hr class="divider">
+        <hr class="divider">
 
-      <ul class="contact__details">
-        {{#each info.details}}<li>— {{this}}</li>
-        {{/each}}
-      </ul>
+        <ul class="contact__details">
+          {{#each info.details}}<li>— {{this}}</li>
+          {{/each}}
+        </ul>
+      </div>
     </div>
 
     <!-- ============ FORM PANEL ============ -->
@@ -28,12 +36,20 @@
         replacement service or serverless endpoint once we deploy on Vercel.
       -->
       <form class="form" id="contactForm" name="contact" method="POST" enctype="multipart/form-data">
-        {{#each form.fields}}<div class="field">
+        <!-- Honeypot — invisible to real users (see .field--hp in
+             contact.css), but bots that auto-fill every field on a form
+             will trip it. Server-side handling must also reject any
+             submission where this arrives non-empty. -->
+        <div class="field field--hp" aria-hidden="true">
+          <label for="hp-website">Website</label>
+          <input type="text" id="hp-website" name="website" tabindex="-1" autocomplete="off">
+        </div>
+        {{#each form.fields}}<div class="field" data-reveal>
           <label for="{{id}}">{{label}}</label>
           {{{renderedControl}}}
         </div>
         {{/each}}
-        <div class="field">
+        <div class="field" data-reveal>
           <label for="{{form.upload.id}}">{{form.upload.label}} <span class="field__optional">{{form.upload.labelSuffix}}</span></label>
           <div class="upload-zone" id="dropzone">
             <input type="file" accept="{{form.upload.accept}}"{{#if form.upload.multiple}} multiple{{/if}} id="{{form.upload.id}}" name="images">
@@ -42,7 +58,7 @@
             <p class="upload-zone__files" id="fileList"></p>
           </div>
         </div>
-        <button type="submit" class="btn btn--primary btn--full">{{form.submitLabel}}</button>
+        <button type="submit" class="btn btn--primary btn--full" data-reveal>{{form.submitLabel}}</button>
       </form>
     </div>
 
