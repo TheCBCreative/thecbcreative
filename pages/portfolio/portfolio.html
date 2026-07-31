@@ -15,7 +15,7 @@
     <ul class="gallery__grid">
       {{#each gallery.cards}}<li class="portfolio-card" data-reveal>
         <!-- placeholder photo, swap for real project photography -->
-        <img src="{{image.src}}" alt="{{image.alt}}">
+        <img src="{{image.src}}" alt="{{image.alt}}" width="{{image.width}}" height="{{image.height}}" loading="lazy" decoding="async">
         <span class="portfolio-card__tag">{{tag}}</span>
         <div class="portfolio-card__text">
           <p class="portfolio-card__category">{{category}}</p>

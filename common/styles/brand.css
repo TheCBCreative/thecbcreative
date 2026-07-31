@@ -19,6 +19,17 @@
   --color-cta-bg: #1E2614;         /* slightly deeper green used only behind the CTA band */
   --color-nav-hairline: #D8D5CA;   /* thin bottom border on the light/frosted nav */
 
+  /* R,G,B triplets (no rgb() wrapper) for --color-paper/--color-ink, so any
+     stylesheet can drop them into rgba(var(--color-paper-rgb), 0.2) for a
+     translucent tint instead of re-deriving/hardcoding the same triplet. */
+  --color-paper-rgb: 246, 243, 236;
+  --color-ink-rgb: 28, 31, 22;
+
+  /* ---- Motion ---- */
+  /* Signature "ease out, settle" curve used for every scroll-reveal and
+     hover-pop transition on the site — one place to retune the feel. */
+  --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
+
   /* ---- Font families ---- */
   --font-serif: 'Playfair Display', Georgia, serif;       /* headlines */
   --font-serif-accent: 'Cormorant Garamond', serif;       /* italic accents, quote marks */

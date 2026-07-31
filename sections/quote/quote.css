@@ -11,11 +11,20 @@
   overflow: hidden;
 }
 
+/* Static frame — clips the zooming photo below and holds the fixed vignette
+   shadow (::after) and the mobile border, so neither the shadow nor the
+   section edge ever moves or scales, only the photo inside does. */
 .quote__bg {
   position: absolute;
   inset: 0;
   z-index: 0;
+  overflow: hidden;
   background-color: var(--color-ink);
+}
+
+.quote__bg-photo {
+  position: absolute;
+  inset: 0;
   /* Gradient fallback shows if the photo is ever missing; the inline
      background-image (set from backgroundImage in the content schema)
      paints over it. */
@@ -23,8 +32,8 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  /* Slow Ken Burns drift so the photo feels alive rather than static. */
-  animation: quote-bg-zoom 22s ease-in-out infinite alternate;
+  /* Ken Burns drift so the photo feels alive rather than static. */
+  animation: quote-bg-zoom 10s ease-in-out infinite alternate;
   will-change: transform;
 }
 
@@ -33,12 +42,56 @@
     transform: scale(1);
   }
   to {
-    transform: scale(1.12);
+    transform: scale(1.18);
+  }
+}
+
+/* Two soft, independently-drifting light/mist blobs layered over the photo
+   for extra atmosphere and movement beyond the slow background zoom —
+   screen blend mode so they read as light breaking through the trees
+   rather than a flat haze, and kept subtle so the quote text stays
+   legible. Sits above the dark vignette (::after) via z-index so the
+   drift is actually visible against the darkened photo. */
+.quote__bg-fog {
+  position: absolute;
+  inset: -20%;
+  z-index: 1;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background-image:
+    radial-gradient(circle at 30% 40%, rgba(var(--color-paper-rgb), 0.22), transparent 45%),
+    radial-gradient(circle at 75% 65%, rgba(197, 213, 172, 0.16), transparent 40%);
+  background-repeat: no-repeat;
+  animation:
+    quote-fog-drift-a 26s ease-in-out infinite alternate,
+    quote-fog-drift-b 34s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+
+@keyframes quote-fog-drift-a {
+  0% {
+    transform: translate(-4%, -2%) scale(1);
+  }
+  100% {
+    transform: translate(4%, 3%) scale(1.08);
+  }
+}
+
+@keyframes quote-fog-drift-b {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.75;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .quote__bg {
+  .quote__bg-photo,
+  .quote__bg-fog {
     animation: none;
   }
 }
@@ -83,30 +136,15 @@
   .quote {
     min-height: 320px;
     padding: var(--space-lg) var(--gutter-mobile);
-    /* Hard edges (vs. the soft blurred seams elsewhere) so the section
-       reads as a recessed frame rather than a blend. */
-    border-top: 1px solid rgba(246, 243, 236, 0.2);
-    border-bottom: 1px solid rgba(246, 243, 236, 0.2);
+    /* A real drop shadow (not inset) so the section reads as sitting
+       forward/raised above the sections around it, rather than a framed
+       window sunk into the page. box-shadow on the section itself isn't
+       clipped by its own overflow: hidden, so it bleeds onto the
+       neighboring sections above and below. */
+    box-shadow: 0 24px 40px rgba(0, 0, 0, 0.45);
   }
 
   .quote p {
     font-size: 1.75rem;
-  }
-
-  /* Deepen and wrap the inset shadow on all sides so the section reads as
-     sunken into the page — like you could reach into it. */
-  .quote__bg::after {
-    box-shadow:
-      inset 0 16px 32px rgba(0, 0, 0, 0.5),
-      inset 0 -16px 32px rgba(0, 0, 0, 0.5),
-      inset 16px 0 28px rgba(0, 0, 0, 0.35),
-      inset -16px 0 28px rgba(0, 0, 0, 0.35);
-  }
-
-  /* The ambient 22s loop (desktop) is replaced by a scroll-tied zoom on
-     mobile instead — see reveal.js — so it's a deliberate scroll effect
-     like the service cards, not just a passive background animation. */
-  .quote__bg {
-    animation: none;
   }
 }

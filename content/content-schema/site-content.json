@@ -54,8 +54,8 @@
             { "label": "Explore Services", "href": "#services", "style": "link" }
           ],
           "images": {
-            "main": { "src": "/content/images/hero/hero-main.png", "alt": "Cait Burke working at a standing desk, laptop open" },
-            "accent": { "src": "/content/images/hero/hero-accent.png", "alt": "Laptop, coffee, and notebook styled on a couch" }
+            "main": { "src": "/content/images/hero/hero-main.webp", "alt": "Cait Burke working at a standing desk, laptop open", "width": 780, "height": 920 },
+            "accent": { "src": "/content/images/hero/hero-accent.webp", "alt": "Laptop, coffee, and notebook styled on a couch", "width": 377, "height": 442 }
           }
         },
 
@@ -75,7 +75,7 @@
             { "number": "05", "text": "Your website should feel like you — I make sure it does" },
             { "number": "06", "text": "Websites built to command presence, not just tick boxes" }
           ],
-          "image": { "src": "/content/images/about/headshot.png", "alt": "Cait Burke, founder of The CB Creative" }
+          "image": { "src": "/content/images/about/headshot.webp", "alt": "Cait Burke, founder of The CB Creative", "width": 1254, "height": 1254 }
         },
 
         "services": {
@@ -88,7 +88,7 @@
               "title": "Custom Website",
               "description": "Complete ground-up design and development. Hand-crafted specifically for your business to establish authority and convert visitors.",
               "variant": "photo",
-              "image": { "src": "/content/images/services/services-01-custom-v2.png", "alt": "Hands typing on a laptop beside a steaming cup of coffee" }
+              "image": { "src": "/content/images/services/services-01-custom-v2.webp", "alt": "Hands typing on a laptop beside a steaming cup of coffee", "width": 960, "height": 1502 }
             },
             {
               "number": "02.",
@@ -102,7 +102,7 @@
               "title": "Landing Pages",
               "description": "Laser-focused single-page campaigns built around specific product launches, local marketing initiatives, or advertising targets.",
               "variant": "photo",
-              "image": { "src": "/content/images/services/services-03-landing-v2.png", "alt": "Tablet and phone styled on a wooden desk beside a steaming mug" }
+              "image": { "src": "/content/images/services/services-03-landing-v2.webp", "alt": "Tablet and phone styled on a wooden desk beside a steaming mug", "width": 960, "height": 1502 }
             }
           ]
         },
@@ -118,7 +118,7 @@
         "quote": {
           "quote": "Your business deserves a website that works as hard as you do.",
           "attribution": "— Cait Burke, Founder",
-          "backgroundImage": "/content/images/quote/quote-bg-forest.png"
+          "backgroundImage": "/content/images/quote/quote-bg-forest.webp"
         },
 
         "whyNotAI": {
@@ -175,7 +175,7 @@
               "category": "Custom Website · Redesign · Med Spa",
               "title": "Med Spa Redesign",
               "description": "A calm, editorial redesign and full custom build for a boutique medical spa.",
-              "image": { "src": "/content/images/portfolio/portfolio-medspa.png", "alt": "Close-up of a facial treatment — Med Spa Redesign, coming soon" },
+              "image": { "src": "/content/images/portfolio/portfolio-medspa.webp", "alt": "Close-up of a facial treatment — Med Spa Redesign, coming soon", "width": 920, "height": 1200 },
               "href": null
             }
           ],

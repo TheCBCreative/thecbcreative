@@ -15,7 +15,7 @@
 
   <div class="services__cards">
     {{#each cards}}<article class="service-card service-card--{{variant}}" data-reveal>
-      {{#if image}}<img src="{{image.src}}" alt="{{image.alt}}">
+      {{#if image}}<img src="{{image.src}}" alt="{{image.alt}}" width="{{image.width}}" height="{{image.height}}" loading="lazy" decoding="async">
       {{/if}}<div class="service-card__text" data-reveal>
         <p class="num">{{number}}</p>
         <h3>{{title}}</h3>

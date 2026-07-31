@@ -79,7 +79,13 @@
 
   .about__media {
     width: 100%;
-    height: 340px;
+    height: auto;
+    /* A fixed pixel height here made the frame go very wide/short on
+       anything close to the tablet end of this breakpoint (mobile width
+       stretches out, height didn't), so object-fit: cover on the portrait
+       was cropping down to just a tight band across the face. Locking the
+       frame to a portrait ratio keeps the crop sane at any width. */
+    aspect-ratio: 4 / 5;
   }
 
   .about__plate {

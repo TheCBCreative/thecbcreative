@@ -116,14 +116,14 @@ h1, h2 {
 }
 
 .why-not-ai .divider {
-  background: rgba(246, 243, 236, 0.2);
+  background: rgba(var(--color-paper-rgb), 0.2);
   width: 100%;
   max-width: none;
   margin: var(--space-sm) 0;
 }
 
 .about .divider {
-  background: rgba(246, 243, 236, 0.2);
+  background: rgba(var(--color-paper-rgb), 0.2);
 }
 
 /* ---- Numbered markers (about list, service cards) ---- */

@@ -148,7 +148,26 @@ function renderFooter() {
 
 const FAVICON_DIR = '/content/images/logos';
 
-function renderDocument({ title, description, canonical, cssHref, scriptSrc, bodyHtml }) {
+// One ProfessionalService record, reused on every page (standard practice —
+// search engines and AI answer engines expect it site-wide, not just on the
+// homepage). Deliberately includes only what's actually published on the
+// site itself (name, url, logo, description, service area) — no invented
+// phone/email/street address.
+function renderStructuredData() {
+  const data = {
+    '@context': 'https://schema.org',
+    '@type': 'ProfessionalService',
+    name: content.site.name,
+    url: content.site.url,
+    image: `${content.site.url}${content.site.logo.socialShare}`,
+    logo: `${content.site.url}${content.site.logo.horizontal.onLight}`,
+    description: content.pages.home.meta.description,
+    areaServed: ['Snoqualmie, WA', 'Greater Seattle Area'],
+  };
+  return `<script type="application/ld+json">${JSON.stringify(data)}</script>`;
+}
+
+function renderDocument({ title, description, canonical, cssHref, scriptSrc, bodyHtml, preloadImage }) {
   const ogImage = `${content.site.url}${content.site.logo.socialShare}`;
   return `<!DOCTYPE html>
 <html lang="en" class="no-js">
@@ -184,9 +203,14 @@ function renderDocument({ title, description, canonical, cssHref, scriptSrc, bod
   <meta name="twitter:description" content="${attr(description)}">
   <meta name="twitter:image" content="${attr(ogImage)}">
 
+  <!-- Structured data — lets search engines and AI answer engines cite the
+       business accurately rather than guessing from prose alone. -->
+  ${renderStructuredData()}
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Cormorant+Garamond:ital,wght@1,400&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
+  ${preloadImage ? `<link rel="preload" as="image" href="${attr(preloadImage)}" fetchpriority="high">` : ''}
 
   <link rel="stylesheet" href="${attr(cssHref)}">
 </head>
@@ -255,6 +279,10 @@ function buildHome() {
     cssHref: '/css/index.css',
     scriptSrc: '/js/index.js',
     bodyHtml,
+    // Hero's main photo is this page's LCP element — preload it so it starts
+    // fetching in parallel with the CSS/fonts instead of waiting for the
+    // stylesheet to be parsed before the browser even discovers the <img>.
+    preloadImage: s.hero.images.main.src,
   });
 }
 
@@ -378,6 +406,40 @@ console.log(`Bundled ${OUT_DIR}/js/index.js, ${OUT_DIR}/js/portfolio.js, ${OUT_D
 
 copyDir('content/images', 'content/images');
 console.log(`Copied content/images/ → ${OUT_DIR}/content/images/`);
+
+// ---------------------------------------------------------------------------
+// robots.txt + sitemap.xml — generated from the same page list/canonicals
+// used above, so they can't drift out of sync with the actual site.
+// ---------------------------------------------------------------------------
+
+const SITE_PAGES = [content.pages.home, content.pages.portfolio, content.pages.contact];
+
+function buildRobotsTxt() {
+  return `User-agent: *
+Allow: /
+
+Sitemap: ${content.site.url}/sitemap.xml
+`;
+}
+
+function buildSitemapXml() {
+  const today = new Date().toISOString().slice(0, 10);
+  const urls = SITE_PAGES.map(
+    (page) => `  <url>
+    <loc>${escapeHtml(page.meta.canonical)}</loc>
+    <lastmod>${today}</lastmod>
+  </url>`
+  ).join('\n');
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls}
+</urlset>
+`;
+}
+
+write('robots.txt', buildRobotsTxt());
+write('sitemap.xml', buildSitemapXml());
+console.log(`Wrote ${OUT_DIR}/robots.txt, ${OUT_DIR}/sitemap.xml`);
 
 console.log('\nDone. Source: content/content-schema/site-content.json + common/ + sections/ + pages/');
 console.log(`Deployable output: ${OUT_DIR}/`);

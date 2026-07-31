@@ -97,58 +97,7 @@ function initServiceCardScrollScale() {
   mq.addEventListener('change', enable);
 }
 
-// 0 (edge of viewport) .. 1 (dead center) — how close an element's own
-// center is to the viewport's center right now.
-function centerProximity(rect) {
-  const viewportCenter = window.innerHeight / 2;
-  const elCenter = rect.top + rect.height / 2;
-  const distance = Math.abs(viewportCenter - elCenter);
-  const maxDistance = viewportCenter + rect.height / 2;
-  return Math.max(0, 1 - distance / maxDistance);
-}
-
-// The quote section's background photo has a slow ambient zoom on desktop
-// (see quote.css @keyframes quote-bg-zoom). On mobile that's swapped for
-// this scroll-tied version instead, so it reads as the same deliberate
-// "coming into focus" movement as the service cards, rather than a passive
-// loop running whether or not you're even looking at the section.
-function initQuoteScrollZoom() {
-  const bg = document.querySelector('.quote__bg');
-  if (!bg) return;
-
-  const mq = window.matchMedia('(max-width: 768px)');
-  let ticking = false;
-
-  const update = () => {
-    const proximity = centerProximity(bg.parentElement.getBoundingClientRect());
-    bg.style.transform = `scale(${(1.05 + proximity * 0.2).toFixed(3)})`;
-    ticking = false;
-  };
-
-  const onScroll = () => {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(update);
-  };
-
-  const enable = () => {
-    window.removeEventListener('scroll', onScroll);
-    window.removeEventListener('resize', onScroll);
-    if (mq.matches) {
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', onScroll);
-      update();
-    } else {
-      bg.style.transform = '';
-    }
-  };
-
-  enable();
-  mq.addEventListener('change', enable);
-}
-
 document.addEventListener('DOMContentLoaded', () => {
   initScrollReveal();
   initServiceCardScrollScale();
-  initQuoteScrollZoom();
 });

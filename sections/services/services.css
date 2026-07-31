@@ -13,25 +13,6 @@
   padding: var(--space-xl) var(--gutter-desktop) var(--space-lg);
 }
 
-.services-header {
-  position: relative;
-}
-
-.services-header::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  height: 80px;
-  background: inherit;
-  transform: scaleY(-1);
-  opacity: 0.15;
-  mask-image: linear-gradient(to bottom, rgba(0,0,0,0.4), transparent);
-  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.4), transparent);
-  pointer-events: none;
-}
-
 .services__title-col h2 {
   font-size: var(--fs-section-headline);
   color: var(--color-ink);
@@ -67,6 +48,13 @@
 
 .services__cards {
   display: flex;
+  /* Fallback behind the cards themselves — the reveal-in transition scales
+     each card down slightly (see reveal.css [data-reveal]), and a flex
+     item's transform doesn't shrink its reserved layout slot, so without
+     this the section's cream background could peek through at the edges
+     mid-transition. Ink matches the cards' own dark tone so any sliver is
+     invisible instead of showing as a white seam. */
+  background: var(--color-ink);
 }
 
 .service-card {
@@ -83,7 +71,7 @@
   /* Dark fallback so any subpixel seam around the photo (from the scale
      transforms below) shows ink, not the section's cream background. */
   background: var(--color-ink);
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease;
+  transition: transform 0.5s var(--ease-reveal), box-shadow 0.5s ease;
 }
 
 /* Pop the card forward slightly on hover, with its photo fogging over like
@@ -221,6 +209,6 @@
   /* A thin line under the stacked cards to mark the end of the services
      section before the dark portfolio-teaser section begins. */
   .services {
-    border-bottom: 1px solid rgba(246, 243, 236, 0.18);
+    border-bottom: 1px solid rgba(var(--color-paper-rgb), 0.18);
   }
 }
