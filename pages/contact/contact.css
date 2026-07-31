@@ -1,0 +1,21 @@
+/* ---- Contact page ---- */
+
+.contact { display: flex; flex-wrap: wrap; }
+.contact__info { flex: 1; }
+.contact__form-panel { flex: 1; }
+.contact__details { list-style: none; }
+
+.form { display: flex; flex-direction: column; }
+.field { display: flex; flex-direction: column; }
+.field input,
+.field textarea {
+  font: inherit;
+  border: none;
+  background: transparent;
+}
+.upload-zone { position: relative; }
+.upload-zone input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}

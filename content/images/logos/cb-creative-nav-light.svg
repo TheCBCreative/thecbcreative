@@ -1,0 +1,14 @@
+<svg width="230" height="104" viewBox="0 0 230 104" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>The CB Creative — horizontal nav logo, light</title>
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400&amp;family=Inter:wght@300;400&amp;display=swap');
+    </style>
+  </defs>
+  <!-- Mark -->
+  <rect x="20" y="20" width="64" height="64" fill="none" stroke="#232F23" stroke-width="1" stroke-opacity="0.5"/>
+  <text x="52" y="62" text-anchor="middle" font-family="Cormorant Garamond, serif" font-style="italic" font-size="34" fill="#232F23" letter-spacing="-1">cb</text>
+  <!-- Wordmark -->
+  <text x="104" y="45" font-family="Inter, sans-serif" font-weight="300" font-size="9" fill="#232F23" fill-opacity="0.38" letter-spacing="4">THE</text>
+  <text x="104" y="62" font-family="Inter, sans-serif" font-weight="300" font-size="11" fill="#232F23" letter-spacing="4">CB CREATIVE</text>
+</svg>

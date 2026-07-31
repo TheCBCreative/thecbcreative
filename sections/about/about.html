@@ -1,0 +1,22 @@
+<section class="about" id="about">
+  <div class="about__media">
+    <div class="about__plate" aria-hidden="true"></div>
+    <img class="about__portrait" src="{{image.src}}" alt="{{image.alt}}">
+  </div>
+  <div class="about__content">
+    <p class="eyebrow">
+      <span class="eyebrow__line"></span>
+      {{eyebrow}}
+    </p>
+    <h2>{{headline}}</h2>
+    {{#each paragraphs}}<p>{{this}}</p>
+    {{/each}}
+
+    <hr class="divider">
+
+    <ul class="about__list">
+      {{#each list}}<li><span class="num">{{number}}</span> {{text}}</li>
+      {{/each}}
+    </ul>
+  </div>
+</section>

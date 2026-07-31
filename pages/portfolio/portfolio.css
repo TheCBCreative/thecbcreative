@@ -1,0 +1,10 @@
+/* ---- Portfolio page ---- */
+
+.portfolio-header { }
+
+.gallery { }
+.gallery__grid { list-style: none; display: flex; flex-wrap: wrap; }
+.portfolio-card { position: relative; }
+.portfolio-card__tag { }
+.portfolio-card__text { }
+.gallery__caption { text-align: center; }

@@ -1,0 +1,214 @@
+{
+  "site": {
+    "name": "The CB Creative",
+    "url": "https://thecbcreative.com",
+    "logo": {
+      "light": "/content/images/logos/cb-creative-nav-light.svg",
+      "darkBg": "/content/images/logos/cb-creative-nav-dark-bg.svg",
+      "favicon": "/content/images/logos/favicon.svg"
+    }
+  },
+
+  "nav": {
+    "links": [
+      { "label": "About", "href": "/#about" },
+      { "label": "Services", "href": "/#services" },
+      { "label": "Portfolio", "href": "/portfolio.html" },
+      { "label": "Contact", "href": "/contact.html" }
+    ]
+  },
+
+  "footer": {
+    "copyright": "© 2026 The CB Creative. Designed for Distinction."
+  },
+
+  "pages": {
+
+    "home": {
+      "meta": {
+        "title": "The CB Creative | Web Design & Development — Snoqualmie, WA",
+        "description": "Clean, custom, intentional websites for small businesses in Snoqualmie, WA and the greater Seattle area. Design, code, and brand strategy under one roof.",
+        "canonical": "https://thecbcreative.com/"
+      },
+      "sections": {
+
+        "hero": {
+          "eyebrow": "Web Design & Development — Snoqualmie, WA",
+          "headline": "Your website is your first impression. Let's make it {emphasis}.",
+          "headlineEmphasis": "a good one",
+          "subhead": "Clean, custom, intentional digital spaces for small businesses that deserve to look as remarkable as they actually are.",
+          "buttons": [
+            { "label": "Let's Talk", "href": "/contact.html", "style": "primary" },
+            { "label": "Explore Services", "href": "#services", "style": "link" }
+          ],
+          "images": {
+            "main": { "src": "/content/images/hero/cb_hero_image.jpg", "alt": "" },
+            "accent": { "src": "/content/images/hero/hero.png", "alt": "" }
+          }
+        },
+
+        "about": {
+          "eyebrow": "The Story",
+          "headline": "Hi, I'm Cait.",
+          "paragraphs": [
+            "I spent years at Amazon wearing a lot of hats — web development, marketing, product — and somewhere in between all of it, I figured out what I actually love: building things from scratch that feel genuinely beautiful and uniquely yours.",
+            "Corporate work taught me a lot, but it also made something clear. Small businesses have more heart, more story, and more personality than any big brand. The problem is most of their websites don't show it.",
+            "That's what The CB Creative is for. I bring the design eye, the development skills, and the marketing instincts to build websites that don't just look good — they pull people in and make them feel something."
+          ],
+          "list": [
+            { "number": "01", "text": "I work with small businesses because I actually believe in them" },
+            { "number": "02", "text": "Design, code, and brand strategy under one single roof" },
+            { "number": "03", "text": "AEO-certified — built for search engines & AI recommenders" },
+            { "number": "04", "text": "Bespoke development tailored for unique workflows" },
+            { "number": "05", "text": "Your website should feel like you — I make sure it does" },
+            { "number": "06", "text": "Websites built to command presence, not just tick boxes" }
+          ],
+          "image": { "src": "/content/images/about/headshot.png", "alt": "Cait Burke, founder of The CB Creative" }
+        },
+
+        "services": {
+          "eyebrow": "Services",
+          "headline": "How we can partner",
+          "intro": "We take a holistic approach to your digital presence, uniting modern brand design with clean, custom-coded infrastructure.",
+          "cards": [
+            {
+              "number": "01.",
+              "title": "Custom Website",
+              "description": "Complete ground-up design and development. Hand-crafted specifically for your business to establish authority and convert visitors.",
+              "variant": "photo",
+              "image": { "src": "/content/images/services/01_custom.jpg", "alt": "Custom website design and development for small businesses" }
+            },
+            {
+              "number": "02.",
+              "title": "Website Refresh",
+              "description": "You already have a site and a following — I rebuild it from the ground up with fresh design and clean code, without losing what people already know you for.",
+              "variant": "color",
+              "image": null
+            },
+            {
+              "number": "03.",
+              "title": "Landing Pages",
+              "description": "Laser-focused single-page campaigns built around specific product launches, local marketing initiatives, or advertising targets.",
+              "variant": "photo",
+              "image": { "src": "/content/images/services/03_landing.png", "alt": "Landing page design for product launches and marketing campaigns" }
+            }
+          ]
+        },
+
+        "portfolioTeaser": {
+          "eyebrow": "Portfolio",
+          "headline": "Real client work, coming soon.",
+          "body": "I'm building out a collection of recent projects — check back soon.",
+          "cta": { "label": "View Portfolio →", "href": "/portfolio.html" }
+        },
+
+        "quote": {
+          "quote": "Your business deserves a website that works as hard as you do.",
+          "attribution": "— Cait Burke, CB Creative",
+          "backgroundImage": null
+        },
+
+        "whyNotAI": {
+          "eyebrow": "Why Human-Built Matters",
+          "headline": "Why not just\nuse AI?",
+          "intro": "AI can spin up a boilerplate template in seconds. But it can't sit with you, learn your values, find your distinction, or design for your actual target.",
+          "body": "I use AI tools every single day — which means I know exactly where they fall short. Generic layouts. Off-brand copy. No real strategy. What I build for you is specific to you: your story, your market, your goals.",
+          "faq": [
+            {
+              "question": "AI builds for the average.",
+              "answer": "I build directly for you — your brand, your distinct voice, and your specific local customer demographic."
+            },
+            {
+              "question": "Optimized for the future.",
+              "answer": "Every site I code is built with search and AI engine accessibility (AEO) to make sure you get surfaced when people search."
+            },
+            {
+              "question": "A collaborative partner.",
+              "answer": "You get a real human being to brainstorm with, solve design challenges, and iterate alongside."
+            },
+            {
+              "question": "I know when to put the tools down.",
+              "answer": "I use AI tools every day — I just know exactly when to put them down and do the work myself."
+            }
+          ],
+          "closing": "If you wanted average, you wouldn't be here."
+        },
+
+        "cta": {
+          "headline": "Let's build something beautiful.",
+          "button": { "label": "Start a Project", "href": "/contact.html" }
+        }
+      }
+    },
+
+    "portfolio": {
+      "meta": {
+        "title": "Portfolio | The CB Creative",
+        "description": "A curated collection of recent web design and development projects by The CB Creative. New work landing soon.",
+        "canonical": "https://thecbcreative.com/portfolio.html"
+      },
+      "sections": {
+        "header": {
+          "eyebrow": "Selected Work",
+          "headline": "Recent work, {emphasis}.",
+          "headlineEmphasis": "coming soon",
+          "intro": "I'm building out a curated collection of recent projects. The first is landing soon — new work will appear here as each site launches."
+        },
+        "gallery": {
+          "cards": [
+            {
+              "status": "coming-soon",
+              "tag": "Coming Soon",
+              "category": "Custom Website · Redesign · Med Spa",
+              "title": "Med Spa Redesign",
+              "description": "A calm, editorial redesign and full custom build for a boutique medical spa.",
+              "image": { "src": "/content/images/portfolio/02_redesign.png", "alt": "Med Spa Redesign — coming soon" },
+              "href": null
+            }
+          ],
+          "caption": "More projects launching soon."
+        }
+      }
+    },
+
+    "contact": {
+      "meta": {
+        "title": "Contact | The CB Creative",
+        "description": "Get in touch with The CB Creative about a new website, a refresh, or a landing page. Based in Snoqualmie, WA — serving the greater Seattle area and beyond.",
+        "canonical": "https://thecbcreative.com/contact.html"
+      },
+      "sections": {
+        "info": {
+          "eyebrow": "Contact",
+          "headline": "Let's {emphasis}.",
+          "headlineEmphasis": "connect",
+          "body": "Have a project in mind or just curious what a new site could do for your business? I'd love to hear from you. Feel free to share inspiration links or screenshots — the more context the better.",
+          "details": [
+            "Based in Snoqualmie, WA",
+            "Serving the greater Seattle area & beyond",
+            "Available for new projects"
+          ]
+        },
+        "form": {
+          "fields": [
+            { "id": "name", "label": "Your Name", "type": "text", "placeholder": "Jane Smith", "required": true },
+            { "id": "business", "label": "Business Name", "type": "text", "placeholder": "Smith & Co.", "required": false },
+            { "id": "email", "label": "Email", "type": "email", "placeholder": "jane@smithco.com", "required": true },
+            { "id": "message", "label": "Tell me about your project", "type": "textarea", "placeholder": "What are you looking for?", "required": true },
+            { "id": "links", "label": "Inspiration Links", "type": "text", "placeholder": "Pinterest boards, websites you love, etc.", "required": false }
+          ],
+          "upload": {
+            "id": "fileInput",
+            "label": "Inspiration Images",
+            "labelSuffix": "— optional",
+            "dropLabel": "Drop screenshots here or click to browse",
+            "subLabel": "PNG, JPG, WEBP up to 10MB each",
+            "accept": "image/*",
+            "multiple": true
+          },
+          "submitLabel": "Send Message"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{{{nav}}}
+
+<main id="main-content">
+
+  <section class="portfolio-header">
+    <p class="eyebrow">
+      <span class="eyebrow__line"></span>
+      {{header.eyebrow}}
+    </p>
+    <h1>{{{header.renderedHeadline}}}</h1>
+    <p>{{header.intro}}</p>
+  </section>
+
+  <section class="gallery">
+    <ul class="gallery__grid">
+      {{#each gallery.cards}}<li class="portfolio-card">
+        <!-- placeholder photo, swap for real project photography -->
+        <img src="{{image.src}}" alt="{{image.alt}}">
+        <span class="portfolio-card__tag">{{tag}}</span>
+        <div class="portfolio-card__text">
+          <p class="portfolio-card__category">{{category}}</p>
+          <h2>{{title}}</h2>
+          <p>{{description}}</p>
+        </div>
+      </li>
+      {{/each}}
+    </ul>
+    <p class="gallery__caption">{{gallery.caption}}</p>
+  </section>
+
+</main>
+
+{{{footer}}}

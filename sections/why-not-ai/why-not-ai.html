@@ -1,0 +1,23 @@
+<section class="why-not-ai" id="why-not-ai">
+  <div class="why-not-ai__left">
+    <p class="eyebrow">
+      <span class="eyebrow__line"></span>
+      {{eyebrow}}
+    </p>
+    <h2>{{{renderedHeadline}}}</h2>
+    <p>{{intro}}</p>
+  </div>
+
+  <div class="why-not-ai__faq">
+    <p>{{body}}</p>
+    <hr class="divider">
+
+    {{#each faq}}<div class="faq-row">
+      <h3>{{question}}</h3>
+      <p>{{answer}}</p>
+    </div>
+    {{/each}}
+  </div>
+
+  <p class="why-not-ai__closing">{{closing}}</p>
+</section>

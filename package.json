@@ -1,0 +1,9 @@
+{
+  "name": "cb-creative-site",
+  "private": true,
+  "version": "1.0.0",
+  "description": "The CB Creative — static site, built from a single content schema.",
+  "scripts": {
+    "build": "node scripts/build.js"
+  }
+}

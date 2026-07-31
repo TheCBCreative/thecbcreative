@@ -1,0 +1,19 @@
+<header class="nav{{#if light}} nav--light{{/if}}">
+  <a href="/" class="nav__logo" aria-label="{{siteName}} — Home">
+    <img src="{{logoLight}}" alt="{{siteName}}">
+  </a>
+  <nav class="nav__links" aria-label="Primary">
+    <ul>
+      {{#each links}}<li><a href="{{href}}"{{#if active}} aria-current="page"{{/if}}>{{label}}</a></li>
+      {{/each}}
+    </ul>
+  </nav>
+  <button class="nav__hamburger" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  {{#each links}}<a href="{{href}}">{{label}}</a>
+  {{/each}}
+</div>

@@ -1,0 +1,27 @@
+/* ---- Navigation (common component) ---- */
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav__links ul {
+  display: flex;
+  list-style: none;
+}
+
+.nav__hamburger {
+  display: none;
+  background: none;
+  border: none;
+}
+
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+}
+
+.mobile-menu.open {
+  display: flex;
+}

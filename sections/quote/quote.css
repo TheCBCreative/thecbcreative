@@ -1,0 +1,4 @@
+/* ---- Quote (section component) ---- */
+
+.quote { position: relative; text-align: center; }
+.quote__bg { position: absolute; inset: 0; }

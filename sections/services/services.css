@@ -1,0 +1,6 @@
+/* ---- Services (section component) ---- */
+
+.services { }
+.services__header { }
+.services__cards { display: flex; }
+.service-card { position: relative; flex: 1; }

@@ -1,0 +1,52 @@
+{{{nav}}}
+
+<main id="main-content">
+  <section class="contact">
+
+    <!-- ============ INFO PANEL ============ -->
+    <div class="contact__info">
+      <p class="eyebrow">
+        <span class="eyebrow__line"></span>
+        {{info.eyebrow}}
+      </p>
+      <h1>{{{info.renderedHeadline}}}</h1>
+      <p>{{info.body}}</p>
+
+      <hr class="divider">
+
+      <ul class="contact__details">
+        {{#each info.details}}<li>— {{this}}</li>
+        {{/each}}
+      </ul>
+    </div>
+
+    <!-- ============ FORM PANEL ============ -->
+    <div class="contact__form-panel">
+      <!--
+        TODO: form backend not yet wired up.
+        Previously used Netlify Forms (data-netlify attribute) — needs a
+        replacement service or serverless endpoint once we deploy on Vercel.
+      -->
+      <form class="form" id="contactForm" name="contact" method="POST" enctype="multipart/form-data">
+        {{#each form.fields}}<div class="field">
+          <label for="{{id}}">{{label}}</label>
+          {{{renderedControl}}}
+        </div>
+        {{/each}}
+        <div class="field">
+          <label for="{{form.upload.id}}">{{form.upload.label}} <span class="field__optional">{{form.upload.labelSuffix}}</span></label>
+          <div class="upload-zone" id="dropzone">
+            <input type="file" accept="{{form.upload.accept}}"{{#if form.upload.multiple}} multiple{{/if}} id="{{form.upload.id}}" name="images">
+            <p class="upload-zone__label">{{form.upload.dropLabel}}</p>
+            <p class="upload-zone__sub">{{form.upload.subLabel}}</p>
+            <p class="upload-zone__files" id="fileList"></p>
+          </div>
+        </div>
+        <button type="submit" class="btn btn--primary btn--full">{{form.submitLabel}}</button>
+      </form>
+    </div>
+
+  </section>
+</main>
+
+{{{footer}}}
