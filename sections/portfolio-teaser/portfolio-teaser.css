@@ -3,7 +3,7 @@
 .portfolio-teaser {
   background: var(--color-ink);
   padding: var(--space-xl) var(--gutter-desktop);
-  text-align: center;
+  text-align: left;
 }
 
 .portfolio-teaser__content {
@@ -29,7 +29,6 @@
 @media (max-width: 768px) {
   .portfolio-teaser {
     padding: var(--space-lg) var(--gutter-mobile);
-    text-align: right;
   }
 
   .portfolio-teaser .eyebrow {
