@@ -1,0 +1,25 @@
+{{{nav}}}
+
+<main id="main-content">
+  <!-- Same forest photo + Ken Burns zoom as the contact page and homepage
+       quote section — see .photo-bg in common/styles/base.css. Nothing is
+       redefined here; this page just uses the shared component. -->
+  <section class="thank-you">
+    <div class="photo-bg" aria-hidden="true">
+      <div class="photo-bg__photo" style="background-image: url('{{message.backgroundImage}}');"></div>
+    </div>
+
+    <div class="thank-you__content" data-reveal>
+      <p class="eyebrow">
+        <span class="eyebrow__line"></span>
+        {{message.eyebrow}}
+      </p>
+      <h1>{{{message.renderedHeadline}}}</h1>
+      <p class="thank-you__body">{{message.body}}</p>
+
+      <a href="{{message.button.href}}" class="btn btn--ghost">{{message.button.label}}</a>
+    </div>
+  </section>
+</main>
+
+{{{footer}}}

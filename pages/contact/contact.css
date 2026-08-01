@@ -31,7 +31,6 @@
   position: relative;
   z-index: 1;
   height: 100%;
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -80,7 +79,6 @@
   flex: 1 1 55%;
   min-width: 0;
   height: 100%;
-  box-sizing: border-box;
   overflow-y: auto;
   padding: var(--space-3xl) var(--gutter-desktop);
 }

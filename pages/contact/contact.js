@@ -47,12 +47,13 @@ function initForm() {
   const messages = JSON.parse(form.dataset.status || '{}');
   const submitLabel = submitBtn ? submitBtn.textContent : '';
   const submittingLabel = form.dataset.submittingLabel || 'Sending…';
+  const successRedirect = form.dataset.successRedirect || '/thank-you.html';
 
-  const setStatus = (text, kind) => {
+  // Only ever shows errors now — success navigates to the thank-you page.
+  const setError = (text) => {
     if (!statusEl) return;
     statusEl.textContent = text || '';
-    statusEl.classList.toggle('form__status--error', kind === 'error');
-    statusEl.classList.toggle('form__status--success', kind === 'success');
+    statusEl.classList.toggle('form__status--error', Boolean(text));
   };
 
   // Bot mitigation, client half: (1) a honeypot field real users never see
@@ -71,14 +72,14 @@ function initForm() {
     const submittedTooFast = Date.now() - loadedAt < MIN_SUBMIT_DELAY_MS;
 
     if (honeypotFilled || submittedTooFast) {
-      // Show the same success message a real submission gets rather than
-      // an error, so a bot can't tell it was caught.
-      setStatus(messages.success, 'success');
+      // Send them to the same thank-you page a real submission gets, so a
+      // bot can't tell from the response that it was caught.
+      window.location.assign(successRedirect);
       return;
     }
 
     if (totalFileBytes(form) > MAX_TOTAL_ATTACHMENT_BYTES) {
-      setStatus(messages.tooLarge, 'error');
+      setError(messages.tooLarge);
       return;
     }
 
@@ -87,7 +88,7 @@ function initForm() {
     // check reads this rather than trusting a client timestamp.
     data.set('elapsed', String(Date.now() - loadedAt));
 
-    setStatus('');
+    setError('');
     if (submitBtn) {
       submitBtn.disabled = true;
       submitBtn.textContent = submittingLabel;
@@ -98,18 +99,19 @@ function initForm() {
       const result = await response.json().catch(() => ({}));
 
       if (response.ok && result.ok) {
+        // Reset before navigating so the browser's back button lands on an
+        // empty form rather than a filled one that looks unsent.
         form.reset();
-        const fileList = document.getElementById('fileList');
-        if (fileList) fileList.textContent = '';
-        setStatus(messages.success, 'success');
-      } else {
-        // Prefer the server's specific reason ("that email doesn't look
-        // right") over the generic fallback when it sent one.
-        setStatus(result.error || messages.error, 'error');
+        window.location.assign(successRedirect);
+        return;
       }
+
+      // Prefer the server's specific reason ("that email doesn't look
+      // right") over the generic fallback when it sent one.
+      setError(result.error || messages.error);
     } catch (err) {
       console.error('Contact form submit failed:', err);
-      setStatus(messages.error, 'error');
+      setError(messages.error);
     } finally {
       if (submitBtn) {
         submitBtn.disabled = false;

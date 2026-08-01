@@ -171,7 +171,7 @@ function renderStructuredData() {
   return `<script type="application/ld+json">${JSON.stringify(data)}</script>`;
 }
 
-function renderDocument({ title, description, canonical, cssHref, scriptSrc, bodyHtml, preloadImage }) {
+function renderDocument({ title, description, canonical, cssHref, scriptSrc, bodyHtml, preloadImage, noindex }) {
   const ogImage = `${content.site.url}${content.site.logo.socialShare}`;
   return `<!DOCTYPE html>
 <html lang="en" class="no-js">
@@ -182,6 +182,13 @@ function renderDocument({ title, description, canonical, cssHref, scriptSrc, bod
   <title>${escapeHtml(title)}</title>
   <meta name="description" content="${attr(description)}">
   <link rel="canonical" href="${attr(canonical)}">
+${
+  // Pages that only make sense as the end of a flow (the thank-you page)
+  // shouldn't be indexed — landing on one straight from search results is
+  // a confusing dead end, and it would compete with the real contact page.
+  // Such pages are also left out of sitemap.xml (see SITE_PAGES).
+  noindex ? '  <meta name="robots" content="noindex, follow">\n' : ''
+}
 
   <!-- Favicon / browser tab icon -->
   <link rel="icon" type="image/svg+xml" href="${FAVICON_DIR}/favicon.svg">
@@ -321,6 +328,44 @@ function buildPortfolio() {
 }
 
 // ---------------------------------------------------------------------------
+// Thank you page (post-submit landing for the contact form)
+// ---------------------------------------------------------------------------
+
+function buildThankYou() {
+  const page = content.pages.thankYou;
+  const s = page.sections;
+
+  const context = {
+    // light: false — the dark-overlay nav, same as the homepage, since this
+    // page's background is the dark forest photo rather than cream. No
+    // active link: per the mock, nothing is underlined here, since this
+    // page isn't one of the nav destinations.
+    nav: renderNav(null, false),
+    footer: renderFooter(),
+    message: {
+      ...s.message,
+      renderedHeadline: headlineHtml(s.message.headline, s.message.headlineEmphasis),
+    },
+  };
+
+  const bodyHtml = render(read('pages/contact/thank-you/thank-you.html'), context);
+
+  return renderDocument({
+    title: page.meta.title,
+    description: page.meta.description,
+    canonical: page.meta.canonical,
+    noindex: page.meta.noindex,
+    cssHref: '/css/thank-you.css',
+    scriptSrc: '/js/thank-you.js',
+    bodyHtml,
+    // The forest photo is this page's LCP element, and it's referenced from
+    // an inline style rather than an <img>, so the browser can't discover
+    // it until CSS has parsed. Preloading it removes that delay.
+    preloadImage: s.message.backgroundImage,
+  });
+}
+
+// ---------------------------------------------------------------------------
 // Contact page
 // ---------------------------------------------------------------------------
 
@@ -340,6 +385,7 @@ function buildContact() {
       upload: s.form.upload,
       submitLabel: s.form.submitLabel,
       submittingLabel: s.form.submittingLabel,
+      successRedirect: s.form.successRedirect,
       // Status copy lives in the schema like everything else, but the form
       // needs it in JS at submit time — so it's emitted once as a data
       // attribute on the form rather than hardcoded in contact.js.
@@ -391,6 +437,11 @@ const portfolioJs = [...COMMON_JS, 'pages/portfolio/portfolio.js'];
 const contactCss = [BRAND_CSS, BASE_CSS, ...COMMON_CSS, 'pages/contact/contact.css'];
 const contactJs = [...COMMON_JS, 'pages/contact/contact.js'];
 
+// No page-specific JS — the thank-you page is static content, so it only
+// needs the shared nav/footer/reveal behavior.
+const thankYouCss = [BRAND_CSS, BASE_CSS, ...COMMON_CSS, 'pages/contact/thank-you/thank-you.css'];
+const thankYouJs = [...COMMON_JS];
+
 // ---------------------------------------------------------------------------
 // Write output — everything lands in /public, which is fully generated
 // ---------------------------------------------------------------------------
@@ -401,17 +452,26 @@ console.log(`Cleaned ${OUT_DIR}/`);
 write('index.html', buildHome());
 write('portfolio.html', buildPortfolio());
 write('contact.html', buildContact());
-console.log(`Built ${OUT_DIR}/index.html, ${OUT_DIR}/portfolio.html, ${OUT_DIR}/contact.html`);
+write('thank-you.html', buildThankYou());
+console.log(
+  `Built ${OUT_DIR}/index.html, ${OUT_DIR}/portfolio.html, ${OUT_DIR}/contact.html, ${OUT_DIR}/thank-you.html`
+);
 
 write('css/index.css', concat(homeCss));
 write('css/portfolio.css', concat(portfolioCss));
 write('css/contact.css', concat(contactCss));
-console.log(`Bundled ${OUT_DIR}/css/index.css, ${OUT_DIR}/css/portfolio.css, ${OUT_DIR}/css/contact.css`);
+write('css/thank-you.css', concat(thankYouCss));
+console.log(
+  `Bundled ${OUT_DIR}/css/index.css, ${OUT_DIR}/css/portfolio.css, ${OUT_DIR}/css/contact.css, ${OUT_DIR}/css/thank-you.css`
+);
 
 write('js/index.js', concat(homeJs));
 write('js/portfolio.js', concat(portfolioJs));
 write('js/contact.js', concat(contactJs));
-console.log(`Bundled ${OUT_DIR}/js/index.js, ${OUT_DIR}/js/portfolio.js, ${OUT_DIR}/js/contact.js`);
+write('js/thank-you.js', concat(thankYouJs));
+console.log(
+  `Bundled ${OUT_DIR}/js/index.js, ${OUT_DIR}/js/portfolio.js, ${OUT_DIR}/js/contact.js, ${OUT_DIR}/js/thank-you.js`
+);
 
 copyDir('content/images', 'content/images');
 console.log(`Copied content/images/ → ${OUT_DIR}/content/images/`);

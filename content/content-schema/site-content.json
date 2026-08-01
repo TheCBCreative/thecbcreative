@@ -184,6 +184,25 @@
       }
     },
 
+    "thankYou": {
+      "meta": {
+        "title": "Thank You | The CB Creative",
+        "description": "Your message has been received. Cait will get back to you within 48 hours.",
+        "canonical": "https://thecbcreative.com/thank-you.html",
+        "noindex": true
+      },
+      "sections": {
+        "message": {
+          "eyebrow": "Message Sent",
+          "headline": "Thank {emphasis}.",
+          "headlineEmphasis": "you",
+          "backgroundImage": "/content/images/quote/quote-bg-forest.webp",
+          "body": "I've got it! I'll personally take a look at everything you shared and get back to you within 48 hours. In the meantime, feel free to look around and explore my recent thoughts and projects.",
+          "button": { "label": "Back to Home", "href": "/" }
+        }
+      }
+    },
+
     "contact": {
       "meta": {
         "title": "Contact | The CB Creative",
@@ -222,8 +241,8 @@
           },
           "submitLabel": "Send Message",
           "submittingLabel": "Sending…",
+          "successRedirect": "/thank-you.html",
           "status": {
-            "success": "Thank you — your message is on its way. I'll be in touch soon.",
             "error": "Something went wrong sending that. Please try again, or email cait@thecbcreative.com directly.",
             "tooLarge": "Those images add up to more than 3.5MB. Try sending fewer, or email them over directly."
           }

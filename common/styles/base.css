@@ -4,6 +4,19 @@
    and every homepage section. Reference brand.css tokens only.
    ========================================================================== */
 
+/* Border-box everywhere. Without this, `width`/`height` describe only the
+   content box, so any element with both an explicit size and padding or a
+   border renders wider than asked for and overflows its container — the
+   cause of several bugs on this site (a full-width button spilling 74px
+   past the page gutter, panels with padding overflowing their column).
+   Setting it once here means those cases just work, rather than needing a
+   box-sizing declaration remembered at each call site. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
@@ -127,7 +140,8 @@ h1, h2 {
 .portfolio-teaser .eyebrow,
 .why-not-ai .eyebrow,
 .about .eyebrow,
-.contact__info .eyebrow {
+.contact__info .eyebrow,
+.thank-you .eyebrow {
   color: var(--color-sage);
 }
 
@@ -153,7 +167,8 @@ h1, h2 {
 }
 
 .about .divider,
-.contact__info .divider {
+.contact__info .divider,
+.thank-you .divider {
   background: rgba(var(--color-paper-rgb), 0.2);
 }
 
@@ -265,6 +280,21 @@ h1, h2 {
 .btn--outline:hover {
   color: var(--color-paper);
   border-color: var(--color-sage);
+}
+
+/* Transparent with a hairline border and cream text — for sitting over a
+   dark photo, where the solid cream fill of .btn--primary would be too
+   heavy. Shares the base .btn hover sweep, so the ink fill still wipes in
+   from the left on hover; the border brightens to full paper to match. */
+.btn--ghost {
+  background: transparent;
+  color: var(--color-paper);
+  border-color: rgba(var(--color-paper-rgb), 0.5);
+}
+
+.btn--ghost:hover {
+  color: var(--color-paper);
+  border-color: var(--color-paper);
 }
 
 .btn--link {
