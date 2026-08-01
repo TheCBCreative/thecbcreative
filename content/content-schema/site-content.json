@@ -17,6 +17,11 @@
       },
       "favicon": "/content/images/logos/favicon.svg",
       "socialShare": "/content/images/logos/social-share.png"
+    },
+
+    "analytics": {
+      "//": "Vercel Web Analytics. Enable it in the Vercel dashboard (Analytics -> Enable), then paste the script path it gives you here. '/_vercel/insights/script.js' is the standard path; the dashboard may instead offer a project-specific one that ad blockers don't recognise. Leave scriptPath empty to disable analytics entirely (e.g. locally).",
+      "scriptPath": "/_vercel/insights/script.js"
     }
   },
 

@@ -181,6 +181,29 @@ function renderStructuredData() {
   return `<script type="application/ld+json">${JSON.stringify(data)}</script>`;
 }
 
+/**
+ * Vercel Web Analytics — cookieless, so it needs no consent banner, and it's
+ * loaded with `defer` so it never blocks rendering.
+ *
+ * The script path is project-specific and only exists once Web Analytics is
+ * enabled in the Vercel dashboard, so it's read from the content schema
+ * rather than hardcoded. Omit `site.analytics.scriptPath` (or leave it empty)
+ * and nothing is emitted at all — which is what you want locally, where the
+ * endpoint doesn't exist and would just 404 in the console.
+ *
+ * The inline stub queues any calls made before the deferred script finishes
+ * loading, so nothing is dropped on a fast first interaction.
+ */
+function renderAnalytics() {
+  const scriptPath = content.site.analytics && content.site.analytics.scriptPath;
+  if (!scriptPath) return '';
+  return `  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="${attr(scriptPath)}"></script>
+`;
+}
+
 function renderDocument({ title, description, canonical, cssHref, scriptSrc, bodyHtml, preloadImage, noindex }) {
   const ogImage = `${content.site.url}${content.site.logo.socialShare}`;
   return `<!DOCTYPE html>
@@ -242,7 +265,7 @@ ${
 ${bodyHtml}
 
   <script src="${attr(scriptSrc)}"></script>
-</body>
+${renderAnalytics()}</body>
 </html>
 `;
 }
