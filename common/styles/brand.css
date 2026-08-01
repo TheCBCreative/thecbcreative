@@ -18,6 +18,8 @@
   --color-border: #D9D5C9;         /* hairlines, input underlines, dashed borders */
   --color-cta-bg: #1E2614;         /* slightly deeper green used only behind the CTA band */
   --color-nav-hairline: #D8D5CA;   /* thin bottom border on the light/frosted nav */
+  --color-forest-deep: #12160C;    /* darkest green — service card 1 & 2 photo overlays */
+  --color-error: #8A2F22;          /* form error text; 7.5:1 on paper */
 
   /* R,G,B triplets (no rgb() wrapper) for --color-paper/--color-ink, so any
      stylesheet can drop them into rgba(var(--color-paper-rgb), 0.2) for a

@@ -128,7 +128,7 @@ function initForm() {
 // where the cursor is. Only once the form has hit its own scroll limit does
 // the event fall through untouched, so the page can scroll normally and
 // reveal the footer below.
-function initFixedPanelScroll() {
+function initFixedPanelScroll(onScrolled) {
   const contact = document.querySelector('.contact');
   const formPanel = document.querySelector('.contact__form-panel');
   if (!contact || !formPanel) return;
@@ -151,13 +151,59 @@ function initFixedPanelScroll() {
 
       e.preventDefault();
       formPanel.scrollTop += e.deltaY;
+      // Setting scrollTop in script doesn't always dispatch a scroll event as
+      // promptly as a real user scroll, so nudge dependent UI directly.
+      if (onScrolled) onScrolled();
     },
     { passive: false }
   );
 }
 
+// Shows the shadow over the bottom of the form column while there's more to
+// scroll to, and fades it out at the end. Stays hidden when the form is short
+// enough not to scroll at all, so it never points at nothing.
+// Returns its update function so callers that scroll the panel in script can
+// refresh the cue directly.
+function initScrollCue() {
+  const formPanel = document.querySelector('.contact__form-panel');
+  const cue = document.getElementById('scrollCue');
+  if (!formPanel || !cue) return null;
+
+  // Scroll offsets are fractional at some zoom levels and can land a pixel
+  // short of the true maximum, which would leave the cue stuck on.
+  const EPSILON = 4;
+  const mq = window.matchMedia('(max-width: 768px)');
+
+  const update = () => {
+    if (mq.matches) {
+      // Stacked mobile layout: the page scrolls, not the panel. The cue's job
+      // is just to say "there's more below the intro", so it goes as soon as
+      // they start moving — any longer turns a hint into an obstruction.
+      const started = window.scrollY > 40;
+      const atPageBottom =
+        window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - EPSILON;
+      cue.classList.toggle('is-hidden', started || atPageBottom);
+      return;
+    }
+    const { scrollTop, scrollHeight, clientHeight } = formPanel;
+    const scrollable = scrollHeight - clientHeight > EPSILON;
+    const atBottom = scrollTop + clientHeight >= scrollHeight - EPSILON;
+    cue.classList.toggle('is-hidden', !scrollable || atBottom);
+  };
+
+  formPanel.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  mq.addEventListener('change', update);
+  update();
+
+  return update;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initUploadZone();
   initForm();
-  initFixedPanelScroll();
+  // Cue first, so its update can be handed to the wheel-forwarding handler.
+  const updateScrollCue = initScrollCue();
+  initFixedPanelScroll(updateScrollCue);
 });

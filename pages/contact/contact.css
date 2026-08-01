@@ -10,6 +10,11 @@
    nothing to get out of sync. Only the form column scrolls, internally,
    within its own box. */
 .contact {
+  /* Single source of truth for the split — the info panel takes the
+     remainder, and the scroll cue lines up with the form column's left
+     edge without the three drifting out of sync. */
+  --form-col: 55%;
+  position: relative;
   display: flex;
   flex-wrap: nowrap;
   height: calc(100vh - var(--nav-height));
@@ -22,7 +27,7 @@
    here ever moves. */
 .contact__info {
   position: relative;
-  flex: 1 1 45%;
+  flex: 1 1 calc(100% - var(--form-col));
   min-width: 0;
   overflow: hidden;
 }
@@ -76,11 +81,68 @@
 /* The only part of this section that scrolls — its own internal
    scrollbar, independent of the info panel and the page's outer scroll. */
 .contact__form-panel {
-  flex: 1 1 55%;
+  flex: 1 1 var(--form-col);
   min-width: 0;
   height: 100%;
   overflow-y: auto;
   padding: var(--space-3xl) var(--gutter-desktop);
+}
+
+/* ---- Scroll cue ----
+   The form scrolls inside its own column, which is easy to miss — the page
+   itself doesn't move, so there's no scrollbar travel to hint at it. A soft
+   shadow plus a small chevron over the bottom of the column signals there's
+   more below. It lives on .contact rather than inside the scrolling panel so
+   it stays pinned to the column's bottom edge instead of scrolling away. */
+.contact__scroll-cue {
+  position: absolute;
+  bottom: 0;
+  left: calc(100% - var(--form-col));
+  right: 0;
+  height: 100px;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: var(--space-sm);
+  /* Ink at partial alpha, so it darkens the cream without tinting it. */
+  background: linear-gradient(
+    to top,
+    rgba(var(--color-ink-rgb), 0.5) 0%,
+    rgba(var(--color-ink-rgb), 0.28) 35%,
+    rgba(var(--color-ink-rgb), 0.1) 70%,
+    rgba(var(--color-ink-rgb), 0) 100%
+  );
+  /* Never intercepts clicks on the fields it sits over. */
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.35s ease;
+}
+
+/* Toggled from contact.js — hidden once the form is scrolled to the bottom,
+   and when the form is short enough not to scroll at all. */
+.contact__scroll-cue.is-hidden {
+  opacity: 0;
+}
+
+.contact__scroll-cue svg {
+  width: 22px;
+  height: 22px;
+  /* Near-solid ink — at the darkest part of the gradient a translucent
+     stroke muddies into the background rather than reading as a mark. */
+  stroke: rgba(var(--color-ink-rgb), 0.85);
+  animation: scroll-cue-nudge 2.4s ease-in-out infinite;
+}
+
+@keyframes scroll-cue-nudge {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact__scroll-cue svg {
+    animation: none;
+  }
 }
 
 .form {
@@ -241,7 +303,7 @@
 .form__status--error {
   /* Not a brand token — this is the one place on the site that needs to
      read as an error, and it's tuned dark enough to clear 4.5:1 on paper. */
-  color: #8a2f22;
+  color: var(--color-error);
 }
 
 @media (max-width: 768px) {
@@ -278,5 +340,24 @@
 
   .form .btn--full {
     align-self: stretch;
+  }
+
+  /* Mobile has no internal scroll — the whole page moves — but touch
+     scrollbars are transient or absent, so the shadow still earns its keep.
+     Pinned to the viewport bottom and full-width, since the layout is a
+     single stacked column here. */
+  .contact__scroll-cue {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 80px;
+  }
+
+  /* On mobile the cue only ever shows over the dark forest panel — it hides
+     as soon as the user scrolls toward the cream form — so the chevron is
+     cream here rather than ink, which would vanish against the photo. */
+  .contact__scroll-cue svg {
+    stroke: rgba(var(--color-paper-rgb), 0.8);
   }
 }

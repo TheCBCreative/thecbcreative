@@ -73,6 +73,16 @@
       </form>
     </div>
 
+    <!-- Decorative scroll affordance: a soft shadow along the bottom of the
+         form column. aria-hidden because it conveys nothing to a screen
+         reader — the form's fields are all in the accessibility tree
+         regardless of which part of the column is scrolled into view. -->
+    <div class="contact__scroll-cue" id="scrollCue" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 9l6 6 6-6" />
+      </svg>
+    </div>
+
   </section>
 </main>
 

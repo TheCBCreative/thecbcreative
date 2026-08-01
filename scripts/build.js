@@ -78,8 +78,18 @@ function copyDir(srcRelative, destRelativeInsideOut) {
   walk(srcRoot, destRoot);
 }
 
+/**
+ * Concatenates the given source files into one bundle.
+ *
+ * Missing files are skipped rather than throwing: most sections have no
+ * page-specific JavaScript, and requiring an empty placeholder .js beside
+ * every .html/.css just to satisfy the bundler litters the tree with files
+ * that contain nothing. Add a section's .js only when it actually has
+ * behaviour; the asset lists below can name it either way.
+ */
 function concat(relativePaths, label) {
   return relativePaths
+    .filter((p) => fs.existsSync(path.join(ROOT, p)))
     .map((p) => `/* ---- ${label ? label + ': ' : ''}${p} ---- */\n${read(p)}`)
     .join('\n');
 }
@@ -301,6 +311,18 @@ function buildHome() {
 // Portfolio page
 // ---------------------------------------------------------------------------
 
+/**
+ * A portfolio card's title: a link when the card has an href, plain text
+ * when it doesn't (e.g. a "coming soon" project with nowhere to go yet).
+ * Built here rather than in the template because the mini template engine
+ * has {{#if}} but no {{#else}}.
+ */
+function renderedCardTitle(card) {
+  const title = escapeHtml(card.title);
+  if (!card.href) return title;
+  return `<a class="portfolio-card__link" href="${attr(card.href)}">${title}</a>`;
+}
+
 function buildPortfolio() {
   const page = content.pages.portfolio;
   const s = page.sections;
@@ -312,10 +334,24 @@ function buildPortfolio() {
       ...s.header,
       renderedHeadline: headlineHtml(s.header.headline, s.header.headlineEmphasis),
     },
-    gallery: s.gallery,
+    gallery: {
+      ...s.gallery,
+      // The first card is near/above the fold, so it loads eagerly at high
+      // priority (and gets preloaded below) as the page's likely LCP
+      // element. Everything after it stays lazy. Flags are computed here
+      // rather than with template logic so the template stays declarative.
+      cards: s.gallery.cards.map((card, i) => ({
+        ...card,
+        renderedTitle: renderedCardTitle(card),
+        isFirst: i === 0,
+        isLazy: i > 0,
+      })),
+    },
   };
 
   const bodyHtml = render(read('pages/portfolio/portfolio.html'), context);
+
+  const firstCardImage = s.gallery.cards[0] && s.gallery.cards[0].image;
 
   return renderDocument({
     title: page.meta.title,
@@ -324,6 +360,7 @@ function buildPortfolio() {
     cssHref: '/css/portfolio.css',
     scriptSrc: '/js/portfolio.js',
     bodyHtml,
+    preloadImage: firstCardImage ? firstCardImage.src : undefined,
   });
 }
 
@@ -402,6 +439,11 @@ function buildContact() {
     cssHref: '/css/contact.css',
     scriptSrc: '/js/contact.js',
     bodyHtml,
+    // Same reasoning as the thank-you page: the forest photo is this page's
+    // LCP element but it's applied via an inline background-image, so the
+    // browser can't discover it until CSS has parsed. Preloading removes
+    // that round-trip from the critical path.
+    preloadImage: s.info.backgroundImage,
   });
 }
 

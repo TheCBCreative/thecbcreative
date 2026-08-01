@@ -8,24 +8,40 @@
       {{header.eyebrow}}
     </p>
     <h1>{{{header.renderedHeadline}}}</h1>
-    <p>{{header.intro}}</p>
+    <p class="portfolio-header__intro">{{header.intro}}</p>
   </section>
 
   <section class="gallery">
     <ul class="gallery__grid">
       {{#each gallery.cards}}<li class="portfolio-card" data-reveal>
-        <!-- placeholder photo, swap for real project photography -->
-        <img src="{{image.src}}" alt="{{image.alt}}" width="{{image.width}}" height="{{image.height}}" loading="lazy" decoding="async">
-        <span class="portfolio-card__tag">{{tag}}</span>
+        <!-- The photo is wrapped so the hover zoom can be clipped by the
+             card's rounded corners without the card itself needing
+             overflow: hidden (which would clip its drop shadow). -->
+        <div class="portfolio-card__media">
+          <!-- The first card sits within the fold on most desktop
+               viewports, so it loads eagerly at high priority as the likely
+               LCP element (and is preloaded in <head>); later cards stay
+               lazy. -->
+          <img src="{{image.src}}" alt="{{image.alt}}"
+               width="{{image.width}}" height="{{image.height}}"
+               decoding="async"{{#if isFirst}} fetchpriority="high"{{/if}}{{#if isLazy}} loading="lazy"{{/if}}>
+        </div>
+        {{#if tag}}<span class="portfolio-card__tag">{{tag}}</span>
+        {{/if}}
         <div class="portfolio-card__text">
           <p class="portfolio-card__category">{{category}}</p>
-          <h2>{{title}}</h2>
-          <p>{{description}}</p>
+          <!-- Becomes a link when the card has an href, plain text when it
+               doesn't (see renderedCardTitle in build.js). The link is
+               stretched over the whole card in CSS, so the entire card is
+               clickable while the accessible name stays the project title
+               rather than a vague "read more". -->
+          <h2>{{{renderedTitle}}}</h2>
+          <p class="portfolio-card__desc">{{description}}</p>
         </div>
       </li>
       {{/each}}
     </ul>
-    <p class="gallery__caption">{{gallery.caption}}</p>
+    <p class="gallery__caption" data-reveal>{{gallery.caption}}</p>
   </section>
 
 </main>

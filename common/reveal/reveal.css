@@ -49,27 +49,38 @@
 }
 
 .field:nth-child(2) {
-  transition-delay: 0.08s;
+  transition-delay: 0.05s;
 }
 
 .field:nth-child(3) {
-  transition-delay: 0.16s;
+  transition-delay: 0.1s;
 }
 
 .field:nth-child(4) {
-  transition-delay: 0.24s;
+  transition-delay: 0.15s;
 }
 
 .field:nth-child(5) {
-  transition-delay: 0.32s;
+  transition-delay: 0.2s;
 }
 
 .field:nth-child(6) {
-  transition-delay: 0.4s;
+  transition-delay: 0.25s;
 }
 
+/* (7) is the file upload — previously missed, so it arrived before the
+   fields above it. */
+.field:nth-child(7) {
+  transition-delay: 0.3s;
+}
+
+/* The submit button sits below the fold of the form's own scroll container,
+   so unlike the fields above it, it's never part of the arrival cascade — it
+   reveals only once the user scrolls down to reach it. Making them then sit
+   through the full 1.4s fade reads as the button being slow to load. */
 .form > .btn--full {
-  transition-delay: 0.48s;
+  transition-delay: 0.06s;
+  transition-duration: 0.5s;
 }
 
 /* No motion for anyone who's asked for it, and no invisible content if JS

@@ -82,6 +82,16 @@
   box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5);
 }
 
+/* Promote all three cards to their own compositor layers as soon as the
+   pointer enters the row — before any individual card's hover transition
+   starts. Without this the browser promotes a card at the moment its own
+   hover begins, and for a frame or two the photo and its dark overlay are
+   rasterized separately, flashing un-overlaid photo along the edge where
+   the growing card overlaps its neighbour. */
+.services__cards:hover .service-card {
+  will-change: transform;
+}
+
 .service-card img {
   position: absolute;
   inset: 0;
@@ -100,7 +110,10 @@
 .service-card--photo::after {
   content: '';
   position: absolute;
-  inset: 0;
+  /* -1px, not 0: at fractional scale values the overlay's edge can round a
+     subpixel short of the photo's, leaving a hairline of un-darkened photo.
+     The overspill is clipped by the card's overflow: hidden. */
+  inset: -1px;
   background: var(--color-ink);
   opacity: 0.72;
   z-index: 1;
@@ -112,12 +125,12 @@
 
 /* Cards 1 and 2 get a deeper, dark-forest-tinted treatment. */
 .service-card:nth-child(1)::after {
-  background: #12160c;
+  background: var(--color-forest-deep);
   opacity: 0.88;
 }
 
 .service-card:nth-child(2) {
-  background: #12160c;
+  background: var(--color-forest-deep);
 }
 
 .service-card:nth-child(3)::after {
