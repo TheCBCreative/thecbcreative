@@ -17,7 +17,7 @@
           {{info.eyebrow}}
         </p>
         <h1>{{{info.renderedHeadline}}}</h1>
-        <p>{{info.body}}</p>
+        <p class="contact__info-body">{{info.body}}</p>
 
         <hr class="divider">
 
@@ -30,12 +30,15 @@
 
     <!-- ============ FORM PANEL ============ -->
     <div class="contact__form-panel" data-reveal>
-      <!--
-        TODO: form backend not yet wired up.
-        Previously used Netlify Forms (data-netlify attribute) — needs a
-        replacement service or serverless endpoint once we deploy on Vercel.
-      -->
-      <form class="form" id="contactForm" name="contact" method="POST" enctype="multipart/form-data">
+      <!-- Posts to the Vercel Function in api/contact.mjs, which re-runs the
+           bot checks server-side and emails the inquiry on via Resend.
+           action/method are set for real (not just handled in JS) so the
+           form still degrades to a normal submit if the fetch handler
+           never attaches. -->
+      <form class="form" id="contactForm" name="contact" method="POST"
+            action="/api/contact" enctype="multipart/form-data"
+            data-status="{{form.statusJson}}"
+            data-submitting-label="{{form.submittingLabel}}">
         <!-- Honeypot — invisible to real users (see .field--hp in
              contact.css), but bots that auto-fill every field on a form
              will trip it. Server-side handling must also reject any
@@ -58,7 +61,14 @@
             <p class="upload-zone__files" id="fileList"></p>
           </div>
         </div>
-        <button type="submit" class="btn btn--primary btn--full" data-reveal>{{form.submitLabel}}</button>
+        <button type="submit" class="btn btn--primary btn--full" id="submitBtn" data-reveal>{{form.submitLabel}}</button>
+
+        <!-- Success/error messages land here. role="status" + aria-live
+             means screen readers announce the result without the focus
+             having to move; it stays in the DOM (rather than being
+             created on submit) so the live region is already registered
+             when the text arrives. -->
+        <p class="form__status" id="formStatus" role="status" aria-live="polite"></p>
       </form>
     </div>
 

@@ -26,24 +26,44 @@ function initUploadZone() {
   });
 }
 
+// Keep in sync with MAX_TOTAL_ATTACHMENT_BYTES in api/contact.mjs. Checking
+// here too is purely so an oversize batch fails instantly with a clear
+// message rather than after a slow upload — the server's copy is the one
+// that actually enforces it.
+const MAX_TOTAL_ATTACHMENT_BYTES = 3.5 * 1024 * 1024;
+
+function totalFileBytes(form) {
+  const input = form.querySelector('input[type="file"]');
+  if (!input || !input.files) return 0;
+  return Array.from(input.files).reduce((sum, f) => sum + f.size, 0);
+}
+
 function initForm() {
   const form = document.getElementById('contactForm');
   if (!form) return;
 
-  // Basic bot mitigation — there's no backend yet to do this server-side,
-  // so for now it's: (1) a honeypot field real users never see or fill
-  // (see .field--hp in contact.html/.css), and (2) a minimum time-since-
-  // page-load, since spam bots that auto-fill-and-submit typically do so
-  // near-instantly. Neither is bulletproof alone, but together they filter
-  // out the vast majority of unsophisticated form bots without a
-  // third-party captcha/script.
-  // IMPORTANT: once a real backend/serverless endpoint exists, it MUST
-  // re-check both server-side too — a bot that POSTs directly to the
-  // endpoint skips this client-side JS entirely.
+  const statusEl = document.getElementById('formStatus');
+  const submitBtn = document.getElementById('submitBtn');
+  const messages = JSON.parse(form.dataset.status || '{}');
+  const submitLabel = submitBtn ? submitBtn.textContent : '';
+  const submittingLabel = form.dataset.submittingLabel || 'Sending…';
+
+  const setStatus = (text, kind) => {
+    if (!statusEl) return;
+    statusEl.textContent = text || '';
+    statusEl.classList.toggle('form__status--error', kind === 'error');
+    statusEl.classList.toggle('form__status--success', kind === 'success');
+  };
+
+  // Bot mitigation, client half: (1) a honeypot field real users never see
+  // or fill (see .field--hp), and (2) a minimum time since page load, since
+  // spam bots that auto-fill-and-submit usually do so near-instantly.
+  // api/contact.mjs re-checks BOTH server-side — that's the check that
+  // counts, since a bot POSTing straight at the endpoint never runs this.
   const loadedAt = Date.now();
   const MIN_SUBMIT_DELAY_MS = 1500;
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const honeypot = form.querySelector('input[name="website"]');
@@ -51,16 +71,51 @@ function initForm() {
     const submittedTooFast = Date.now() - loadedAt < MIN_SUBMIT_DELAY_MS;
 
     if (honeypotFilled || submittedTooFast) {
-      // Fail silently (no error shown) rather than tipping the bot off
-      // that it was caught.
-      console.log('Form submission blocked (bot heuristic triggered).');
+      // Show the same success message a real submission gets rather than
+      // an error, so a bot can't tell it was caught.
+      setStatus(messages.success, 'success');
       return;
     }
 
-    // TODO: wire up to a real form backend once hosting is finalized
-    // (Netlify Forms won't carry over to Vercel — needs a replacement
-    // service or serverless endpoint).
-    console.log('Form submit — backend not yet connected.');
+    if (totalFileBytes(form) > MAX_TOTAL_ATTACHMENT_BYTES) {
+      setStatus(messages.tooLarge, 'error');
+      return;
+    }
+
+    const data = new FormData(form);
+    // How long the form sat open before submitting — the server's timing
+    // check reads this rather than trusting a client timestamp.
+    data.set('elapsed', String(Date.now() - loadedAt));
+
+    setStatus('');
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = submittingLabel;
+    }
+
+    try {
+      const response = await fetch(form.action, { method: 'POST', body: data });
+      const result = await response.json().catch(() => ({}));
+
+      if (response.ok && result.ok) {
+        form.reset();
+        const fileList = document.getElementById('fileList');
+        if (fileList) fileList.textContent = '';
+        setStatus(messages.success, 'success');
+      } else {
+        // Prefer the server's specific reason ("that email doesn't look
+        // right") over the generic fallback when it sent one.
+        setStatus(result.error || messages.error, 'error');
+      }
+    } catch (err) {
+      console.error('Contact form submit failed:', err);
+      setStatus(messages.error, 'error');
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = submitLabel;
+      }
+    }
   });
 }
 

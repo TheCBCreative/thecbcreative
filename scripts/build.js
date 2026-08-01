@@ -339,6 +339,11 @@ function buildContact() {
       fields: s.form.fields.map((f) => ({ ...f, renderedControl: fieldControlHtml(f) })),
       upload: s.form.upload,
       submitLabel: s.form.submitLabel,
+      submittingLabel: s.form.submittingLabel,
+      // Status copy lives in the schema like everything else, but the form
+      // needs it in JS at submit time — so it's emitted once as a data
+      // attribute on the form rather than hardcoded in contact.js.
+      statusJson: JSON.stringify(s.form.status),
     },
   };
 

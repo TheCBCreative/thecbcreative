@@ -44,7 +44,10 @@
   margin: var(--space-md) 0 var(--space-lg);
 }
 
-.contact__info-content > p {
+/* Scoped to its own class, not a bare `> p` combinator — this panel's
+   .eyebrow is also a <p>, and a tag-based selector would leak these
+   overrides (margin especially) onto it too. */
+.contact__info-body {
   font-size: var(--fs-body-sm);
   color: var(--color-muted-on-dark);
   line-height: var(--lh-body-loose);
@@ -211,6 +214,36 @@
   margin-top: var(--space-sm);
   align-self: flex-start;
   min-width: 220px;
+}
+
+.form .btn--full:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+/* Never display: none, even while empty — a live region that's hidden at
+   the moment its text arrives often isn't announced at all, which would
+   defeat the point of role="status". An empty <p> generates no line box,
+   so it's already 0px tall; the only thing it costs is the parent .form's
+   flex gap, and the negative margin below cancels exactly that. */
+.form__status {
+  margin: 0;
+  font-size: var(--fs-body-sm);
+  line-height: var(--lh-body-loose);
+}
+
+.form__status:empty {
+  margin-top: calc(-1 * var(--space-lg));
+}
+
+.form__status--success {
+  color: var(--color-forest);
+}
+
+.form__status--error {
+  /* Not a brand token — this is the one place on the site that needs to
+     read as an error, and it's tuned dark enough to clear 4.5:1 on paper. */
+  color: #8a2f22;
 }
 
 @media (max-width: 768px) {

@@ -216,11 +216,17 @@
             "label": "Inspiration Images",
             "labelSuffix": "— optional",
             "dropLabel": "Drop screenshots here or click to browse",
-            "subLabel": "PNG, JPG, WEBP up to 10MB each",
+            "subLabel": "PNG, JPG or WEBP — up to 3.5MB total",
             "accept": "image/*",
             "multiple": true
           },
-          "submitLabel": "Send Message"
+          "submitLabel": "Send Message",
+          "submittingLabel": "Sending…",
+          "status": {
+            "success": "Thank you — your message is on its way. I'll be in touch soon.",
+            "error": "Something went wrong sending that. Please try again, or email cait@thecbcreative.com directly.",
+            "tooLarge": "Those images add up to more than 3.5MB. Try sending fewer, or email them over directly."
+          }
         }
       }
     }

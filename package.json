@@ -4,6 +4,8 @@
   "version": "1.0.0",
   "description": "The CB Creative — static site, built from a single content schema.",
   "scripts": {
-    "build": "node scripts/build.js"
+    "build": "node scripts/build.js",
+    "dev": "node scripts/build.js && node --env-file=.env.local scripts/dev-server.mjs",
+    "test": "node scripts/test-contact.mjs"
   }
 }
