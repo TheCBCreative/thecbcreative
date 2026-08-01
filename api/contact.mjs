@@ -21,6 +21,22 @@
 
 const RESEND_ENDPOINT = 'https://api.resend.com/emails';
 
+/**
+ * Reads an environment variable, trimming whitespace and stripping a matching
+ * pair of surrounding quotes.
+ *
+ * A .env file needs quotes around a value containing spaces (`CONTACT_FROM_EMAIL=
+ * "Name <a@b.com>"`) and the shell removes them. Pasting that same line into a
+ * hosting dashboard keeps the quotes as literal characters, so the value
+ * arrives as `"Name <a@b.com>"` — which Resend rejects with a 422 on the
+ * `from` field. Tolerating both forms means the variable works wherever it's
+ * set, rather than failing in a way that's only visible in the server logs.
+ */
+function env(name) {
+  const raw = (process.env[name] || '').trim();
+  return raw.replace(/^(["'])([\s\S]*)\1$/, '$2').trim();
+}
+
 const DEFAULT_TO = 'cait@thecbcreative.com';
 const DEFAULT_FROM = 'The CB Creative <inquiries@thecbcreative.com>';
 
@@ -241,7 +257,7 @@ async function handleContact(request) {
     return json({ ok: false, error: 'Method not allowed.' }, 405);
   }
 
-  const apiKey = process.env.RESEND_API_KEY;
+  const apiKey = env('RESEND_API_KEY');
   if (!apiKey) {
     // Config problem on our side, not the sender's — log loudly, but don't
     // leak the reason to the browser.
@@ -338,8 +354,8 @@ async function handleContact(request) {
   const view = { fields, attachments, submittedAt: `${submittedAt} PT` };
 
   const payload = {
-    from: process.env.CONTACT_FROM_EMAIL || DEFAULT_FROM,
-    to: [process.env.CONTACT_TO_EMAIL || DEFAULT_TO],
+    from: env('CONTACT_FROM_EMAIL') || DEFAULT_FROM,
+    to: [env('CONTACT_TO_EMAIL') || DEFAULT_TO],
     // So hitting "reply" in the inbox goes straight back to the sender
     // rather than to the no-reply sending address.
     reply_to: fields.email,
