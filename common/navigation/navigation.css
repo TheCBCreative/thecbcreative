@@ -179,8 +179,11 @@
     padding: 0 var(--gutter-mobile);
   }
 
+  /* The mobile nav bar is 76px tall, so the logo can comfortably take ~54px
+     and still leave breathing room above and below. At 42px it read as
+     undersized next to the hamburger and lost the wordmark's legibility. */
   .nav__logo img {
-    height: 42px;
+    height: 54px;
   }
 
   .nav__links {

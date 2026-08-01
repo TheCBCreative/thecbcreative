@@ -376,9 +376,3 @@ h1, h2 {
   z-index: 5;
 }
 
-/* ---- Layout helpers ---- */
-
-.section-inner {
-  max-width: var(--page-max-width);
-  margin: 0 auto;
-}

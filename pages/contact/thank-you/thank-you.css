@@ -11,10 +11,25 @@
    content changes), the page is a full-height flex column and the photo
    section takes whatever's left after the footer — self-correcting at any
    viewport size. */
+/* Ink rather than the site's default cream. Everything visible on this page
+   is dark — the photo panel and the footer — so if the document ever scrolls
+   a few pixels (see the dvh note below) or the user rubber-band overscrolls,
+   what shows past the edge blends instead of flashing a cream band. */
+html,
+body {
+  background: var(--color-ink);
+}
+
 body {
   display: flex;
   flex-direction: column;
+  /* 100vh on mobile measures the viewport with the browser chrome collapsed,
+     so it's taller than what's actually visible — the page then scrolls by
+     the height of the URL bar and reveals background below the footer. dvh
+     tracks the real visible height. vh first as a fallback for browsers
+     without dvh. */
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 /* The photo bleeds up behind the fixed nav, the same way the homepage hero
