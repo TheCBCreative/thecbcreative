@@ -2,46 +2,35 @@
 
 <main id="main-content">
 
-  <section class="portfolio-header" data-reveal>
+  <section data-reveal class="bg-paper py-xl px-gutter-mobile md:pt-3xl md:px-gutter-desktop md:pb-2xl">
     <p class="eyebrow">
       <span class="eyebrow__line"></span>
       {{header.eyebrow}}
     </p>
-    <h1>{{{header.renderedHeadline}}}</h1>
-    <p class="portfolio-header__intro">{{header.intro}}</p>
+    <h1 class="text-hero-headline-mobile text-ink mt-md mb-lg max-w-[14em] md:text-hero-headline">{{{header.renderedHeadline}}}</h1>
+    <p class="text-body-sm text-muted-on-light leading-body-loose max-w-[32em] m-0">{{header.intro}}</p>
   </section>
 
-  <section class="gallery">
-    <ul class="gallery__grid">
-      {{#each gallery.cards}}<li class="portfolio-card" data-reveal>
-        <!-- The photo is wrapped so the hover zoom can be clipped by the
-             card's rounded corners without the card itself needing
-             overflow: hidden (which would clip its drop shadow). -->
-        <div class="portfolio-card__media">
-          <!-- The first card sits within the fold on most desktop
-               viewports, so it loads eagerly at high priority as the likely
-               LCP element (and is preloaded in <head>); later cards stay
-               lazy. -->
+  <section class="bg-ink py-xl px-gutter-mobile md:py-3xl md:px-gutter-desktop">
+    <ul class="list-none m-0 p-0 flex flex-wrap justify-center gap-xl">
+      {{#each gallery.cards}}<li data-reveal class="group portfolio-card relative grow-0 shrink basis-full aspect-[920/1200] flex flex-col justify-end overflow-visible rounded-[2px] bg-ink shadow-[0_2px_6px_rgba(0,0,0,0.4),0_18px_40px_rgba(0,0,0,0.45),0_40px_80px_rgba(0,0,0,0.35)] hover:scale-[1.04] hover:z-[2] hover:shadow-[0_4px_10px_rgba(0,0,0,0.45),0_30px_60px_rgba(0,0,0,0.55),0_60px_110px_rgba(0,0,0,0.45)] motion-reduce:hover:scale-100 md:basis-[400px]">
+        <div class="absolute inset-0 z-0 overflow-hidden rounded-[inherit] after:content-[''] after:absolute after:inset-0 after:[background:linear-gradient(to_bottom,rgba(28,31,22,0)_30%,rgba(28,31,22,0.75)_70%,rgba(28,31,22,0.94)_100%),rgba(28,31,22,0.45)]">
           <img src="{{image.src}}" alt="{{image.alt}}"
                width="{{image.width}}" height="{{image.height}}"
-               decoding="async"{{#if isFirst}} fetchpriority="high"{{/if}}{{#if isLazy}} loading="lazy"{{/if}}>
+               decoding="async"{{#if isFirst}} fetchpriority="high"{{/if}}{{#if isLazy}} loading="lazy"{{/if}}
+               class="w-full h-full object-cover transition-none group-hover:scale-[1.06] motion-reduce:group-hover:scale-100 md:[transition:transform_0.6s_ease]">
         </div>
-        {{#if tag}}<span class="portfolio-card__tag">{{tag}}</span>
+        {{#if tag}}<span class="absolute top-md left-md z-[2] bg-paper text-ink font-sans font-semibold text-label tracking-label uppercase py-[9px] px-[18px] rounded-full">{{tag}}</span>
         {{/if}}
-        <div class="portfolio-card__text">
-          <p class="portfolio-card__category">{{category}}</p>
-          <!-- Becomes a link when the card has an href, plain text when it
-               doesn't (see renderedCardTitle in build.js). The link is
-               stretched over the whole card in CSS, so the entire card is
-               clickable while the accessible name stays the project title
-               rather than a vague "read more". -->
-          <h2>{{{renderedTitle}}}</h2>
-          <p class="portfolio-card__desc">{{description}}</p>
+        <div class="relative z-[1] p-md text-paper md:p-lg">
+          <p class="font-sans font-medium text-label tracking-label uppercase text-sage mb-sm">{{category}}</p>
+          <h2 class="text-card-title tracking-normal text-paper mb-sm [&_a]:no-underline [&_a]:text-inherit [&_a]:relative [&_a]:focus-visible:outline-none [&_a::after]:content-[''] [&_a::after]:absolute [&_a::after]:inset-0 [&_a::after]:z-[3] [&_a::after]:rounded-[inherit] [&_a:focus-visible::after]:outline-2 [&_a:focus-visible::after]:outline-sage [&_a:focus-visible::after]:outline-offset-4">{{{renderedTitle}}}</h2>
+          <p class="text-body-sm leading-body text-muted-on-dark m-0">{{description}}</p>
         </div>
       </li>
       {{/each}}
     </ul>
-    <p class="gallery__caption" data-reveal>{{gallery.caption}}</p>
+    <p data-reveal class="text-center font-serif-accent italic text-body text-muted-on-dark mt-2xl">{{gallery.caption}}</p>
   </section>
 
 </main>

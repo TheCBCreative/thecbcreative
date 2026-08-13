@@ -4,8 +4,13 @@
   "version": "1.0.0",
   "description": "The CB Creative — static site, built from a single content schema.",
   "scripts": {
-    "build": "node scripts/build.js",
-    "dev": "node scripts/build.js && node --env-file=.env.local scripts/dev-server.mjs",
+    "build": "node scripts/build.js && npm run tailwind:build",
+    "tailwind:build": "tailwindcss -i common/styles/tailwind.css -o public/css/tailwind.css",
+    "dev": "node scripts/build.js && npm run tailwind:build && node --env-file=.env.local scripts/dev-server.mjs",
     "test": "node scripts/test-contact.mjs"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "tailwindcss": "^4.3.3"
   }
 }

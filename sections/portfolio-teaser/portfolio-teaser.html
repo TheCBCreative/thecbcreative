@@ -1,11 +1,11 @@
-<section class="portfolio-teaser" id="portfolio-teaser">
-  <div class="portfolio-teaser__content" data-reveal>
-    <p class="eyebrow">
+<section id="portfolio-teaser" class="bg-ink text-left py-lg px-gutter-mobile md:py-xl md:px-gutter-desktop">
+  <div data-reveal class="mx-auto">
+    <p class="eyebrow justify-end md:justify-start">
       <span class="eyebrow__line"></span>
       {{eyebrow}}
     </p>
-    <h2>{{{renderedHeadline}}}</h2>
-    <p>{{body}}</p>
+    <h2 class="text-section-headline-mobile text-paper mb-md md:text-4xl">{{{renderedHeadline}}}</h2>
+    <p class="text-body-sm text-muted-on-dark mb-lg">{{body}}</p>
     <a href="{{cta.href}}" class="text-link">{{cta.label}}</a>
   </div>
 </section>

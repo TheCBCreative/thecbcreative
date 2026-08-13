@@ -1,19 +1,25 @@
-<header class="nav{{#if light}} nav--light{{/if}}">
-  <a href="/" class="nav__logo" aria-label="{{siteName}} — Home">
-    <img src="{{logoSrc}}" alt="{{siteName}}" width="222" height="88" decoding="async">
+<header{{#if light}} data-light{{/if}} class="group/nav fixed top-0 left-0 right-0 z-[100] flex justify-between items-center h-nav-height-mobile px-gutter-mobile border-b border-ink/10 shadow-[0px_8px_24px_0px_rgba(0,0,0,0.22)] [&:has(~_.mobile-menu.open)]:shadow-none [&:has(~_.mobile-menu.open)]:border-b-0 md:h-nav-height md:px-gutter-desktop
+  before:content-[''] before:absolute before:inset-0 before:z-[-1] before:[background:linear-gradient(to_bottom,rgba(28,31,22,0.88),rgba(28,31,22,0))] before:[backdrop-filter:blur(28px)] before:[-webkit-backdrop-filter:blur(28px)]
+  data-[light]:before:[background:var(--color-paper)] data-[light]:before:opacity-[0.82]
+  [&:has(~_.mobile-menu.open):not([data-light])]:before:[background:var(--color-ink)]! [&:has(~_.mobile-menu.open)]:before:opacity-100!">
+  <a href="/" class="block leading-[0]" aria-label="{{siteName}} — Home">
+    <img src="{{logoSrc}}" alt="{{siteName}}" width="222" height="88" decoding="async" class="h-[54px] w-[136px] md:h-16 md:w-[161px]">
   </a>
-  <nav class="nav__links" aria-label="Primary">
-    <ul>
-      {{#each links}}<li><a href="{{href}}"{{#if active}} aria-current="page"{{/if}}>{{label}}</a></li>
+  <nav aria-label="Primary" class="nav__links hidden md:block">
+    <ul class="flex gap-10 list-none">
+      {{#each links}}<li><a href="{{href}}"{{#if active}} aria-current="page"{{/if}} class="relative inline-block pb-[6px] font-sans font-medium text-label tracking-label uppercase no-underline text-paper transition-colors duration-200 hover:text-sage group-data-[light]/nav:text-ink aria-[current=page]:text-sage group-data-[light]/nav:aria-[current=page]:text-forest
+        after:content-[''] after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-sage after:scale-x-0 after:origin-left after:transition-transform after:duration-[250ms] aria-[current=page]:after:scale-x-100 group-data-[light]/nav:aria-[current=page]:after:bg-forest">{{label}}</a></li>
       {{/each}}
     </ul>
   </nav>
-  <button class="nav__hamburger" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
-    <span></span><span></span><span></span>
+  <button class="group flex flex-col gap-[5px] bg-transparent border-0 p-1 cursor-pointer md:hidden" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+    <span class="block w-[22px] h-px bg-paper group-data-[light]/nav:bg-ink [transition:background_0.2s_ease,transform_0.3s_ease,opacity_0.2s_ease] group-aria-[expanded=true]:translate-y-[6px] group-aria-[expanded=true]:rotate-45"></span>
+    <span class="block w-[22px] h-px bg-paper group-data-[light]/nav:bg-ink [transition:background_0.2s_ease,transform_0.3s_ease,opacity_0.2s_ease] group-aria-[expanded=true]:opacity-0"></span>
+    <span class="block w-[22px] h-px bg-paper group-data-[light]/nav:bg-ink [transition:background_0.2s_ease,transform_0.3s_ease,opacity_0.2s_ease] group-aria-[expanded=true]:-translate-y-[6px] group-aria-[expanded=true]:-rotate-45"></span>
   </button>
 </header>
 
-<div class="mobile-menu" id="mobileMenu">
-  {{#each links}}<a href="{{href}}">{{label}}</a>
+<div class="mobile-menu hidden [&.open]:flex flex-col gap-10 fixed top-nav-height-mobile bottom-0 left-0 right-0 z-[99] bg-ink py-lg px-gutter-mobile" id="mobileMenu">
+  {{#each links}}<a href="{{href}}" class="font-sans font-medium text-body-sm tracking-label uppercase no-underline text-paper">{{label}}</a>
   {{/each}}
 </div>

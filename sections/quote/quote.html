@@ -1,10 +1,10 @@
-<section class="quote">
+<section class="quote-blur-seam relative text-center min-h-[320px] flex items-center justify-center py-lg px-gutter-mobile overflow-hidden max-md:shadow-[0_24px_40px_rgba(0,0,0,0.45)] md:min-h-[400px] md:py-xl md:px-gutter-desktop">
   <div class="quote__bg photo-bg" aria-hidden="true">
     <div class="quote__bg-photo photo-bg__photo" style="background-image: url('{{backgroundImage}}');"></div>
-    <div class="quote__bg-fog"></div>
+    <div class="quote-fog"></div>
   </div>
-  <blockquote data-reveal>
-    <p>&ldquo;{{quote}}&rdquo;</p>
-    <cite>{{attribution}}</cite>
+  <blockquote data-reveal class="relative z-[1] max-w-[720px]">
+    <p class="font-serif-accent font-normal italic text-[1.75rem] leading-[1.3] text-paper mb-lg md:text-quote">&ldquo;{{quote}}&rdquo;</p>
+    <cite class="block font-sans font-semibold text-label tracking-caption uppercase not-italic text-sage">{{attribution}}</cite>
   </blockquote>
 </section>

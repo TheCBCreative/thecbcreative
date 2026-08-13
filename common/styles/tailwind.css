@@ -1,0 +1,236 @@
+/* Tailwind v4 entry point. CSS-first config (no tailwind.config.js) — the
+   @theme block below is a 1:1 port of brand.css's tokens into Tailwind's
+   naming namespaces, so it generates matching utilities (bg-ink,
+   text-section-headline, gap-lg, ...). brand.css/base.css stay in place for
+   global primitives (buttons, eyebrow, focus states, etc.) — only
+   page/section layout has moved to utilities. */
+
+@import "tailwindcss";
+
+@source "../../sections/**/*.html";
+@source "../../pages/**/*.html";
+@source "../../common/**/*.html";
+
+@theme {
+  --color-paper: #F6F3EC;
+  --color-ink: #1C1F16;
+  --color-forest: #2F3A1F;
+  --color-forest-deep: #12160C;
+  --color-sage: #93A876;
+  --color-muted-on-light: #6E6B5D;
+  --color-muted-on-dark: #9A9789;
+  --color-border: #D9D5C9;
+  --color-cta-bg: #1E2614;
+  --color-nav-hairline: #D8D5CA;
+  --color-error: #8A2F22;
+
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-serif-accent: 'Cormorant Garamond', serif;
+  --font-sans: 'Geist', system-ui, -apple-system, sans-serif;
+
+  /* Desktop/mobile pairs kept as distinct named sizes (used with md: at the
+     call site) rather than collapsed into responsive scaling — brand.css's
+     mobile sizes aren't just scaled-down versions of the desktop ones. */
+  --text-hero-headline: 3.5rem;
+  --text-hero-headline-mobile: 2.5rem;
+  --text-section-headline: 3.25rem;
+  --text-section-headline-mobile: 2.375rem;
+  --text-card-title: 3rem;
+  --text-card-title-mobile: 2rem;
+  --text-quote: 3rem;
+  --text-body-lg: 1.0625rem;
+  --text-body: 1rem;
+  --text-body-sm: 0.9375rem;
+  --text-label: 0.6875rem;
+  --text-caption: 0.625rem;
+
+  --tracking-label: 0.14em;
+  --tracking-button: 0.12em;
+  --tracking-caption: 0.1em;
+
+  --leading-tight: 1.08;
+  --leading-headline: 1.15;
+  --leading-body: 1.6;
+  --leading-body-loose: 1.75;
+
+  /* Named, not numbered, to match brand.css — sits alongside Tailwind's
+     built-in numeric spacing scale, doesn't replace it. */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+  --spacing-2xl: 4rem;
+  --spacing-3xl: 6rem;
+  --spacing-gutter-desktop: 96px;
+  --spacing-gutter-mobile: 24px;
+  --spacing-nav-height: 92px;
+  --spacing-nav-height-mobile: 76px;
+
+  --radius-card: 20px;
+  --radius-card-mobile: 18px;
+
+  --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Effects that don't reduce to clean utilities — vendor-prefixed
+   properties, keyframes, or multi-duration transitions. Everything else on
+   these elements is plain utilities; only the bespoke part lives here. */
+@layer components {
+  /* services__title-reflection: mask-image needs -webkit- duplicated. */
+  .text-reflection-mask {
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.65), transparent 70%);
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.65), transparent 70%);
+  }
+
+  /* service-card: opacity needs the shared 1.4s reveal timing while
+     transform/box-shadow animate quicker — one duration per utility isn't
+     enough here. */
+  .service-card {
+    transition: opacity 1.4s var(--ease-reveal), transform 0.5s var(--ease-reveal), box-shadow 0.5s ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .service-card {
+      transition: box-shadow 0.5s ease;
+    }
+  }
+
+  /* quote's drifting light overlay — gradient + keyframe + will-change,
+     all specific to this one decorative layer. */
+  .quote-fog {
+    position: absolute;
+    inset: -20%;
+    z-index: 1;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    background-image:
+      radial-gradient(circle at 30% 40%, rgba(246, 243, 236, 0.22), transparent 45%),
+      radial-gradient(circle at 75% 65%, rgba(197, 213, 172, 0.16), transparent 40%);
+    background-repeat: no-repeat;
+    animation: quote-fog-drift 30s ease-in-out infinite alternate;
+    will-change: transform, opacity;
+  }
+
+  @keyframes quote-fog-drift {
+    0% { transform: translate(-4%, -2%) scale(1); opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { transform: translate(4%, 3%) scale(1.08); opacity: 0.75; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .quote-fog {
+      animation: none;
+    }
+  }
+
+  /* portfolio-card: same multi-duration transition need as .service-card. */
+  .portfolio-card {
+    transition: opacity 1.4s var(--ease-reveal), transform 0.5s var(--ease-reveal), box-shadow 0.5s ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .portfolio-card {
+      transition: box-shadow 0.5s ease;
+    }
+  }
+
+  /* Blur seam into quote's photo — needs -webkit- duplicated for Safari. */
+  .quote-blur-seam::before {
+    content: '';
+    position: absolute;
+    top: -60px;
+    left: 0;
+    right: 0;
+    height: 120px;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    mask-image: linear-gradient(to bottom, transparent, black 40%, black 60%, transparent);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 40%, black 60%, transparent);
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  /* Contact form field — one component class since the same treatment
+     repeats across 7+ fields; @apply keeps it in the utility vocabulary
+     instead of duplicating a long class string at every field. */
+  .field {
+    @apply flex flex-col gap-xs;
+  }
+
+  .field label {
+    @apply font-sans font-medium text-label tracking-label uppercase text-ink;
+  }
+
+  .field__optional {
+    @apply normal-case font-normal tracking-normal text-muted-on-light;
+  }
+
+  .field input,
+  .field textarea {
+    @apply text-body text-ink border-0 border-b border-border bg-transparent py-sm transition-colors duration-200;
+  }
+
+  .field input::placeholder,
+  .field textarea::placeholder {
+    @apply text-muted-on-light opacity-70;
+  }
+
+  .field input:hover,
+  .field textarea:hover {
+    @apply border-ink;
+  }
+
+  .field input:focus-visible,
+  .field textarea:focus-visible {
+    outline: none;
+    @apply border-forest;
+    box-shadow: 0 1px 0 0 var(--color-forest);
+  }
+
+  .field textarea {
+    @apply resize-y min-h-[120px] leading-body;
+  }
+
+  /* Honeypot — off-screen, not display:none (see contact.html). */
+  .field--hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .upload-zone {
+    @apply relative text-center p-lg border border-dashed border-border transition-colors duration-200;
+  }
+
+  .upload-zone:hover {
+    @apply border-forest;
+  }
+
+  /* Toggled from contact.js on drag events. */
+  .upload-zone.is-dragover {
+    @apply border-forest bg-forest/6;
+  }
+
+  .form__status--success {
+    color: var(--color-forest);
+  }
+
+  /* Not a brand token — the one place on the site that needs to read as an
+     error, tuned dark enough for 4.5:1 contrast on paper. */
+  .form__status--error {
+    color: var(--color-error);
+  }
+
+  @keyframes scroll-cue-nudge {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(4px); }
+  }
+
+  /* Toggled from contact.js once the form panel hits its scroll limit. */
+  #scrollCue.is-hidden {
+    opacity: 0;
+  }
+}

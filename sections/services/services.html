@@ -1,25 +1,32 @@
-<section class="services" id="services">
-  <div class="services__header" data-reveal>
-    <div class="services__title-col">
+<!-- Tailwind (see common/styles/tailwind.css). Mobile-first: unprefixed =
+     mobile, md: = desktop — opposite of the old CSS's desktop-first
+     approach. .eyebrow/.num stay as shared base.css classes. Card 2's bg
+     uses a positional nth-child override (matches what actually renders
+     today); the old CSS also had a variant-based fallback color that was
+     already dead code behind it. -->
+<section id="services" class="bg-paper border-b border-paper/18 md:border-b-0 [filter:drop-shadow(0px_43px_4.5px_rgba(0,0,0,0.25))]">
+  <div data-reveal class="flex flex-col items-start gap-md pt-xl pb-xl px-gutter-mobile md:flex-row md:justify-between md:items-end md:gap-xl md:pb-lg md:px-gutter-desktop">
+    <div>
       <p class="eyebrow">
         <span class="eyebrow__line"></span>
         {{eyebrow}}
       </p>
-      <div class="services__headline-wrap">
-        <h2>{{headline}}</h2>
-        <h2 class="services__title-reflection" aria-hidden="true">{{headline}}</h2>
+      <div class="relative">
+        <h2 class="text-section-headline-mobile text-ink md:text-section-headline">{{headline}}</h2>
+        <h2 aria-hidden="true" class="text-reflection-mask absolute inset-x-0 top-full m-0 -scale-y-100 blur-[9px] opacity-[0.28] pointer-events-none select-none text-section-headline-mobile text-ink md:text-section-headline">{{headline}}</h2>
       </div>
     </div>
-    <p class="services__intro">{{intro}}</p>
+    <p class="text-body-sm text-muted-on-light leading-body-loose max-w-[26em] text-left md:text-right">{{intro}}</p>
   </div>
 
-  <div class="services__cards">
-    {{#each cards}}<article class="service-card service-card--{{variant}}" data-reveal>
-      {{#if image}}<img src="{{image.src}}" alt="{{image.alt}}" width="{{image.width}}" height="{{image.height}}" loading="lazy" decoding="async">
-      {{/if}}<div class="service-card__text" data-reveal>
-        <p class="num">{{number}}</p>
-        <h3>{{title}}</h3>
-        <p>{{description}}</p>
+  <div class="flex flex-col bg-ink md:flex-row">
+    {{#each cards}}<article data-reveal class="group service-card relative flex-1 flex items-center justify-center text-center overflow-hidden text-paper z-[1] bg-ink min-h-[480px] shadow-[0_32px_56px_rgba(0,0,0,0.55),0_12px_20px_rgba(0,0,0,0.35)] md:min-h-[751px] md:shadow-none hover:scale-[1.045] hover:z-[5] hover:shadow-[0_30px_70px_rgba(0,0,0,0.5)] motion-reduce:hover:scale-100 [&:nth-child(2)]:bg-forest-deep {{#if image}}after:content-[''] after:absolute after:-inset-px after:z-[1] after:bg-ink after:opacity-[0.72] [&:nth-child(1)]:after:bg-forest-deep [&:nth-child(1)]:after:opacity-[0.88] [&:nth-child(3)]:after:opacity-80{{/if}}">
+      {{#if image}}<img src="{{image.src}}" alt="{{image.alt}}" width="{{image.width}}" height="{{image.height}}" loading="lazy" decoding="async"
+        class="absolute inset-0 w-full h-full object-cover z-[0] transition-none md:[transition:filter_0.5s_ease,transform_0.6s_ease] group-hover:blur-[6px] group-hover:brightness-[0.92] group-hover:scale-[1.08]">
+      {{/if}}<div data-reveal class="relative z-[2] flex flex-col justify-center h-[340px] px-lg max-w-[400px] box-border md:h-[360px] md:px-xl">
+        <p class="num block mb-sm">{{number}}</p>
+        <h3 class="font-serif font-medium text-card-title-mobile tracking-[8px] leading-[1.1] uppercase mb-md md:text-card-title">{{title}}</h3>
+        <p class="font-sans font-light text-base leading-body opacity-80 max-w-[26em] mx-auto">{{description}}</p>
       </div>
     </article>
     {{/each}}

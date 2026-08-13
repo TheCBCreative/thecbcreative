@@ -2,7 +2,24 @@
    base.css — shared component primitives
    Buttons, eyebrows, dividers, numbered markers used across nav, footer,
    and every homepage section. Reference brand.css tokens only.
+
+   Wrapped in @layer base: Tailwind puts every utility class it generates
+   inside @layer utilities. Per the CSS spec, unlayered styles always beat
+   layered styles regardless of specificity — so left unlayered, a rule as
+   plain as `a { color: inherit }` below would silently override every
+   Tailwind text-color utility on every link on the site, no matter how
+   specific. Layering this file as `base` (Tailwind's own preflight uses
+   the same layer name) puts it in the right place in the cascade: after
+   Tailwind's theme setup, before utilities — so a plain utility class can
+   still override any of these resets, same as it would in a normal
+   Tailwind project with no separate base.css at all. The bare @layer
+   statement below declares that order explicitly and early, rather than
+   relying on tailwind.css's own internal declaration to arrive in time.
    ========================================================================== */
+
+@layer base, components, utilities;
+
+@layer base {
 
 /* Border-box everywhere. Without this, `width`/`height` describe only the
    content box, so any element with both an explicit size and padding or a
@@ -342,37 +359,5 @@ h1, h2 {
   border-color: var(--color-sage);
 }
 
-/* ---- Section transitions ----
-   A soft blurred band straddling the seam between stacked homepage
-   sections, so hard background-color/photo edges (e.g. cream -> ink)
-   blend rather than cut sharply. Purely decorative — no pointer events. */
-
-.about,
-.services,
-.portfolio-teaser,
-.quote,
-.why-not-ai,
-.cta,
-.gallery {
-  position: relative;
-}
-
-.about::before,
-.services::before,
-.portfolio-teaser::before,
-.quote::before,
-.gallery::before {
-  content: '';
-  position: absolute;
-  top: -60px;
-  left: 0;
-  right: 0;
-  height: 120px;
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  -webkit-mask-image: linear-gradient(to bottom, transparent, black 40%, black 60%, transparent);
-  mask-image: linear-gradient(to bottom, transparent, black 40%, black 60%, transparent);
-  pointer-events: none;
-  z-index: 5;
-}
+} /* @layer base */
 

@@ -1,21 +1,21 @@
-<section class="about" id="about">
-  <div class="about__media" data-reveal>
-    <div class="about__plate" aria-hidden="true"></div>
-    <img class="about__portrait" src="{{image.src}}" alt="{{image.alt}}" width="{{image.width}}" height="{{image.height}}" loading="lazy" decoding="async">
+<section id="about" class="flex flex-col items-stretch gap-lg py-lg px-gutter-mobile bg-ink border-t border-b border-paper/8 shadow-[0px_28px_26px_0px_rgba(0,0,0,0.25)] md:flex-row md:items-center md:gap-xl md:py-xl md:px-gutter-desktop">
+  <div data-reveal class="relative w-full h-auto aspect-[4/5] md:w-[40%] md:shrink-0 md:h-[460px] md:aspect-auto">
+    <div class="absolute right-[5%] top-[40px] w-[80%] h-[90%] bg-forest md:left-[-24px] md:right-auto md:top-[60px] md:w-[84%]" aria-hidden="true"></div>
+    <img class="absolute left-0 top-0 w-[82%] h-[90%] object-cover shadow-[0px_4px_12px_0px_rgba(0,0,0,0.2),-20px_20px_32px_-4px_rgba(0,0,0,0.4)] md:left-[40px] md:w-[84%]" src="{{image.src}}" alt="{{image.alt}}" width="{{image.width}}" height="{{image.height}}" loading="lazy" decoding="async">
   </div>
-  <div class="about__content" data-reveal>
+  <div data-reveal class="w-full md:w-[56%]">
     <p class="eyebrow">
       <span class="eyebrow__line"></span>
       {{eyebrow}}
     </p>
-    <h2>{{headline}}</h2>
-    {{#each paragraphs}}<p>{{this}}</p>
+    <h2 class="text-section-headline-mobile text-paper mb-lg md:text-section-headline">{{headline}}</h2>
+    {{#each paragraphs}}<p class="text-body-sm text-muted-on-dark leading-body-loose max-w-[44em] mb-md">{{this}}</p>
     {{/each}}
 
     <hr class="divider">
 
-    <ul class="about__list">
-      {{#each list}}<li><span class="num">{{number}}</span> {{text}}</li>
+    <ul class="grid grid-cols-1 gap-y-md gap-x-xl md:grid-cols-2">
+      {{#each list}}<li class="flex items-baseline gap-sm text-[0.8125rem] text-muted-on-dark"><span class="num">{{number}}</span> {{text}}</li>
       {{/each}}
     </ul>
   </div>

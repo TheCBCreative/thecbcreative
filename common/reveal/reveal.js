@@ -10,12 +10,27 @@ function initScrollReveal() {
   const els = document.querySelectorAll('[data-reveal]');
   if (!els.length) return;
 
-  const setVisible = (el, visible) => el.classList.toggle('is-visible', visible);
+  // will-change on only while transitioning; '' (not 'auto') on cleanup so
+  // elements with their own conditional will-change (e.g. hover rules)
+  // get their stylesheet behavior back.
+  const setVisible = (el, visible) => {
+    el.style.willChange = 'opacity, transform';
+    el.classList.toggle('is-visible', visible);
+  };
+
+  els.forEach((el) => {
+    el.addEventListener('transitionend', (e) => {
+      if (e.target !== el) return;
+      if (e.propertyName !== 'opacity' && e.propertyName !== 'transform') return;
+      el.style.willChange = '';
+    });
+  });
 
   // No IntersectionObserver support (very old browser) — just show
-  // everything rather than risk content staying invisible.
+  // everything rather than risk content staying invisible. Nothing is
+  // transitioning here, so no will-change needed.
   if (!('IntersectionObserver' in window)) {
-    els.forEach((el) => setVisible(el, true));
+    els.forEach((el) => el.classList.add('is-visible'));
     return;
   }
 
