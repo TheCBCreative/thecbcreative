@@ -10,7 +10,12 @@
   transform: translateY(28px) scale(0.94);
   transition: opacity 1.4s var(--ease-reveal),
     transform 1.4s var(--ease-reveal);
-  will-change: opacity, transform;
+  /* will-change is applied/removed by reveal.js, only for the ~1.4s an
+     element is actually transitioning — not set permanently here. This
+     page can carry 15+ [data-reveal] elements at once; leaving will-change
+     on all of them for the whole page lifetime means that many permanent
+     compositor layers sitting in memory doing nothing most of the time,
+     which is real GPU/memory pressure on mobile. */
 }
 
 [data-reveal].is-visible {

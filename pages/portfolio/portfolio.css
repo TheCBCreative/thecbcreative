@@ -65,7 +65,15 @@
     0 2px 6px rgba(0, 0, 0, 0.4),
     0 18px 40px rgba(0, 0, 0, 0.45),
     0 40px 80px rgba(0, 0, 0, 0.35);
-  transition: transform 0.5s var(--ease-reveal), box-shadow 0.5s ease;
+  /* This card also carries [data-reveal] (see reveal.css), which wants its
+     own transition on opacity + transform. transition is a shorthand, so
+     two rules on the same element don't merge — whichever comes later in
+     the bundle wins outright, which was silently dropping the opacity half
+     and making the card pop into view instead of fading like everything
+     else on the page. Naming opacity explicitly here (at the shared
+     1.4s reveal timing) keeps that fade intact; transform/box-shadow stay
+     on their own quicker hover timing. */
+  transition: opacity 1.4s var(--ease-reveal), transform 0.5s var(--ease-reveal), box-shadow 0.5s ease;
 }
 
 /* Grows and lifts on hover, the same language as the homepage service

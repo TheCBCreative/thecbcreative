@@ -71,7 +71,15 @@
   /* Dark fallback so any subpixel seam around the photo (from the scale
      transforms below) shows ink, not the section's cream background. */
   background: var(--color-ink);
-  transition: transform 0.5s var(--ease-reveal), box-shadow 0.5s ease;
+  /* This card also carries [data-reveal] (see reveal.css), which wants its
+     own transition on opacity + transform. transition is a shorthand, so
+     two rules on the same element don't merge — whichever comes later in
+     the bundle wins outright, which was silently dropping the opacity half
+     and making the card pop into view instead of fading like everything
+     else on the page. Naming opacity explicitly here (at the shared
+     1.4s reveal timing) keeps that fade intact; transform/box-shadow stay
+     on their own quicker hover timing. */
+  transition: opacity 1.4s var(--ease-reveal), transform 0.5s var(--ease-reveal), box-shadow 0.5s ease;
 }
 
 /* Pop the card forward slightly on hover, with its photo fogging over like
@@ -176,6 +184,19 @@
   opacity: 0.8;
   max-width: 26em;
   margin: 0 auto;
+}
+
+/* Same reasoning as .portfolio-card's reduced-motion override: the hover
+   growth/slide is decorative, so anyone who's asked for reduced motion
+   gets the shadow change only, with no movement. */
+@media (prefers-reduced-motion: reduce) {
+  .service-card {
+    transition: box-shadow 0.5s ease;
+  }
+
+  .service-card:hover {
+    transform: none;
+  }
 }
 
 @media (max-width: 768px) {

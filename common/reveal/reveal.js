@@ -10,12 +10,31 @@ function initScrollReveal() {
   const els = document.querySelectorAll('[data-reveal]');
   if (!els.length) return;
 
-  const setVisible = (el, visible) => el.classList.toggle('is-visible', visible);
+  // will-change is applied only while an element is actively transitioning
+  // (either direction), and removed the moment that transition ends —
+  // see the comment in reveal.css for why this isn't just left on
+  // permanently. Setting to '' (not 'auto') on cleanup removes the inline
+  // override entirely rather than fighting it, so elements with their own
+  // conditional will-change in CSS (e.g. .service-card's hover rule) get
+  // their stylesheet behavior back instead of being stuck on 'auto'.
+  const setVisible = (el, visible) => {
+    el.style.willChange = 'opacity, transform';
+    el.classList.toggle('is-visible', visible);
+  };
+
+  els.forEach((el) => {
+    el.addEventListener('transitionend', (e) => {
+      if (e.target !== el) return;
+      if (e.propertyName !== 'opacity' && e.propertyName !== 'transform') return;
+      el.style.willChange = '';
+    });
+  });
 
   // No IntersectionObserver support (very old browser) — just show
-  // everything rather than risk content staying invisible.
+  // everything rather than risk content staying invisible. Nothing is
+  // transitioning here, so no will-change needed.
   if (!('IntersectionObserver' in window)) {
-    els.forEach((el) => setVisible(el, true));
+    els.forEach((el) => el.classList.add('is-visible'));
     return;
   }
 

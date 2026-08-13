@@ -34,24 +34,10 @@
     text-align: center;
   }
 
-  /* Soft blend from the CTA section above into the footer, replacing the
-     hard border-top with a gentle blurred seam on mobile. */
-  .site-footer {
-    border-top: none;
-  }
-
-  .site-footer::before {
-    content: '';
-    position: absolute;
-    top: -60px;
-    left: 0;
-    right: 0;
-    height: 120px;
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    -webkit-mask-image: linear-gradient(to bottom, transparent, black 40%, black 60%, transparent);
-    mask-image: linear-gradient(to bottom, transparent, black 40%, black 60%, transparent);
-    pointer-events: none;
-    z-index: 5;
-  }
+  /* This used to replace the hairline border with a blurred ::before band
+     for a "softer" transition into the footer — but CTA and footer are
+     both flat solid colors, so there's no photographic detail behind the
+     seam for a blur to actually soften; it was pure backdrop-filter cost
+     (mobile GPU, no less) for an effect that was never visible. The plain
+     hairline border reads the same and costs nothing. */
 }

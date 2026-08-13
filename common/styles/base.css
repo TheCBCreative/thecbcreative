@@ -344,8 +344,21 @@ h1, h2 {
 
 /* ---- Section transitions ----
    A soft blurred band straddling the seam between stacked homepage
-   sections, so hard background-color/photo edges (e.g. cream -> ink)
-   blend rather than cut sharply. Purely decorative — no pointer events. */
+   sections, so a hard edge (e.g. solid color cutting into a photo) blends
+   rather than cutting sharply. Purely decorative — no pointer events.
+
+   backdrop-filter is one of the more expensive things a browser paints,
+   and the fixed nav already runs its own blur(28px) on every page. This
+   used to repeat the same blurred band on every section seam (about,
+   services, portfolio-teaser, quote, gallery) — six blur layers active
+   at once on the homepage — which is real, and stacked next to this
+   page's other animated layers (Ken Burns zoom, fog drift, reveal
+   transitions), was a likely source of scroll jank/flicker, especially on
+   mobile GPUs. A blurred seam only does real visual work where it's
+   softening the edge into a *photo* — solid-color-to-solid-color seams
+   (about→services, services→portfolio-teaser, etc.) don't have enough
+   detail behind them for the blur to be visible either way. Kept on only
+   the one seam that actually transitions into a photo. */
 
 .about,
 .services,
@@ -357,11 +370,7 @@ h1, h2 {
   position: relative;
 }
 
-.about::before,
-.services::before,
-.portfolio-teaser::before,
-.quote::before,
-.gallery::before {
+.quote::before {
   content: '';
   position: absolute;
   top: -60px;
