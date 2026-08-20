@@ -1,47 +1,47 @@
 {{{nav}}}
 
 <main id="main-content">
-  <section class="contact">
+  <section class="contact relative flex flex-col flex-nowrap h-auto bg-paper overflow-visible md:flex-row md:h-[calc(100vh-var(--spacing-nav-height))] md:overflow-hidden">
 
     <!-- ============ INFO PANEL ============ -->
-    <!-- Static — the whole .contact section is pinned to the viewport
-         height (see contact.css), so this panel never needs to move or
-         scroll at all. Only the form panel beside it scrolls internally. -->
-    <div class="contact__info">
+    <!-- Static — .contact is pinned to the viewport height on desktop (see
+         the md:h-[calc(...)] above), so this panel never needs to move or
+         scroll. Only the form panel beside it scrolls internally. -->
+    <div class="relative basis-auto grow shrink min-w-0 overflow-hidden h-auto min-h-[420px] md:basis-[45%] md:min-h-0">
       <div class="photo-bg" aria-hidden="true">
         <div class="photo-bg__photo" style="background-image: url('{{info.backgroundImage}}');"></div>
       </div>
-      <div class="contact__info-content" data-reveal>
+      <div data-reveal class="relative z-[1] flex flex-col justify-center h-auto py-xl px-gutter-mobile md:h-full md:py-3xl md:px-gutter-desktop">
         <p class="eyebrow">
           <span class="eyebrow__line"></span>
           {{info.eyebrow}}
         </p>
-        <h1>{{{info.renderedHeadline}}}</h1>
-        <p class="contact__info-body">{{info.body}}</p>
+        <h1 class="text-hero-headline-mobile text-paper mt-md mb-lg md:text-hero-headline">{{{info.renderedHeadline}}}</h1>
+        <p class="text-body-sm text-muted-on-dark leading-body-loose max-w-[32em] mb-sm">{{info.body}}</p>
 
-        <hr class="divider">
+        <hr class="divider my-sm">
 
-        <ul class="contact__details">
-          {{#each info.details}}<li>— {{this}}</li>
+        <ul class="list-none mt-xs p-0">
+          {{#each info.details}}<li class="text-body-sm text-muted-on-dark leading-body-loose">— {{this}}</li>
           {{/each}}
         </ul>
       </div>
     </div>
 
     <!-- ============ FORM PANEL ============ -->
-    <div class="contact__form-panel" data-reveal>
+    <div class="contact__form-panel grow shrink basis-auto min-w-0 h-auto overflow-y-visible py-xl px-gutter-mobile md:basis-[55%] md:h-full md:overflow-y-auto md:py-3xl md:px-gutter-desktop" data-reveal>
       <!-- Posts to the Vercel Function in api/contact.mjs, which re-runs the
            bot checks server-side and emails the inquiry on via Resend.
            action/method are set for real (not just handled in JS) so the
            form still degrades to a normal submit if the fetch handler
            never attaches. -->
-      <form class="form" id="contactForm" name="contact" method="POST"
+      <form class="flex flex-col gap-lg" id="contactForm" name="contact" method="POST"
             action="/api/contact" enctype="multipart/form-data"
             data-status="{{form.statusJson}}"
             data-submitting-label="{{form.submittingLabel}}"
             data-success-redirect="{{form.successRedirect}}">
         <!-- Honeypot — invisible to real users (see .field--hp in
-             contact.css), but bots that auto-fill every field on a form
+             tailwind.css), but bots that auto-fill every field on a form
              will trip it. Server-side handling must also reject any
              submission where this arrives non-empty. -->
         <div class="field field--hp" aria-hidden="true">
@@ -57,19 +57,19 @@
           <label for="{{form.upload.id}}">{{form.upload.label}} <span class="field__optional">{{form.upload.labelSuffix}}</span></label>
           <div class="upload-zone" id="dropzone">
             <input type="file" accept="{{form.upload.accept}}"{{#if form.upload.multiple}} multiple{{/if}} id="{{form.upload.id}}" name="images">
-            <p class="upload-zone__label">{{form.upload.dropLabel}}</p>
-            <p class="upload-zone__sub">{{form.upload.subLabel}}</p>
-            <p class="upload-zone__files" id="fileList"></p>
+            <p class="text-body-sm text-ink mb-xs">{{form.upload.dropLabel}}</p>
+            <p class="text-caption text-muted-on-light">{{form.upload.subLabel}}</p>
+            <p class="mt-sm text-caption text-forest break-words" id="fileList"></p>
           </div>
         </div>
-        <button type="submit" class="btn btn--primary btn--full" id="submitBtn" data-reveal>{{form.submitLabel}}</button>
+        <button type="submit" class="btn btn--primary btn--full mt-sm self-stretch min-w-[220px] disabled:cursor-wait disabled:opacity-60 md:self-start" id="submitBtn" data-reveal>{{form.submitLabel}}</button>
 
         <!-- Errors only — a successful submit navigates to the thank-you
              page instead. role="status" + aria-live means screen readers
              announce the problem without focus having to move, and it
              stays in the DOM (rather than being created on submit) so the
              live region is already registered when the text arrives. -->
-        <p class="form__status" id="formStatus" role="status" aria-live="polite"></p>
+        <p class="m-0 text-body-sm leading-body-loose empty:mt-[calc(-1*var(--spacing-lg))]" id="formStatus" role="status" aria-live="polite"></p>
       </form>
     </div>
 
@@ -77,8 +77,9 @@
          form column. aria-hidden because it conveys nothing to a screen
          reader — the form's fields are all in the accessibility tree
          regardless of which part of the column is scrolled into view. -->
-    <div class="contact__scroll-cue" id="scrollCue" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <div class="fixed left-0 right-0 bottom-0 h-[80px] z-[2] flex items-end justify-center pb-sm [background:linear-gradient(to_top,rgba(28,31,22,0.5)_0%,rgba(28,31,22,0.28)_35%,rgba(28,31,22,0.1)_70%,rgba(28,31,22,0)_100%)] pointer-events-none opacity-100 transition-opacity duration-[350ms] md:absolute md:left-[45%] md:h-[100px]" id="scrollCue" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+           class="w-[22px] h-[22px] [stroke:rgba(246,243,236,0.8)] animate-[scroll-cue-nudge_2.4s_ease-in-out_infinite] motion-reduce:animate-none md:[stroke:rgba(28,31,22,0.85)]">
         <path d="M6 9l6 6 6-6" />
       </svg>
     </div>

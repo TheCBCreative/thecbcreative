@@ -1,23 +1,23 @@
-<section class="why-not-ai" id="why-not-ai">
-  <div class="why-not-ai__left" data-reveal>
+<section id="why-not-ai" class="bg-ink grid grid-cols-1 gap-md py-2xl px-gutter-mobile md:grid-cols-2 md:gap-lg md:py-lg md:px-gutter-desktop">
+  <div data-reveal>
     <p class="eyebrow">
       <span class="eyebrow__line"></span>
       {{eyebrow}}
     </p>
-    <h2>{{{renderedHeadline}}}</h2>
-    <p>{{intro}}</p>
+    <h2 class="italic text-section-headline-mobile text-paper mt-xs mb-sm md:text-[2.75rem]">{{{renderedHeadline}}}</h2>
+    <p class="text-body-sm text-muted-on-dark leading-[1.5] max-w-[30em]">{{intro}}</p>
   </div>
 
-  <div class="why-not-ai__faq" data-reveal>
-    <p>{{body}}</p>
+  <div data-reveal>
+    <p class="text-body-sm text-muted-on-dark leading-[1.5] mb-sm">{{body}}</p>
     <hr class="divider">
 
-    {{#each faq}}<div class="faq-row" data-reveal>
-      <h3>{{question}}</h3>
-      <p>{{answer}}</p>
+    {{#each faq}}<div data-reveal class="py-[6px]">
+      <h3 class="font-sans font-medium text-base text-paper mb-[2px]">{{question}}</h3>
+      <p class="text-sm text-muted-on-dark leading-[1.4]">{{answer}}</p>
     </div>
     {{/each}}
   </div>
 
-  <p class="why-not-ai__closing" data-reveal>{{closing}}</p>
+  <p data-reveal class="col-span-full text-center font-serif italic text-[1.375rem] text-paper mt-sm md:text-[1.625rem]">{{closing}}</p>
 </section>

@@ -204,7 +204,7 @@ function renderAnalytics() {
 `;
 }
 
-function renderDocument({ title, description, canonical, cssHref, scriptSrc, bodyHtml, preloadImage, noindex }) {
+function renderDocument({ title, description, canonical, cssHref, extraCssHref, scriptSrc, bodyHtml, bodyClass, preloadImage, noindex }) {
   const ogImage = `${content.site.url}${content.site.logo.socialShare}`;
   return `<!DOCTYPE html>
 <html lang="en" class="no-js">
@@ -257,8 +257,11 @@ ${
   ${preloadImage ? `<link rel="preload" as="image" href="${attr(preloadImage)}" fetchpriority="high">` : ''}
 
   <link rel="stylesheet" href="${attr(cssHref)}">
-</head>
-<body>
+${
+  // Loaded after the main bundle so its utility classes win the cascade.
+  extraCssHref ? `  <link rel="stylesheet" href="${attr(extraCssHref)}">\n` : ''
+}</head>
+<body${bodyClass ? ` class="${attr(bodyClass)}"` : ''}>
 
   <a href="#main-content" class="skip-link">Skip to content</a>
 
@@ -321,6 +324,7 @@ function buildHome() {
     description: page.meta.description,
     canonical: page.meta.canonical,
     cssHref: '/css/index.css',
+    extraCssHref: '/css/tailwind.css',
     scriptSrc: '/js/index.js',
     bodyHtml,
     // Hero's main photo is this page's LCP element — preload it so it starts
@@ -343,7 +347,7 @@ function buildHome() {
 function renderedCardTitle(card) {
   const title = escapeHtml(card.title);
   if (!card.href) return title;
-  return `<a class="portfolio-card__link" href="${attr(card.href)}">${title}</a>`;
+  return `<a href="${attr(card.href)}">${title}</a>`;
 }
 
 function buildPortfolio() {
@@ -381,6 +385,7 @@ function buildPortfolio() {
     description: page.meta.description,
     canonical: page.meta.canonical,
     cssHref: '/css/portfolio.css',
+    extraCssHref: '/css/tailwind.css',
     scriptSrc: '/js/portfolio.js',
     bodyHtml,
     preloadImage: firstCardImage ? firstCardImage.src : undefined,
@@ -416,8 +421,13 @@ function buildThankYou() {
     canonical: page.meta.canonical,
     noindex: page.meta.noindex,
     cssHref: '/css/thank-you.css',
+    extraCssHref: '/css/tailwind.css',
     scriptSrc: '/js/thank-you.js',
     bodyHtml,
+    // Everything visible on this page (photo panel + footer) is dark — if
+    // the page ever rubber-bands past its own edges, dark blends instead
+    // of flashing the site's default cream body background.
+    bodyClass: 'bg-ink flex flex-col min-h-dvh',
     // The forest photo is this page's LCP element, and it's referenced from
     // an inline style rather than an <img>, so the browser can't discover
     // it until CSS has parsed. Preloading it removes that delay.
@@ -460,6 +470,7 @@ function buildContact() {
     description: page.meta.description,
     canonical: page.meta.canonical,
     cssHref: '/css/contact.css',
+    extraCssHref: '/css/tailwind.css',
     scriptSrc: '/js/contact.js',
     bodyHtml,
     // Same reasoning as the thank-you page: the forest photo is this page's
@@ -476,35 +487,34 @@ function buildContact() {
 
 const BRAND_CSS = 'common/styles/brand.css';
 const BASE_CSS = 'common/styles/base.css';
-const COMMON_CSS = ['common/navigation/navigation.css', 'common/footer/footer.css', 'common/reveal/reveal.css'];
+// navigation.css/footer.css dropped — both converted to Tailwind (see
+// common/styles/tailwind.css). reveal.css stays; it's behavior, not layout.
+const COMMON_CSS = ['common/reveal/reveal.css'];
 const COMMON_JS = ['common/navigation/navigation.js', 'common/footer/footer.js', 'common/reveal/reveal.js'];
 
 function sectionAssetPaths(name, ext) {
   return `sections/${name}/${name}.${ext}`;
 }
 
-const homeCss = [
-  BRAND_CSS,
-  BASE_CSS,
-  ...COMMON_CSS,
-  ...HOME_SECTIONS.map((n) => sectionAssetPaths(n, 'css')),
-  'pages/home/home.css',
-];
+// Every page links common/styles/tailwind.css as extraCssHref (see each
+// build* function) — the old per-page/section .css files below are kept on
+// disk for reference but no longer bundled.
+const homeCss = [BRAND_CSS, BASE_CSS, ...COMMON_CSS];
 const homeJs = [
   ...COMMON_JS,
   ...HOME_SECTIONS.map((n) => sectionAssetPaths(n, 'js')),
   'pages/home/home.js',
 ];
 
-const portfolioCss = [BRAND_CSS, BASE_CSS, ...COMMON_CSS, 'pages/portfolio/portfolio.css'];
+const portfolioCss = [BRAND_CSS, BASE_CSS, ...COMMON_CSS];
 const portfolioJs = [...COMMON_JS, 'pages/portfolio/portfolio.js'];
 
-const contactCss = [BRAND_CSS, BASE_CSS, ...COMMON_CSS, 'pages/contact/contact.css'];
+const contactCss = [BRAND_CSS, BASE_CSS, ...COMMON_CSS];
 const contactJs = [...COMMON_JS, 'pages/contact/contact.js'];
 
 // No page-specific JS — the thank-you page is static content, so it only
 // needs the shared nav/footer/reveal behavior.
-const thankYouCss = [BRAND_CSS, BASE_CSS, ...COMMON_CSS, 'pages/contact/thank-you/thank-you.css'];
+const thankYouCss = [BRAND_CSS, BASE_CSS, ...COMMON_CSS];
 const thankYouJs = [...COMMON_JS];
 
 // ---------------------------------------------------------------------------

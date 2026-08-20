@@ -1,21 +1,20 @@
 {{{nav}}}
 
-<main id="main-content">
+<main id="main-content" class="flex-1 pt-0!">
   <!-- Same forest photo + Ken Burns zoom as the contact page and homepage
-       quote section — see .photo-bg in common/styles/base.css. Nothing is
-       redefined here; this page just uses the shared component. -->
-  <section class="thank-you">
+       quote section — see .photo-bg in common/styles/base.css. -->
+  <section class="relative overflow-hidden flex-1 flex items-center justify-center text-center py-xl px-gutter-mobile md:py-3xl md:px-gutter-desktop">
     <div class="photo-bg" aria-hidden="true">
       <div class="photo-bg__photo" style="background-image: url('{{message.backgroundImage}}');"></div>
     </div>
 
-    <div class="thank-you__content" data-reveal>
-      <p class="eyebrow">
+    <div data-reveal class="relative z-[1] max-w-[50em]">
+      <p class="eyebrow justify-center">
         <span class="eyebrow__line"></span>
         {{message.eyebrow}}
       </p>
-      <h1>{{{message.renderedHeadline}}}</h1>
-      <p class="thank-you__body">{{message.body}}</p>
+      <h1 class="text-hero-headline-mobile text-paper mt-md mb-lg md:text-hero-headline">{{{message.renderedHeadline}}}</h1>
+      <p class="text-body text-muted-on-dark leading-body-loose max-w-[38em] mx-auto mb-xl">{{message.body}}</p>
 
       <a href="{{message.button.href}}" class="btn btn--ghost">{{message.button.label}}</a>
     </div>

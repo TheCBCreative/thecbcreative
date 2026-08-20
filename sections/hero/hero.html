@@ -1,16 +1,16 @@
-<section class="hero" id="hero">
-  <div class="hero__collage" aria-hidden="true">
-    <img class="hero__image--main" src="{{images.main.src}}" alt="{{images.main.alt}}" width="{{images.main.width}}" height="{{images.main.height}}" fetchpriority="high" decoding="async">
-    <img class="hero__image--accent" src="{{images.accent.src}}" alt="{{images.accent.alt}}" width="{{images.accent.width}}" height="{{images.accent.height}}" decoding="async">
+<section id="hero" class="relative flex flex-col items-stretch min-h-0 p-0 bg-ink overflow-hidden md:flex-row md:items-center md:min-h-[780px] md:px-gutter-desktop">
+  <div class="relative w-full h-[460px] md:absolute md:top-[15%] md:right-[5%] md:w-[39%] md:h-[85%]" aria-hidden="true">
+    <img class="absolute top-0 right-0 w-full h-full object-cover md:right-[14%] md:w-[79%] md:h-[79%]" src="{{images.main.src}}" alt="{{images.main.alt}}" width="{{images.main.width}}" height="{{images.main.height}}" fetchpriority="high" decoding="async">
+    <img class="absolute w-[39%] h-[205px] left-[51%] top-[84%] max-md:right-gutter-mobile max-md:bottom-[-90px] md:left-[47%] md:top-[64%] md:w-[41%] md:h-[42%] object-cover border-8 border-solid border-paper -translate-y-1/2 rotate-[4deg] z-[2]" src="{{images.accent.src}}" alt="{{images.accent.alt}}" width="{{images.accent.width}}" height="{{images.accent.height}}" decoding="async">
   </div>
-  <div class="hero__content">
+  <div class="relative z-[1] w-full pt-2xl px-gutter-mobile pb-xl md:w-1/2 md:px-0 md:pb-2xl">
     <p class="eyebrow">
       <span class="eyebrow__line"></span>
       {{eyebrow}}
     </p>
-    <h1>{{{renderedHeadline}}}</h1>
-    <p class="hero__subhead">{{subhead}}</p>
-    <div class="hero__actions">
+    <h1 class="text-hero-headline-mobile leading-[1.06] text-paper mb-lg tracking-[9px] md:text-hero-headline md:leading-tight [&_em]:font-serif-accent [&_em]:font-light [&_em]:not-italic">{{{renderedHeadline}}}</h1>
+    <p class="text-body-lg text-paper opacity-[0.72] max-w-[30em] mb-xl">{{subhead}}</p>
+    <div class="flex items-center flex-col gap-sm md:flex-row md:gap-lg">
       {{#each buttons}}<a href="{{href}}" class="btn btn--{{style}}">{{label}}</a>
       {{/each}}
     </div>

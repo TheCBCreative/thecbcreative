@@ -10,13 +10,9 @@ function initScrollReveal() {
   const els = document.querySelectorAll('[data-reveal]');
   if (!els.length) return;
 
-  // will-change is applied only while an element is actively transitioning
-  // (either direction), and removed the moment that transition ends —
-  // see the comment in reveal.css for why this isn't just left on
-  // permanently. Setting to '' (not 'auto') on cleanup removes the inline
-  // override entirely rather than fighting it, so elements with their own
-  // conditional will-change in CSS (e.g. .service-card's hover rule) get
-  // their stylesheet behavior back instead of being stuck on 'auto'.
+  // will-change on only while transitioning; '' (not 'auto') on cleanup so
+  // elements with their own conditional will-change (e.g. hover rules)
+  // get their stylesheet behavior back.
   const setVisible = (el, visible) => {
     el.style.willChange = 'opacity, transform';
     el.classList.toggle('is-visible', visible);

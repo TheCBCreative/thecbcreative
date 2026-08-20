@@ -30,7 +30,6 @@
       { "label": "Home", "href": "/" },
       { "label": "About", "href": "/#about" },
       { "label": "Services", "href": "/#services" },
-      { "label": "Portfolio", "href": "/portfolio.html" },
       { "label": "Contact", "href": "/contact.html" }
     ]
   },
