@@ -19,7 +19,7 @@
   </button>
 </header>
 
-<div class="mobile-menu hidden [&.open]:flex flex-col gap-10 fixed top-nav-height-mobile bottom-0 left-0 right-0 z-[99] bg-ink py-lg px-gutter-mobile" id="mobileMenu">
+<nav aria-label="Mobile" class="mobile-menu hidden [&.open]:flex flex-col gap-10 fixed top-nav-height-mobile bottom-0 left-0 right-0 z-[99] bg-ink py-lg px-gutter-mobile" id="mobileMenu">
   {{#each links}}<a href="{{href}}" class="font-sans font-medium text-body-sm tracking-label uppercase no-underline text-paper">{{label}}</a>
   {{/each}}
-</div>
+</nav>

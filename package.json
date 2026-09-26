@@ -7,10 +7,12 @@
     "build": "node scripts/build.js && npm run tailwind:build",
     "tailwind:build": "tailwindcss -i common/styles/tailwind.css -o public/css/tailwind.css",
     "dev": "node scripts/build.js && npm run tailwind:build && node --env-file=.env.local scripts/dev-server.mjs",
-    "test": "node scripts/test-contact.mjs"
+    "test": "node scripts/test-contact.mjs",
+    "a11y": "a11y-gate"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.3.3",
+    "a11y-gate": "github:TheCBCreative/a11y-gate#v1.0.0",
     "tailwindcss": "^4.3.3"
   }
 }
