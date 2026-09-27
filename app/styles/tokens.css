@@ -21,6 +21,7 @@
   --color-brass: #b08d57; /* lines, outlines, CTA fill — not small text */
   --color-brass-light: #d1bd9e; /* brass text over the video */
   --color-brass-deep: #85663a; /* brass text on Snow / Mist */
+  --color-rust: #9b3b2f; /* form errors only: 6.3:1 on Snow */
 
   /* Color — semantic */
   --color-text-on-video: var(--color-snow);
@@ -35,6 +36,7 @@
   --color-cta-text: var(--color-pine);
   --color-cta-hover-bg: var(--color-pine);
   --color-cta-hover-text: var(--color-snow);
+  --color-error-text: var(--color-rust);
 
   /* Opacity — use as color modifiers, e.g. bg-pine/(--opacity-nav-tint) */
   --opacity-glass-tint: 14%;
@@ -131,6 +133,7 @@
   --blur-nav: 36px;
   --shadow-nav: 0 8px 24px rgb(0 0 0 / 0.25);
   --shadow-card: 0 16px 40px rgb(0 0 0 / 0.18);
+  --shadow-card-hover: 0 24px 56px rgb(0 0 0 / 0.3); /* E1 hover */
   --shadow-panel: 0 24px 60px rgb(0 0 0 / 0.28);
 
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);

@@ -1,9 +1,13 @@
+import { MotionConfig } from 'motion/react';
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router';
 import type { Route } from './+types/root';
 import './app.css';
 
 export const links: Route.LinksFunction = () => [
+  { rel: 'icon', href: '/brand/favicon.ico', sizes: '48x48' },
   { rel: 'icon', href: '/brand/favicon.svg', type: 'image/svg+xml' },
+  { rel: 'apple-touch-icon', href: '/brand/apple-touch-icon.png' },
+  { rel: 'manifest', href: '/site.webmanifest' },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -26,6 +30,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
+// Reduced motion keeps fades but drops movement.
 export default function App() {
-  return <Outlet />;
+  return (
+    <MotionConfig reducedMotion="user">
+      <Outlet />
+    </MotionConfig>
+  );
 }

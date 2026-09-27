@@ -22,8 +22,38 @@
     }
   }
 
+  :root {
+    --focus-ring: var(--color-brass-light);
+    --underline: var(--color-brass-light);
+  }
+
+  /* A1 focus ring: Brass Light over the video, Brass Deep on cream. */
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 3px;
+  }
+
   ::selection {
     background-color: var(--color-brass);
     color: var(--color-pine);
   }
+}
+
+/* Cream panels and pages swap the accent colors that sit on them. */
+@utility surface-cream {
+  background-color: var(--color-snow);
+  color: var(--color-pine);
+  --focus-ring: var(--color-brass-deep);
+  --underline: var(--color-brass-deep);
+}
+
+@utility eyebrow {
+  font-family: var(--font-eyebrow);
+  text-transform: uppercase;
+}
+
+/* Outlined display type (ghost numerals, "average"). Stroke color follows text color. */
+@utility text-outline {
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke-width: var(--stroke-outline);
 }
