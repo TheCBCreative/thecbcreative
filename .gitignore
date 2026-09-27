@@ -19,3 +19,6 @@ node_modules/
 # Logs / reports
 npm-debug.log*
 a11y-report.json
+
+# Files shared from Claude sessions
+Claude outputs/
