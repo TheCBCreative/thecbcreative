@@ -46,6 +46,8 @@
   --opacity-hairline-on-cream: 45%;
   --opacity-input-line: 55%;
   --opacity-form-glass: 60%;
+  --opacity-page-rule: 14%; /* hairlines on the cream service pages */
+  --opacity-muted-text: 70%; /* quiet Pine text on cream, 5.8:1 on Snow */
 
   /* Type — families */
   --font-display: 'Italiana', 'Times New Roman', serif;
@@ -119,6 +121,7 @@
   --spacing-edge: 3.5rem; /* layout/edge-margin */
   --spacing-nav: 5.25rem; /* layout/nav-height */
   --spacing-card: min(25rem, 39.063svh); /* service card height, 400 at 1024 */
+  --spacing-ghost-numeral: min(55.9375rem, 87.402svh); /* ghost numeral text box, 895 at 1024 */
   --container-content: 78rem; /* layout/content-width */
   --container-frame: 90rem; /* layout/frame-width */
 

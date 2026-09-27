@@ -1,10 +1,14 @@
+import { useFlip } from '~/components/flip/flip-context';
 import { Chapter } from '~/components/ui/Chapter';
 import { Reveal } from '~/components/ui/Reveal';
 import { SERVICES_INTRO } from '~/data/home';
 import { SERVICES } from '~/data/services';
+import { cx } from '~/utils/cx';
 import { ServiceCard } from './ServiceCard';
 
 export function Services() {
+  const { activeSlug } = useFlip();
+
   return (
     <Chapter id="services" labelledBy="services-title" grade className="justify-center">
       <div className="px-page">
@@ -19,7 +23,8 @@ export function Services() {
         </Reveal>
         <ul className="mt-16 grid grid-cols-3 gap-8">
           {SERVICES.map((service, index) => (
-            <li key={service.slug}>
+            // Hidden while the flip overlay stands in for this card.
+            <li key={service.slug} data-service={service.slug} className={cx(activeSlug === service.slug && 'invisible')}>
               <Reveal index={index}>
                 <ServiceCard service={service} />
               </Reveal>

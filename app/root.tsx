@@ -1,5 +1,6 @@
 import { MotionConfig } from 'motion/react';
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router';
+import { FlipProvider } from '~/components/flip/FlipProvider';
 import type { Route } from './+types/root';
 import './app.css';
 
@@ -34,7 +35,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <MotionConfig reducedMotion="user">
-      <Outlet />
+      <FlipProvider>
+        <Outlet />
+      </FlipProvider>
     </MotionConfig>
   );
 }

@@ -52,6 +52,14 @@
   text-transform: uppercase;
 }
 
+/* Clips a line of display type so it can rise into view; the padding keeps ascenders and descenders. */
+@utility mask-line {
+  display: block;
+  overflow: clip;
+  padding-block: 0.3em;
+  margin-block: -0.3em;
+}
+
 /* Outlined display type (ghost numerals, "average"). Stroke color follows text color. */
 @utility text-outline {
   -webkit-text-fill-color: transparent;

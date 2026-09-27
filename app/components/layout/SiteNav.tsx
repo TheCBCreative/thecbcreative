@@ -1,6 +1,7 @@
 import { motion, useTransform } from 'motion/react';
 import { Link, useLocation } from 'react-router';
 import { UnderlineLink } from '~/components/ui/UnderlineLink';
+import { Wordmark } from '~/components/ui/Wordmark';
 import { NAV_LINKS, SITE } from '~/data/site';
 import { useLogoHandoff } from '~/hooks/useLogoHandoff';
 
@@ -24,7 +25,7 @@ export function SiteNav() {
           ))}
         </ul>
         <MotionLink to="/" aria-label={`${SITE.name} — home`} style={isHome ? { opacity, visibility } : undefined}>
-          <img src="/brand/logo-wordmark.svg" alt="" width={128} height={40} className="h-10 w-32" />
+          <Wordmark className="h-10 w-32" />
         </MotionLink>
       </nav>
     </header>
