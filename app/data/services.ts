@@ -19,7 +19,7 @@ export const SERVICES: Service[] = [
     teaser: 'Custom-designed. Custom-coded. Built around your brand.',
     description: [
       'A fully custom-designed, fully custom-coded site — including the brand identity behind it (colors, type, logo) — built around your business, not a template.',
-      'Every build is accessible from day one, checked against a real accessibility standard, not just eyeballed.',
+      'Every build is accessible from day one and built for AEO — so Google, ChatGPT, and the AI tools your customers already use can find, understand, and recommend you.',
     ],
   },
   {
