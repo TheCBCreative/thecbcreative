@@ -4,7 +4,7 @@ import { ABOUT } from '~/data/home';
 
 export function About() {
   return (
-    <Chapter id="about" labelledBy="about-title" className="justify-center">
+    <Chapter id="about" labelledBy="about-title" className="justify-center pb-12">
       <div className="grid grid-cols-[25rem_40rem] items-center gap-30 px-page">
         <Reveal className="relative">
           <div aria-hidden className="absolute inset-0 translate-x-5 translate-y-5 bg-brass" />
