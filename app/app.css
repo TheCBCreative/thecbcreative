@@ -1,0 +1,29 @@
+@import 'tailwindcss';
+@import './styles/tokens.css';
+
+@import '@fontsource/italiana/latin-400.css';
+@import '@fontsource/aboreto/latin-400.css';
+@import '@fontsource-variable/work-sans/wght.css';
+@import '@fontsource-variable/fraunces/wght-italic.css';
+
+@layer base {
+  html {
+    background-color: var(--color-pine);
+    color: var(--color-snow);
+    font-family: var(--font-body);
+    font-weight: var(--font-weight-light);
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  ::selection {
+    background-color: var(--color-brass);
+    color: var(--color-pine);
+  }
+}
