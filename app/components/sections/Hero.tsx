@@ -16,7 +16,7 @@ export function Hero() {
         <p className="eyebrow text-body-sm tracking-wide">{HERO.eyebrow}</p>
         <h1 id="hero-title" className="mt-5 font-display">
           <span className="block text-heading-md leading-subhead tracking-hero">{HERO.lead}</span>
-          <span className="mt-14 block text-display-md leading-heading tracking-hero">
+          <span className="mt-14 block text-display-lg leading-heading tracking-hero">
             {HERO.headline} <span className="text-brass-light">{HERO.headlineAccent}</span>
           </span>
         </h1>

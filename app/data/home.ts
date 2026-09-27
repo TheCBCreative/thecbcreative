@@ -11,7 +11,19 @@ export const HERO = {
 export const ABOUT = {
   eyebrow: 'About',
   headline: "Hi, I'm Cait.",
-  body: "Corporate tech taught me what big brands look like. Small businesses taught me what they should feel like — and most of their websites don't show it yet. That's what CB Creative is for: custom sites built with the same care you put into your work.",
+  paragraphs: [
+    'I spent years at Amazon wearing a lot of hats — web development, marketing, product — and somewhere in between all of it, I figured out what I actually love: building things from scratch that feel genuinely beautiful and uniquely yours.',
+    "Corporate work taught me a lot, but it also made something clear. Small businesses have more heart, more story, and more personality than any big brand. The problem is most of their websites don't show it.",
+    "That's what The CB Creative is for. I bring the design eye, the development skills, and the marketing instincts to build websites that don't just look good — they pull people in and make them feel something.",
+  ],
+  points: [
+    'I work with small businesses because I actually believe in them',
+    'Design, code, and brand strategy under one single roof',
+    'AEO-certified — built for search engines & AI recommenders',
+    'Bespoke development tailored for unique workflows',
+    'Your website should feel like you — I make sure it does',
+    'Websites built to command presence, not just tick boxes',
+  ],
   photo: { src: '/images/about/headshot.webp', alt: 'Cait Burke, founder of The CB Creative', width: 1254, height: 1254 },
 };
 
