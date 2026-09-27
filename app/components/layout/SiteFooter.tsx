@@ -5,7 +5,7 @@ export function SiteFooter() {
   return (
     <footer className="px-edge">
       <div className="flex h-18 items-center justify-between border-t border-snow/(--opacity-footer-rule) eyebrow text-caption tracking-caps text-snow">
-        <img src="/brand/logo-mark.svg" alt="" width={40} height={40} />
+        <img src="/brand/logo-mark.svg" alt="" width={40} height={40} className="size-10" />
         <p>
           {SITE.locality}, {SITE.region} <span aria-hidden>·</span> © {new Date().getFullYear()} {SITE.name}
         </p>

@@ -8,12 +8,14 @@ export function Services() {
   return (
     <Chapter id="services" labelledBy="services-title" grade className="justify-center">
       <div className="px-page">
-        <Reveal>
-          <p className="eyebrow text-eyebrow-lg tracking-eyebrow">{SERVICES_INTRO.eyebrow}</p>
-          <h2 id="services-title" className="mt-4 font-display text-heading-lg">
-            {SERVICES_INTRO.headline}
-          </h2>
-          <p className="mt-8.5 max-w-155 text-body-lg leading-copy">{SERVICES_INTRO.body}</p>
+        <Reveal className="grid grid-cols-3 items-end gap-8">
+          <div>
+            <p className="eyebrow text-eyebrow-lg tracking-eyebrow">{SERVICES_INTRO.eyebrow}</p>
+            <h2 id="services-title" className="mt-4 font-display text-heading-lg">
+              {SERVICES_INTRO.headline}
+            </h2>
+          </div>
+          <p className="col-span-2 max-w-155 text-body-lg leading-copy">{SERVICES_INTRO.body}</p>
         </Reveal>
         <ul className="mt-16 grid grid-cols-3 gap-8">
           {SERVICES.map((service, index) => (

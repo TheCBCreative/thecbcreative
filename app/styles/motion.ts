@@ -12,4 +12,6 @@ export const DURATION = {
 export const REVEAL_OFFSET = 24;
 
 // Crossfade between two copies of the background video so the loop point doesn't jump.
-export const VIDEO_CROSSFADE = 1.2;
+// The next copy starts VIDEO_LEAD early so it's already playing when the fade begins.
+export const VIDEO_CROSSFADE = 2.5;
+export const VIDEO_LEAD = 0.5;

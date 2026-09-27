@@ -16,7 +16,7 @@ export function SiteNav() {
           ))}
         </ul>
         <Link to="/" aria-label={`${SITE.name} — home`}>
-          <img src="/brand/logo-wordmark.svg" alt="" width={128} height={40} />
+          <img src="/brand/logo-wordmark.svg" alt="" width={128} height={40} className="h-10 w-32" />
         </Link>
       </nav>
     </header>

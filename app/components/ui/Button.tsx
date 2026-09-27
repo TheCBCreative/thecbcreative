@@ -14,9 +14,9 @@ const variants: Record<Variant, string> = {
   outline: 'border border-snow/55 px-8.5 py-3.5 font-body text-eyebrow font-normal tracking-label text-snow',
 };
 
-const wipe = 'transition-[transform,clip-path] duration-(--duration-cta-fill) ease-out-soft motion-reduce:transition-none';
+const wipe = 'transition-[scale,clip-path] duration-(--duration-cta-fill) ease-in-out-soft motion-reduce:transition-none';
 
-// CTA spec: Pine fills in from the left on hover, focus and press; Brass buttons flip their label to Snow along the fill edge.
+// CTA spec: Pine wipes in from the left on hover, focus and press; Brass buttons flip their label to Snow along the fill edge.
 export function Button({ variant = 'brass', children, className, ...props }: ButtonProps) {
   const content = (
     <>

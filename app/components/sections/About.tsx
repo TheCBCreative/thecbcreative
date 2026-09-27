@@ -5,7 +5,7 @@ import { ABOUT } from '~/data/home';
 export function About() {
   return (
     <Chapter id="about" labelledBy="about-title" className="justify-center">
-      <div className="grid grid-cols-[460px_480px] items-center gap-35 px-page">
+      <div className="grid grid-cols-[28.75rem_30rem] items-center gap-35 px-page">
         <Reveal className="relative">
           <div aria-hidden className="absolute inset-0 translate-x-5 translate-y-5 bg-brass" />
           <img
