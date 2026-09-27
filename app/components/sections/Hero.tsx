@@ -1,7 +1,9 @@
-import { motion, type Variants } from 'motion/react';
+import { motion, useTransform, type Variants } from 'motion/react';
 import { Button } from '~/components/ui/Button';
 import { Chapter } from '~/components/ui/Chapter';
 import { HERO } from '~/data/home';
+import { SITE } from '~/data/site';
+import { useLogoHandoff } from '~/hooks/useLogoHandoff';
 import { EASE_IN_OUT, HERO_ENTRANCE } from '~/styles/motion';
 
 const container: Variants = {
@@ -14,26 +16,39 @@ const line: Variants = {
 };
 
 export function Hero() {
+  const handoff = useLogoHandoff();
+  const logoOpacity = useTransform(handoff, (value) => 1 - value);
+
   return (
     <Chapter labelledBy="hero-title" grade className="px-page text-center">
       <motion.div
-        className="mx-auto flex w-full max-w-225 flex-1 flex-col items-center justify-center"
+        className="mx-auto flex w-full max-w-250 flex-1 flex-col items-center justify-center"
         variants={container}
         initial="hidden"
         animate="shown"
       >
-        <motion.p variants={line} className="eyebrow text-body-sm tracking-wide">
+        <motion.div variants={line}>
+          <motion.img
+            src="/brand/logo-mark.svg"
+            alt={SITE.name}
+            width={80}
+            height={80}
+            className="size-20"
+            style={{ opacity: logoOpacity }}
+          />
+        </motion.div>
+        <motion.p variants={line} className="mt-6 eyebrow text-body-sm tracking-wide">
           {HERO.eyebrow}
         </motion.p>
-        <h1 id="hero-title" className="mt-5 font-display">
+        <h1 id="hero-title" className="mt-3 font-display">
           <motion.span variants={line} className="block text-heading-md leading-subhead tracking-hero">
             {HERO.lead}
           </motion.span>
-          <motion.span variants={line} className="mt-14 block text-display-lg leading-heading tracking-hero">
+          <motion.span variants={line} className="mt-2 block text-display-lg leading-heading tracking-hero">
             {HERO.headline} <span className="text-brass-light">{HERO.headlineAccent}</span>
           </motion.span>
         </h1>
-        <motion.p variants={line} className="mt-10 max-w-155 text-body-lg leading-copy text-mist">
+        <motion.p variants={line} className="mt-18 max-w-155 text-body-lg leading-copy text-mist">
           {HERO.body}
         </motion.p>
         <motion.div variants={line} className="mt-8">
