@@ -11,8 +11,8 @@ export const DURATION = {
 
 export const REVEAL_OFFSET = 24;
 
-// Hero entrance on load: each line rises in turn, slower than the section reveals.
-export const HERO_ENTRANCE = { delay: 0.3, duration: 1, stagger: 0.18 } as const;
+// Hero entrance on load: each line clears in place like lifting fog.
+export const HERO_ENTRANCE = { delay: 0.4, duration: 2, stagger: 0.3, blur: 12 } as const;
 
 // Crossfade between two copies of the background video so the loop point doesn't jump.
 // The next copy starts VIDEO_LEAD early so it's already playing when the fade begins.

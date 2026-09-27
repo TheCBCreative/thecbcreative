@@ -2,15 +2,15 @@ import { motion, type Variants } from 'motion/react';
 import { Button } from '~/components/ui/Button';
 import { Chapter } from '~/components/ui/Chapter';
 import { HERO } from '~/data/home';
-import { EASE_OUT, HERO_ENTRANCE, REVEAL_OFFSET } from '~/styles/motion';
+import { EASE_IN_OUT, HERO_ENTRANCE } from '~/styles/motion';
 
 const container: Variants = {
   shown: { transition: { delayChildren: HERO_ENTRANCE.delay, staggerChildren: HERO_ENTRANCE.stagger } },
 };
 
 const line: Variants = {
-  hidden: { opacity: 0, y: REVEAL_OFFSET },
-  shown: { opacity: 1, y: 0, transition: { duration: HERO_ENTRANCE.duration, ease: EASE_OUT } },
+  hidden: { opacity: 0, filter: `blur(${HERO_ENTRANCE.blur}px)` },
+  shown: { opacity: 1, filter: 'blur(0px)', transition: { duration: HERO_ENTRANCE.duration, ease: EASE_IN_OUT } },
 };
 
 export function Hero() {
