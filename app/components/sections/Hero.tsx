@@ -1,29 +1,46 @@
-import { motion } from 'motion/react';
+import { motion, type Variants } from 'motion/react';
 import { Button } from '~/components/ui/Button';
 import { Chapter } from '~/components/ui/Chapter';
 import { HERO } from '~/data/home';
-import { DURATION, EASE_OUT } from '~/styles/motion';
+import { EASE_OUT, HERO_ENTRANCE, REVEAL_OFFSET } from '~/styles/motion';
+
+const container: Variants = {
+  shown: { transition: { delayChildren: HERO_ENTRANCE.delay, staggerChildren: HERO_ENTRANCE.stagger } },
+};
+
+const line: Variants = {
+  hidden: { opacity: 0, y: REVEAL_OFFSET },
+  shown: { opacity: 1, y: 0, transition: { duration: HERO_ENTRANCE.duration, ease: EASE_OUT } },
+};
 
 export function Hero() {
   return (
     <Chapter labelledBy="hero-title" grade className="px-page text-center">
       <motion.div
         className="mx-auto flex w-full max-w-225 flex-1 flex-col items-center justify-center"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: DURATION.reveal * 2, ease: EASE_OUT }}
+        variants={container}
+        initial="hidden"
+        animate="shown"
       >
-        <p className="eyebrow text-body-sm tracking-wide">{HERO.eyebrow}</p>
+        <motion.p variants={line} className="eyebrow text-body-sm tracking-wide">
+          {HERO.eyebrow}
+        </motion.p>
         <h1 id="hero-title" className="mt-5 font-display">
-          <span className="block text-heading-md leading-subhead tracking-hero">{HERO.lead}</span>
-          <span className="mt-14 block text-display-lg leading-heading tracking-hero">
+          <motion.span variants={line} className="block text-heading-md leading-subhead tracking-hero">
+            {HERO.lead}
+          </motion.span>
+          <motion.span variants={line} className="mt-14 block text-display-lg leading-heading tracking-hero">
             {HERO.headline} <span className="text-brass-light">{HERO.headlineAccent}</span>
-          </span>
+          </motion.span>
         </h1>
-        <p className="mt-10 max-w-155 text-body-lg leading-copy text-mist">{HERO.body}</p>
-        <Button to={HERO.cta.to} variant="outline" className="mt-8">
-          {HERO.cta.label}
-        </Button>
+        <motion.p variants={line} className="mt-10 max-w-155 text-body-lg leading-copy text-mist">
+          {HERO.body}
+        </motion.p>
+        <motion.div variants={line} className="mt-8">
+          <Button to={HERO.cta.to} variant="outline">
+            {HERO.cta.label}
+          </Button>
+        </motion.div>
       </motion.div>
     </Chapter>
   );
