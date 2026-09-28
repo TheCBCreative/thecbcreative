@@ -1,11 +1,18 @@
-import { motion } from 'motion/react';
-import { Fragment } from 'react';
+import { motion, useReducedMotion, useScroll, useSpring } from 'motion/react';
+import { Fragment, useRef } from 'react';
 import { Chapter } from '~/components/ui/Chapter';
 import { Reveal } from '~/components/ui/Reveal';
 import { WHY_NOT_AI } from '~/data/home';
-import { DURATION, EASE_OUT } from '~/styles/motion';
+import { STRIKE_SCROLL } from '~/styles/motion';
 
 export function WhyNotAI() {
+  // The strike follows the scroll: it draws across as "average" rises to the main spot in view,
+  // and undraws if you scroll back up. Reduced motion shows it already struck.
+  const ghost = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: ghost, offset: STRIKE_SCROLL.offset });
+  const strike = useSpring(scrollYProgress, STRIKE_SCROLL.spring);
+
   return (
     <Chapter id="why-not-ai" labelledBy="why-title" grade>
       <div className="grid grid-cols-[minmax(0,520px)_1fr] gap-36 px-page pt-23 -mb-5 max-lg:grid-cols-1 max-lg:gap-10 max-lg:pt-0 max-lg:mb-0">
@@ -42,24 +49,22 @@ export function WhyNotAI() {
         </ol>
       </div>
 
-      {/* The closing line sits on the struck-through "average", as in Figma. */}
-      {/* The parent watches the viewport: a scaleX(0) line has no area, so it can't. */}
-      <motion.div
+      {/* The closing line sits on the struck-through "average", as in Figma (below it on phones). */}
+      <div
+        ref={ghost}
         className="relative mt-auto -mb-18 flex justify-center max-lg:mt-14 max-lg:mb-0 max-lg:flex-col max-lg:items-center"
-        initial="hidden"
-        whileInView="shown"
-        viewport={{ once: true }}
       >
         <span aria-hidden className="relative font-display text-ghost-word leading-[normal] tracking-display text-outline text-brass/40">
           {WHY_NOT_AI.ghostWord}
           <motion.span
             className="absolute -inset-x-10 top-[59%] h-[2px] origin-left bg-brass max-lg:-inset-x-6"
-            variants={{ hidden: { scaleX: 0 }, shown: { scaleX: 1 } }}
-            transition={{ duration: DURATION.draw, ease: EASE_OUT }}
+            style={{ scaleX: reduce ? 1 : strike }}
           />
         </span>
-        <p className="absolute inset-x-0 top-1/2 text-center font-accent text-heading-sm italic max-lg:static max-lg:mt-2 max-lg:px-page">{WHY_NOT_AI.closing}</p>
-      </motion.div>
+        <p className="absolute inset-x-0 top-1/2 text-center font-accent text-heading-sm italic max-lg:static max-lg:mt-2 max-lg:px-page">
+          {WHY_NOT_AI.closing}
+        </p>
+      </div>
     </Chapter>
   );
 }
