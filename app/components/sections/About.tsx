@@ -23,11 +23,12 @@ export function About() {
             width={ABOUT.photo.width}
             height={ABOUT.photo.height}
             loading="lazy"
-            className="relative aspect-400/487 w-full object-cover max-lg:aspect-39/47 max-lg:max-h-photo max-lg:object-top max-lg:mask-b-from-60%"
+            className="relative aspect-400/487 w-full object-cover max-lg:aspect-39/47 max-lg:max-h-photo max-lg:object-top max-lg:mask-t-from-85% max-lg:mask-b-from-60%"
           />
-          {/* On phones the photo runs edge to edge and dissolves into the video under the heading:
-              its bottom fades out, a soft blur covers the seam, and a Pine wash keeps the heading legible. */}
+          {/* On phones the photo runs edge to edge and dissolves into the video at both ends:
+              its edges fade out, soft blurs cover the seams, and a Pine wash keeps the heading legible. */}
           <div aria-hidden className="absolute inset-0 bg-linear-to-b from-pine/0 from-40% via-pine/60 via-75% to-pine/0 lg:hidden" />
+          <div aria-hidden className="absolute inset-x-0 -top-16 h-32 backdrop-blur-glass mask-y-from-50% lg:hidden" />
           <div aria-hidden className="absolute inset-x-0 -bottom-24 h-64 backdrop-blur-glass mask-y-from-50% lg:hidden" />
         </Reveal>
         <div className="relative max-lg:-mt-40 max-lg:px-page">

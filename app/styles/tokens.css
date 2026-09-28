@@ -125,7 +125,7 @@
   --spacing-edge: 56px; /* layout/edge-margin */
   --spacing-nav: 84px; /* layout/nav-height */
   --spacing-card: min(464px, 50svh); /* service card height, 464 max */
-  --spacing-photo: 640px; /* tallest the About photo gets once it runs full width (tablets) */
+  --spacing-photo: 800px; /* tallest the About photo gets once it runs full width (tablets) */
   --spacing-ghost-numeral: min(874px, 86svh); /* ghost numeral, 874 at 1024 (its box minus the bottom bleed) */
   --spacing-ghost-clear: 816px; /* page margin + description column + 32px gap; the numeral never starts left of this */
   /* Service pages: vertical rhythm that shrinks with short windows so the page fits without scrolling */
