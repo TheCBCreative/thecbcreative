@@ -10,6 +10,7 @@ export const SITE = {
 
 // Hash links scroll to homepage chapters; page links get aria-current.
 export const NAV_LINKS = [
+  { label: 'Home', to: '/' },
   { label: 'About', to: '/#about' },
   { label: 'Services', to: '/#services' },
   { label: 'Contact', to: '/contact' },
