@@ -20,7 +20,7 @@ export function About() {
         <div>
           <Reveal index={1}>
             <p className="eyebrow text-eyebrow-lg tracking-eyebrow">{ABOUT.eyebrow}</p>
-            <h2 id="about-title" className="mt-7.5 font-display text-display-xs">
+            <h2 id="about-title" className="mt-7.5 font-display text-display-lg leading-tighter tracking-headline">
               {ABOUT.headline}
             </h2>
           </Reveal>
