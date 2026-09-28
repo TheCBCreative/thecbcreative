@@ -1,4 +1,4 @@
-import { AnimatePresence, motion, type Variants } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 import { useCallback, useEffect, type ReactNode } from 'react';
 import { data, Link, useLocation } from 'react-router';
 import type { Route } from './+types/service';
@@ -11,7 +11,8 @@ import { cx } from '~/utils/cx';
 import { Wordmark } from '~/components/ui/Wordmark';
 import { getNextService, getService, SERVICES, type Service } from '~/data/services';
 import { SITE } from '~/data/site';
-import { DURATION, EASE_OUT, REVEAL_OFFSET } from '~/styles/motion';
+import { DURATION } from '~/styles/motion';
+import { pageDraw, pageFade, pageFadeUp, pageRise, pageStagger } from '~/styles/page-reveal';
 
 export function loader({ params }: Route.LoaderArgs) {
   const service = getService(params.slug);
@@ -26,27 +27,6 @@ export function meta({ loaderData }: Route.MetaArgs) {
     { name: 'description', content: loaderData.service.description[0] },
   ];
 }
-
-// Reveal order from the motion spec: furniture → eyebrow → headline lines → rule → description → CTA.
-const stagger: Variants = {
-  shown: { transition: { staggerChildren: DURATION.stagger } },
-};
-const fade: Variants = {
-  hidden: { opacity: 0 },
-  shown: { opacity: 1, transition: { duration: DURATION.reveal, ease: EASE_OUT } },
-};
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: REVEAL_OFFSET },
-  shown: { opacity: 1, y: 0, transition: { duration: DURATION.reveal, ease: EASE_OUT } },
-};
-const rise: Variants = {
-  hidden: { y: '100%', opacity: 0 },
-  shown: { y: 0, opacity: 1, transition: { duration: DURATION.reveal * 1.5, ease: EASE_OUT } },
-};
-const draw: Variants = {
-  hidden: { scaleX: 0 },
-  shown: { scaleX: 1, transition: { duration: DURATION.reveal, ease: EASE_OUT } },
-};
 
 export default function Service({ loaderData }: Route.ComponentProps) {
   const { service, next } = loaderData;
@@ -78,7 +58,7 @@ export default function Service({ loaderData }: Route.ComponentProps) {
       <SkipLink />
       <motion.header
         className="relative z-10 mx-edge grid h-bar grid-cols-3 items-center border-b border-pine/(--opacity-page-rule) max-lg:grid-cols-2"
-        variants={fade}
+        variants={pageFade}
         initial="hidden"
         animate="shown"
       >
@@ -103,8 +83,8 @@ export default function Service({ loaderData }: Route.ComponentProps) {
           exit={{ opacity: 0, transition: { duration: DURATION.fade } }}
         >
           <GhostNumeral number={service.number} />
-          <motion.div className="relative" variants={stagger} initial="hidden" animate="shown">
-            <motion.p variants={fade} className="eyebrow text-eyebrow tracking-caps text-brass-deep">
+          <motion.div className="relative" variants={pageStagger} initial="hidden" animate="shown">
+            <motion.p variants={pageFade} className="eyebrow text-eyebrow tracking-caps text-brass-deep">
               {service.tag}
             </motion.p>
             <h1
@@ -114,19 +94,19 @@ export default function Service({ loaderData }: Route.ComponentProps) {
             >
               {service.titleLines.map((line) => (
                 <span key={line} className="mask-line">
-                  <motion.span variants={rise} className="block">
+                  <motion.span variants={pageRise} className="block">
                     {line}
                   </motion.span>
                 </span>
               ))}
             </h1>
-            <motion.div variants={draw} className="mt-flow-lg h-px w-12 origin-left bg-brass" />
-            <motion.div variants={fadeUp} className="mt-flow-sm max-w-172 space-y-flow-xs text-body-lg leading-airy text-pine/88">
+            <motion.div variants={pageDraw} className="mt-flow-lg h-px w-12 origin-left bg-brass" />
+            <motion.div variants={pageFadeUp} className="mt-flow-sm max-w-172 space-y-flow-xs text-body-lg leading-airy text-pine/88">
               {service.description.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
               ))}
             </motion.div>
-            <motion.div variants={fadeUp} className="mt-flow-md">
+            <motion.div variants={pageFadeUp} className="mt-flow-md">
               <Button to="/contact">Let's talk</Button>
             </motion.div>
           </motion.div>
@@ -135,7 +115,7 @@ export default function Service({ loaderData }: Route.ComponentProps) {
 
       <motion.footer
         className="relative z-10 mx-edge flex h-bar items-center justify-between border-t border-pine/(--opacity-page-rule)"
-        variants={fade}
+        variants={pageFade}
         initial="hidden"
         animate="shown"
       >
