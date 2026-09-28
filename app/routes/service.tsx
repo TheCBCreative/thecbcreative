@@ -76,7 +76,7 @@ export default function Service({ loaderData }: Route.ComponentProps) {
     <div className="relative flex min-h-svh flex-col overflow-clip surface-cream">
       <SkipLink />
       <motion.header
-        className="relative z-10 mx-edge grid h-25 grid-cols-3 items-center border-b border-pine/(--opacity-page-rule)"
+        className="relative z-10 mx-edge grid h-bar grid-cols-3 items-center border-b border-pine/(--opacity-page-rule)"
         variants={fade}
         initial="hidden"
         animate="shown"
@@ -105,7 +105,7 @@ export default function Service({ loaderData }: Route.ComponentProps) {
           key={service.slug}
           id="main-content"
           tabIndex={-1}
-          className="relative flex-1 px-page pt-18 focus:outline-none"
+          className="flex-1 px-page pt-lede pb-flow-md focus:outline-none"
           exit={{ opacity: 0, transition: { duration: DURATION.fade } }}
         >
           <GhostNumeral number={service.number} />
@@ -116,7 +116,7 @@ export default function Service({ loaderData }: Route.ComponentProps) {
             <h1
               ref={heading}
               tabIndex={-1}
-              className="mt-5 flex flex-col font-display text-display-2xl leading-tightest tracking-display focus:outline-none"
+              className="mt-flow-xs flex flex-col font-display text-display-2xl leading-tightest tracking-display focus:outline-none"
             >
               {service.titleLines.map((line) => (
                 <span key={line} className="mask-line">
@@ -126,13 +126,13 @@ export default function Service({ loaderData }: Route.ComponentProps) {
                 </span>
               ))}
             </h1>
-            <motion.div variants={draw} className="mt-11 h-px w-12 origin-left bg-brass" />
-            <motion.div variants={fadeUp} className="mt-7 max-w-110 space-y-14 text-body-lg leading-airy text-pine/88">
+            <motion.div variants={draw} className="mt-flow-lg h-px w-12 origin-left bg-brass" />
+            <motion.div variants={fadeUp} className="mt-flow-sm max-w-110 space-y-flow-xs text-body-lg leading-airy text-pine/88">
               {service.description.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
               ))}
             </motion.div>
-            <motion.div variants={fadeUp} className="mt-10">
+            <motion.div variants={fadeUp} className="mt-flow-md">
               <Button to="/contact">Let's talk</Button>
             </motion.div>
           </motion.div>
@@ -140,7 +140,7 @@ export default function Service({ loaderData }: Route.ComponentProps) {
       </AnimatePresence>
 
       <motion.footer
-        className="relative z-10 mx-edge flex h-25 items-center justify-between border-t border-pine/(--opacity-page-rule)"
+        className="relative z-10 mx-edge flex h-bar items-center justify-between border-t border-pine/(--opacity-page-rule)"
         variants={fade}
         initial="hidden"
         animate="shown"
