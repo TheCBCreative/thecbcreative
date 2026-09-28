@@ -1,4 +1,6 @@
 // Contact page copy and form rules, mirroring the Figma contact frame and interaction states F2 / G.
+const EMAIL = 'cait@thecbcreative.com';
+
 export const CONTACT = {
   metaDescription:
     'Get in touch with The CB Creative about a new website, a refresh, or a landing page. Based in Snoqualmie, WA — serving the greater Seattle area and beyond.',
@@ -7,7 +9,6 @@ export const CONTACT = {
   headline: 'Contact',
   submit: "Let's talk",
   sending: 'Sending…',
-  email: 'cait@thecbcreative.com',
   fields: {
     name: 'Your name',
     business: 'Your business (optional)',
@@ -25,7 +26,7 @@ export const CONTACT = {
     tooMany: 'Please attach 10 images or fewer.',
     tooLarge: 'Those images add up to more than 3.5 MB. Try fewer, or email them over directly.',
     notImage: 'Attachments need to be images (PNG, JPG or WEBP).',
-    failed: 'Something went wrong sending that. Please try again, or email cait@thecbcreative.com directly.',
+    failed: `Something went wrong sending that. Please try again, or email ${EMAIL} directly.`,
   },
   success: {
     eyebrow: '(Message sent)',

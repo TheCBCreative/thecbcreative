@@ -3,7 +3,7 @@ import { Button } from '~/components/ui/Button';
 import { ATTACHMENT_LIMITS, CONTACT, HONEYPOT_FIELD } from '~/data/contact';
 import { Field, fieldInput } from './Field';
 
-type Status = 'idle' | 'sending' | 'sent' | 'failed';
+type Status = 'idle' | 'sending' | 'failed';
 type Required = 'name' | 'email' | 'message';
 type Errors = Partial<Record<Required | 'images', string>>;
 
@@ -37,10 +37,6 @@ export function ContactForm({ onSent }: { onSent: () => void }) {
   useEffect(() => {
     openedAt.current = Date.now();
   }, []);
-
-  useEffect(() => {
-    if (status === 'sent') onSent();
-  }, [status, onSent]);
 
   const onBlur = (event: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const name = event.target.name as Required;
@@ -90,7 +86,8 @@ export function ContactForm({ onSent }: { onSent: () => void }) {
     try {
       const response = await fetch('/api/contact', { method: 'POST', body: data });
       const result = (await response.json().catch(() => ({}))) as { ok?: boolean };
-      setStatus(response.ok && result.ok ? 'sent' : 'failed');
+      if (response.ok && result.ok) return onSent();
+      setStatus('failed');
     } catch {
       setStatus('failed');
     }
@@ -121,7 +118,8 @@ export function ContactForm({ onSent }: { onSent: () => void }) {
           required
           aria-invalid={Boolean(errors.message)}
           aria-describedby={describe('message')}
-          onBlur={onBlur} onChange={onChange}
+          onBlur={onBlur}
+          onChange={onChange}
           className={`${fieldInput} field-sizing-content resize-none`}
         />
       </Field>

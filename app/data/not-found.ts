@@ -1,4 +1,3 @@
-// 404 copy (draft — Cait to confirm).
 export const NOT_FOUND = {
   eyebrow: '(404)',
   headline: 'Lost in the fog.',
