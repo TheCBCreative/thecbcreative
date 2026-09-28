@@ -49,7 +49,7 @@ export const WHY_NOT_AI = {
 };
 
 export const CLOSING = {
-  tagline: 'Your business deserves a website that works as hard as you do.',
+  tagline: ['Your business', 'deserves', 'a website that works as hard as you do.'],
   signOff: "Let's build something beautiful.",
   cta: { label: 'Start a project', to: '/contact' },
 };

@@ -9,7 +9,7 @@ export function Closing() {
       <div className="flex flex-1 flex-col items-center justify-center px-page">
         <Reveal>
           <h2 id="closing-title" className="mx-auto max-w-260 font-display text-display leading-display tracking-headline">
-            {CLOSING.tagline}
+            {CLOSING.tagline[0]} <span className="text-brass-light">{CLOSING.tagline[1]}</span> {CLOSING.tagline[2]}
           </h2>
         </Reveal>
         <Reveal index={1} className="flex flex-col items-center">
