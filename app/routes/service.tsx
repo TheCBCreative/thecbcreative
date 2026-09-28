@@ -161,7 +161,7 @@ export default function Service({ loaderData }: Route.ComponentProps) {
           </Link>
         ) : (
           <CloseLink service={service} fromHome={fromHome} className="gap-4">
-            <span className={`${groupUnderline} eyebrow text-caption tracking-caps`}>Close — All services</span>
+            <span className={`${groupUnderline} eyebrow text-caption tracking-caps`}>See all services</span>
             <span aria-hidden className="font-body text-icon leading-none font-extralight text-brass">
               ×
             </span>
