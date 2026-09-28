@@ -10,9 +10,16 @@ const container: Variants = {
   shown: { transition: { delayChildren: HERO_ENTRANCE.delay, staggerChildren: HERO_ENTRANCE.stagger } },
 };
 
+// The blur is picked when the animation starts (it only runs in the browser), so the pre-rendered HTML stays the same.
+const startBlur = () => (window.matchMedia(HERO_ENTRANCE.phoneQuery).matches ? HERO_ENTRANCE.blurPhone : HERO_ENTRANCE.blur);
+
 const line: Variants = {
-  hidden: { opacity: 0, filter: `blur(${HERO_ENTRANCE.blur}px)` },
-  shown: { opacity: 1, filter: 'blur(0px)', transition: { duration: HERO_ENTRANCE.duration, ease: EASE_IN_OUT } },
+  hidden: { opacity: 0 },
+  shown: () => ({
+    opacity: 1,
+    filter: [`blur(${startBlur()}px)`, 'blur(0px)'],
+    transition: { duration: HERO_ENTRANCE.duration, ease: EASE_IN_OUT },
+  }),
 };
 
 export function Hero() {
