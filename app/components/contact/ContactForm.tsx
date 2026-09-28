@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState, type ChangeEvent, type FocusEvent, type FormEvent } from 'react';
-import { Link } from 'react-router';
 import { Button } from '~/components/ui/Button';
 import { ATTACHMENT_LIMITS, CONTACT, HONEYPOT_FIELD } from '~/data/contact';
-import { groupUnderline } from '~/styles/underline';
 import { Field, fieldInput } from './Field';
 
 type Status = 'idle' | 'sending' | 'sent' | 'failed';
@@ -29,9 +27,8 @@ function validate(name: Required, value: string) {
 }
 
 // F2 / G from the interaction states: errors show on leaving a field and on submit (focus moves to the first),
-// the button reads "Sending…" while it posts, and success replaces the form with a thank-you.
-export function ContactForm() {
-  const thanks = useRef<HTMLHeadingElement>(null);
+// the button reads "Sending…" while it posts, and success hands over to the thank-you card (onSent).
+export function ContactForm({ onSent }: { onSent: () => void }) {
   const openedAt = useRef(0);
   const [errors, setErrors] = useState<Errors>({});
   const [files, setFiles] = useState<File[]>([]);
@@ -42,8 +39,8 @@ export function ContactForm() {
   }, []);
 
   useEffect(() => {
-    if (status === 'sent') thanks.current?.focus();
-  }, [status]);
+    if (status === 'sent') onSent();
+  }, [status, onSent]);
 
   const onBlur = (event: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const name = event.target.name as Required;
@@ -98,24 +95,6 @@ export function ContactForm() {
       setStatus('failed');
     }
   };
-
-  if (status === 'sent') {
-    return (
-      <div>
-        <p className="eyebrow text-caption tracking-eyebrow text-brass-deep">{CONTACT.success.eyebrow}</p>
-        <h2 ref={thanks} tabIndex={-1} className="mt-2 font-display text-display-lg leading-none tracking-display focus:outline-none">
-          {CONTACT.success.headline}
-        </h2>
-        <p className="mt-8 max-w-110 text-body-lg leading-relaxed">{CONTACT.success.body}</p>
-        <Link to="/" className="group mt-10 inline-flex items-center gap-3 eyebrow text-caption tracking-caps">
-          <span className={groupUnderline}>{CONTACT.success.back}</span>
-          <span aria-hidden className="text-brass-deep">
-            →
-          </span>
-        </Link>
-      </div>
-    );
-  }
 
   const describe = (name: keyof Errors) => (errors[name] ? `${name}-error` : undefined);
   const totalBytes = files.reduce((sum, file) => sum + file.size, 0);
