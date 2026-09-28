@@ -1,5 +1,5 @@
 import type { Config } from '@react-router/dev/config';
-import { mkdir, rename, rm, writeFile } from 'node:fs/promises';
+import { rename, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { SERVICES } from './app/data/services';
 import { SITE } from './app/data/site';
@@ -44,7 +44,8 @@ export default {
     const client = path.join(reactRouterConfig.buildDirectory, 'client');
     await rename(path.join(client, '404', 'index.html'), path.join(client, '404.html'));
     await rm(path.join(client, '404'), { recursive: true, force: true });
-    await mkdir(client, { recursive: true });
+    // Every page is pre-rendered, so the SPA fallback is never served.
+    await rm(path.join(client, '__spa-fallback.html'), { force: true });
     await Promise.all([
       writeFile(path.join(client, 'sitemap.xml'), sitemap()),
       writeFile(path.join(client, 'robots.txt'), robots()),
