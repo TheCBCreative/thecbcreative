@@ -1,10 +1,17 @@
 import { MotionConfig } from 'motion/react';
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router';
 import { FlipProvider } from '~/components/flip/FlipProvider';
+import aboreto from '@fontsource/aboreto/files/aboreto-latin-400-normal.woff2?url';
+import italiana from '@fontsource/italiana/files/italiana-latin-400-normal.woff2?url';
+import workSans from '@fontsource-variable/work-sans/files/work-sans-latin-wght-normal.woff2?url';
+import { MOUNTAIN_VIDEO } from '~/data/media';
 import type { Route } from './+types/root';
 import './app.css';
 
+// Fonts and the video poster load first, so the page paints once in its final type instead of swapping.
 export const links: Route.LinksFunction = () => [
+  ...[italiana, aboreto, workSans].map((href) => ({ rel: 'preload', href, as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' as const })),
+  { rel: 'preload', href: MOUNTAIN_VIDEO.poster, as: 'image', fetchPriority: 'high' as const },
   { rel: 'icon', href: '/brand/favicon.ico', sizes: '48x48' },
   { rel: 'icon', href: '/brand/favicon.svg', type: 'image/svg+xml' },
   { rel: 'apple-touch-icon', href: '/brand/apple-touch-icon.png' },
