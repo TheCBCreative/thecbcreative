@@ -21,20 +21,20 @@ export default function Contact() {
               the eyebrow in Brass Light over the dark treeline, helped by a soft Pine grade at the foot. */}
           <LoopingVideo {...MOUNTAIN_VIDEO} />
           <div aria-hidden className="absolute inset-0 z-20 bg-linear-to-t from-pine/70 to-pine/0 to-35%" />
-          <Reveal className="absolute inset-x-0 top-0 z-30 p-10 max-lg:p-page max-lg:pt-8">
+          <Reveal rise={false} className="absolute inset-x-0 top-0 z-30 p-10 max-lg:p-page max-lg:pt-8">
             <h1 id="contact-title" className="font-display text-display-xl leading-none tracking-display text-pine">
               {CONTACT.headline}
             </h1>
           </Reveal>
-          <Reveal index={1} className="absolute inset-x-0 bottom-0 z-30 p-10 pb-16 max-lg:p-page max-lg:pb-10">
+          <Reveal rise={false} index={1} className="absolute inset-x-0 bottom-0 z-30 p-10 pb-16 max-lg:p-page max-lg:pb-10">
             <p className="eyebrow text-body-sm tracking-eyebrow text-brass-light">{CONTACT.eyebrow}</p>
           </Reveal>
         </div>
         <div className="py-4 max-lg:px-page max-lg:pt-10 max-lg:pb-0">
-          <Reveal>
+          <Reveal rise={false}>
             <p className="text-body leading-relaxed">{CONTACT.intro}</p>
           </Reveal>
-          <Reveal index={1} className="mt-12">
+          <Reveal rise={false} index={1} className="mt-12">
             <ContactForm />
           </Reveal>
         </div>
