@@ -11,6 +11,9 @@ export const DURATION = {
 
 export const REVEAL_OFFSET = 24;
 
+// Lists that arrive item by item (About's 01–06): slower and further apart than D1 so each one lands.
+export const POINTS_REVEAL = { duration: 0.8, stagger: 0.15 } as const;
+
 // Hero entrance on load: each line clears in place like lifting fog.
 export const HERO_ENTRANCE = { delay: 0.4, duration: 2, stagger: 0.3, blur: 12 } as const;
 
