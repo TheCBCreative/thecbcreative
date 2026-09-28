@@ -172,7 +172,7 @@
     --text-display: 54px;
     --text-display-lg: 80px;
     --text-display-xl: 96px;
-    --text-display-2xl: 108px;
+    --text-display-2xl: 96px;
     --text-ghost-word: 112px;
 
     --spacing-page: 48px;
@@ -214,5 +214,6 @@
     rgb(27 35 24 / 0.58) 45%,
     rgb(27 35 24 / 0.66) 100%
   );
-  --scrim-top-grade: linear-gradient(to bottom, rgb(27 35 24 / 0.65) 0%, rgb(27 35 24 / 0) 75%);
+  /* Eases in over the first few percent so there's no hard line where one chapter meets the next. */
+  --scrim-top-grade: linear-gradient(to bottom, rgb(27 35 24 / 0) 0%, rgb(27 35 24 / 0.65) 8%, rgb(27 35 24 / 0) 75%);
 }
