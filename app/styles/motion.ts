@@ -3,7 +3,7 @@ export const EASE_OUT = [0.22, 1, 0.36, 1] as const;
 export const EASE_IN_OUT = [0.65, 0, 0.35, 1] as const;
 
 export const DURATION = {
-  reveal: 0.6,
+  reveal: 0.9,
   stagger: 0.08,
   draw: 1.6,
   fade: 0.3,
