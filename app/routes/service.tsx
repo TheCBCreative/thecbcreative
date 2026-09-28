@@ -94,7 +94,7 @@ export default function Service({ loaderData }: Route.ComponentProps) {
         </Link>
       </motion.header>
 
-      <AnimatePresence mode="wait" initial={false}>
+      <AnimatePresence mode="wait">
         <motion.main
           key={service.slug}
           id="main-content"
