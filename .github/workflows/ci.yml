@@ -1,4 +1,4 @@
-name: Accessibility
+name: CI
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   pull_request:
 
 jobs:
-  a11y:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -15,6 +15,9 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run build
-      - name: Accessibility gate (fails on serious or critical issues)
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      # Builds, serves the build and crawls every page; fails on serious or critical issues.
+      - name: Accessibility gate
         run: npm run a11y
