@@ -1,7 +1,7 @@
 // The Creative wordmark, drawn in currentColor so it sits on video (Snow) or cream (Pine).
-export function Wordmark({ className }: { className?: string }) {
+export function Wordmark() {
   return (
-    <svg viewBox="0 0 128 40" fill="currentColor" aria-hidden className={className}>
+    <svg viewBox="0 0 128 40" fill="currentColor" aria-hidden className="h-10 w-32">
       <path d="M3.58058 10.8811H2.77725V4.20284H1.10284V4.10605H5.26466V4.20284H3.58058V10.8811Z" />
       <path d="M9.55457 10.8811H8.75124V4.10605H9.55457V7.22258H12.7001V4.10605H13.5035V10.8811H12.7001V7.31936H9.55457V10.8811Z" />
       <path d="M21.2253 4.10605V4.20284H18.1765V7.10643H21.0027V7.20322H18.1765V10.7843H21.4382V10.8811H17.3732V4.10605H21.2253Z" />

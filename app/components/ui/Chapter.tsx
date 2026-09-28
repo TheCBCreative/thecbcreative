@@ -23,7 +23,7 @@ export function Chapter({ id, labelledBy, grade, withFooter, screen, flush, clas
       aria-labelledby={labelledBy}
       className={cx(
         'relative flex flex-col overflow-clip',
-        withFooter ? 'min-h-[calc(100svh-var(--spacing)*18)]' : 'min-h-svh',
+        withFooter ? 'min-h-above-footer' : 'min-h-svh',
         !screen && 'max-lg:min-h-0',
       )}
     >

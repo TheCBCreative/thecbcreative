@@ -12,6 +12,7 @@
     "paths": { "~/*": ["./app/*"] },
     "strict": true,
     "allowJs": true,
+    "allowImportingTsExtensions": true,
     "noEmit": true,
     "skipLibCheck": true,
     "verbatimModuleSyntax": true,

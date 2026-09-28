@@ -6,6 +6,7 @@ import { Wordmark } from '~/components/ui/Wordmark';
 import { NAV_LINKS, SITE } from '~/data/site';
 import { useNavCurrent } from '~/hooks/useNavCurrent';
 import { DURATION, EASE_OUT, REVEAL_OFFSET } from '~/styles/motion';
+import { twoDigits } from '~/utils/format';
 
 const list: Variants = { shown: { transition: { staggerChildren: DURATION.stagger, delayChildren: DURATION.stagger } } };
 const item: Variants = {
@@ -49,7 +50,7 @@ export function MobileMenu() {
       >
         <div className="flex h-nav items-center justify-between px-edge">
           <Link to="/" aria-label={`${SITE.name} — home`} onClick={close}>
-            <Wordmark className="h-10 w-32" />
+            <Wordmark />
           </Link>
           <button type="button" onClick={close} className="flex items-center gap-3 eyebrow text-caption tracking-caps">
             Close <span aria-hidden className="font-body text-icon leading-none font-extralight">×</span>
@@ -66,7 +67,7 @@ export function MobileMenu() {
                   className="flex items-baseline gap-5 py-5 aria-[current=location]:text-brass-light aria-[current=page]:text-brass-light"
                 >
                   <span aria-hidden className="font-display text-lead-sm text-brass-light">
-                    {String(index + 1).padStart(2, '0')}
+                    {twoDigits(index + 1)}
                   </span>
                   <span className="font-display text-display-sm leading-none">{link.label}</span>
                 </Link>

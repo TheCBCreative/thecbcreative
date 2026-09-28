@@ -9,8 +9,8 @@ type ButtonProps = { variant?: Variant; children: ReactNode; className?: string 
   | ({ to?: undefined } & Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'children'>)
 );
 
-// base: resting look · fill: colour that wipes in · label: text colour once filled
-// The Brass button keeps a Brass border so its shape still shows when Pine fills it on a Pine background.
+// base: resting look · fill: colour that wipes in · label: text colour once filled.
+// Brass keeps its border so the button still shows when the Pine fill meets a Pine background.
 const variants: Record<Variant, { base: string; fill: string; label: string }> = {
   brass: {
     base: 'border border-brass bg-brass px-11 py-5 font-eyebrow text-eyebrow tracking-caps text-pine',
@@ -26,7 +26,7 @@ const variants: Record<Variant, { base: string; fill: string; label: string }> =
 
 const wipe = 'duration-(--duration-cta-fill) ease-in-out-soft motion-reduce:transition-none';
 
-// CTA spec: the fill wipes in from the left on hover, focus and press, and the label changes colour along the fill edge.
+// The fill wipes in from the left on hover, focus and press; the label changes colour along its edge.
 export function Button({ variant = 'brass', children, className, ...props }: ButtonProps) {
   const { base, fill, label } = variants[variant];
   const content = (
@@ -36,8 +36,7 @@ export function Button({ variant = 'brass', children, className, ...props }: But
         className={cx('absolute inset-0 origin-left scale-x-0 transition-[scale] group-hover:scale-x-100 group-focus-visible:scale-x-100 group-active:scale-x-100', fill, wipe)}
       />
       <span className="relative uppercase">{children}</span>
-      {/* The filled-colour copy of the label. It stays invisible (not just clipped) at rest, so it's never read
-          or contrast-checked against the resting fill; visibility holds through the wipe back out. */}
+      {/* The label in its filled colour. Invisible at rest (not just clipped) so it's never read or contrast-checked. */}
       <span
         aria-hidden
         className={cx(

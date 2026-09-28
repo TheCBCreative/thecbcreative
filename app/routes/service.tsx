@@ -2,18 +2,19 @@ import { AnimatePresence, motion } from 'motion/react';
 import { useCallback, useEffect, type ReactNode } from 'react';
 import { data, Link, useLocation } from 'react-router';
 import type { Route } from './+types/service';
-import { useFlip } from '~/components/flip/flip-context';
+import { cameFromHome, useFlip } from '~/components/flip/flip-context';
 import { SkipLink } from '~/components/layout/SkipLink';
 import { GhostNumeral } from '~/components/service/GhostNumeral';
 import { Button } from '~/components/ui/Button';
-import { groupUnderline } from '~/styles/underline';
-import { cx } from '~/utils/cx';
 import { Wordmark } from '~/components/ui/Wordmark';
 import { getNextService, getService, SERVICES, type Service } from '~/data/services';
 import { SITE } from '~/data/site';
 import { absoluteUrl, businessRef, pageMeta } from '~/seo/meta';
 import { DURATION } from '~/styles/motion';
 import { pageDraw, pageFade, pageFadeUp, pageRise, pageStagger } from '~/styles/page-reveal';
+import { groupUnderline } from '~/styles/underline';
+import { cx } from '~/utils/cx';
+import { twoDigits } from '~/utils/format';
 
 export function loader({ params }: Route.LoaderArgs) {
   const service = getService(params.slug);
@@ -56,7 +57,7 @@ export default function Service({ loaderData }: Route.ComponentProps) {
   const { service, next } = loaderData;
   const { close } = useFlip();
   const location = useLocation();
-  const fromHome = Boolean((location.state as { fromHome?: boolean } | null)?.fromHome);
+  const fromHome = cameFromHome(location.state);
   const position = SERVICES.findIndex((item) => item.slug === service.slug) + 1;
 
   // Escape closes the page, like the Close link.
@@ -94,7 +95,7 @@ export default function Service({ loaderData }: Route.ComponentProps) {
         </CloseLink>
         <p className="justify-self-center eyebrow text-caption tracking-caps text-pine/(--opacity-muted-text) max-lg:hidden">Services</p>
         <Link to="/" aria-label={`${SITE.name} — home`} className="justify-self-end">
-          <Wordmark className="h-10 w-32" />
+          <Wordmark />
         </Link>
       </motion.header>
 
@@ -145,7 +146,7 @@ export default function Service({ loaderData }: Route.ComponentProps) {
       >
         <p className="font-display text-lead-sm">
           <span aria-hidden>
-            {service.number} / {String(SERVICES.length).padStart(2, '0')}
+            {service.number} / {twoDigits(SERVICES.length)}
           </span>
           <span className="sr-only">
             Service {position} of {SERVICES.length}

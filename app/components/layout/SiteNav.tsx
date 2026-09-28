@@ -12,8 +12,7 @@ const MotionLink = motion.create(Link);
 export function SiteNav() {
   const isHome = useLocation().pathname === '/';
   const current = useNavCurrent();
-  // Over the hero the nav logo is hidden (the hero has its own); it fades in as the hero scrolls away.
-  // On phones the nav's tinted bar fades in with it, so the hero reads as one clear screen.
+  // On the homepage the nav logo (and, on phones, its tinted bar) fades in as the hero's logo scrolls away.
   const handoff = useLogoHandoff();
   const visibility = useTransform(handoff, (value) => (value === 0 ? 'hidden' : 'visible'));
 
@@ -36,7 +35,7 @@ export function SiteNav() {
           className="max-lg:order-first"
           style={{ opacity: isHome ? handoff : 1, visibility: isHome ? visibility : 'visible' }}
         >
-          <Wordmark className="h-10 w-32" />
+          <Wordmark />
         </MotionLink>
         <MobileMenu />
       </nav>

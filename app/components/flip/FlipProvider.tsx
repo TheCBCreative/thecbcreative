@@ -4,11 +4,14 @@ import { useLocation, useNavigate } from 'react-router';
 import { ServiceCard } from '~/components/sections/ServiceCard';
 import type { Service } from '~/data/services';
 import { EASE_IN_OUT, FLIP } from '~/styles/motion';
-import { FlipContext } from './flip-context';
+import { cameFromHome, FlipContext } from './flip-context';
 
 // Opening: the card turns over to its cream back, grows to fill the screen, then the service page takes over.
 // Closing: the reverse, landing back on the card in the Services grid.
 type Flip = { service: Service; phase: 'open'; from: DOMRect } | { service: Service; phase: 'close' };
+
+const TURN = { duration: FLIP.turn, ease: EASE_IN_OUT };
+const GROW = { duration: FLIP.grow, ease: EASE_IN_OUT };
 
 const servicePath = (service: Service) => `/services/${service.slug}`;
 const nextFrame = () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
@@ -60,11 +63,9 @@ function FlipOverlay({ flip, onDone }: { flip: Flip; onDone: () => void }) {
   const navigate = useNavigate();
   const { pathname, state } = useLocation();
   const target = flip.phase === 'open' ? servicePath(flip.service) : '/';
-  const fromHome = useRef(Boolean((state as { fromHome?: boolean } | null)?.fromHome));
+  const fromHome = useRef(cameFromHome(state));
   const arrived = useRef<() => void>(undefined);
   const started = useRef(false);
-  const turn = { duration: FLIP.turn, ease: EASE_IN_OUT };
-  const grow = { duration: FLIP.grow, ease: EASE_IN_OUT };
 
   // Resolves the navigation step once the router has rendered the destination.
   useEffect(() => {
@@ -87,12 +88,11 @@ function FlipOverlay({ flip, onDone }: { flip: Flip; onDone: () => void }) {
 
     const run = async () => {
       if (flip.phase === 'open') {
-        await animate(card, { rotateY: [0, 180], transformPerspective: FLIP.perspective }, turn);
-        await Promise.all([animate(container, fullScreen, grow), animate(cream, { borderRadius: 0 }, grow)]);
+        await animate(card, { rotateY: [0, 180], transformPerspective: FLIP.perspective }, TURN);
+        await Promise.all([animate(container, fullScreen, GROW), animate(cream, { borderRadius: 0 }, GROW)]);
         await waitFor(() => navigate(servicePath(flip.service), { state: { fromHome: true } }));
       } else {
-        // Jump, rather than smooth-scroll, back to the card so it can be measured where it will land.
-        // If the card isn't fully on screen, it lands with its bottom edge at the bottom of the screen.
+        // Jump (not smooth-scroll) back so the card can be measured where it lands; if it's cut off, align its bottom edge.
         const root = document.documentElement;
         root.style.scrollBehavior = 'auto';
         await nextFrame();
@@ -105,8 +105,8 @@ function FlipOverlay({ flip, onDone }: { flip: Flip; onDone: () => void }) {
             rect = cell.getBoundingClientRect();
           }
           const bounds = { top: rect.top, left: rect.left, width: rect.width, height: rect.height };
-          await Promise.all([animate(container, bounds, grow), animate(cream, { borderRadius: FLIP.cardRadius }, grow)]);
-          await animate(card, { rotateY: [180, 0], transformPerspective: FLIP.perspective }, turn);
+          await Promise.all([animate(container, bounds, GROW), animate(cream, { borderRadius: FLIP.cardRadius }, GROW)]);
+          await animate(card, { rotateY: [180, 0], transformPerspective: FLIP.perspective }, TURN);
         }
         root.style.scrollBehavior = '';
       }
@@ -116,7 +116,7 @@ function FlipOverlay({ flip, onDone }: { flip: Flip; onDone: () => void }) {
     };
     void run();
     // Runs once per flip; the overlay is keyed by phase and service.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const start =

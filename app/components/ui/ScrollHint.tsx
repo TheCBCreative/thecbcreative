@@ -2,11 +2,10 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { DURATION, EASE_IN_OUT } from '~/styles/motion';
 
-// How close to the bottom (px) counts as "reached the end", where the hint fades away.
+// Pixels from the bottom of the page where the hint fades away.
 const END_THRESHOLD = 48;
 
-// A full-width Pine scrim along the bottom of the screen with a Brass chevron, shown while there's
-// more page below. It fades out near the end, and never appears when the page fits the screen.
+// A Pine scrim and Brass chevron along the bottom of the screen while there's more page below.
 export function ScrollHint() {
   const [more, setMore] = useState(false);
   const reduce = useReducedMotion();

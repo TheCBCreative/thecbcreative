@@ -10,3 +10,6 @@ export interface FlipContext {
 export const FlipContext = createContext<FlipContext>({ activeSlug: undefined, open: () => {}, close: () => {} });
 
 export const useFlip = () => useContext(FlipContext);
+
+// Service pages opened from the homepage carry { fromHome: true }, so Close can go back instead of forward.
+export const cameFromHome = (state: unknown) => Boolean((state as { fromHome?: boolean } | null)?.fromHome);

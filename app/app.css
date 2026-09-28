@@ -47,6 +47,11 @@
   --underline: var(--color-brass-deep);
 }
 
+/* A screen's height less the footer strip, so a closing chapter and the footer fill the screen together. */
+@utility min-h-above-footer {
+  min-height: calc(100svh - var(--spacing-footer));
+}
+
 @utility eyebrow {
   font-family: var(--font-eyebrow);
   text-transform: uppercase;

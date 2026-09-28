@@ -2,10 +2,8 @@ import { motion, useReducedMotion } from 'motion/react';
 import { GHOST_NUMERAL_BLEED, GHOST_NUMERAL_HEIGHT, GHOST_NUMERALS } from '~/data/ghost-numerals';
 import { DURATION, EASE_IN_OUT } from '~/styles/motion';
 
-// The oversized outlined number behind each service page; its outline draws itself in.
-// The viewBox stops at the page edges and the glyph overflows it, so the bleed scales with the numeral.
-// On narrow windows it shrinks (anchored bottom-right) rather than run under the description;
-// on phones it sits faintly behind the headline instead.
+// The oversized outlined number behind each service page, drawn in on arrival. It bleeds off the bottom-right
+// corner, shrinks rather than run under the description, and sits faintly behind the headline on phones.
 export function GhostNumeral({ number }: { number: string }) {
   const reduce = useReducedMotion();
   const numeral = GHOST_NUMERALS[number];

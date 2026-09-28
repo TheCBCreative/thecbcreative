@@ -13,15 +13,12 @@ export function meta() {
   return pageMeta({ title: `Contact | ${SITE.name}`, description: CONTACT.metaDescription, path: '/contact' });
 }
 
-// A cream panel inset over the video: the misty image window carries the headline, the form sits beside it.
-// Below the switch point the panel runs full width and the image becomes a band at the top.
 // Matches the 1200px switch point in tokens.css.
 const SIDE_BY_SIDE = '(width >= 1200px)';
 
 export default function Contact() {
   const panel = useRef<HTMLDivElement>(null);
-  // Once sent, the thank-you fills the whole card. Side by side (desktop) the card keeps its height so nothing jumps;
-  // stacked (phones, tablets) it shrinks to fit and the page returns to the top so the thank-you is in view.
+  // The thank-you takes over the card. On desktop the card keeps its height; stacked, it shrinks and scrolls to the top.
   const [sent, setSent] = useState<{ height?: number }>();
   const onSent = useCallback(() => {
     const sideBySide = window.matchMedia(SIDE_BY_SIDE).matches;
@@ -30,13 +27,12 @@ export default function Contact() {
   }, []);
 
   return (
-    <section aria-labelledby="contact-title" className="flex flex-col min-h-[calc(100svh-var(--spacing)*18)] px-edge pt-nav pb-12 max-lg:px-0 max-lg:pb-0">
+    <section aria-labelledby="contact-title" className="flex min-h-above-footer flex-col px-edge pt-nav pb-12 max-lg:px-0 max-lg:pb-0">
       <div ref={panel} className="my-6 flex flex-col shadow-panel surface-cream max-lg:mt-0" style={{ minHeight: sent?.height }}>
         {!sent ? (
           <div className="grid grid-cols-[minmax(0,600px)_minmax(0,520px)] gap-22 p-6 max-lg:grid-cols-1 max-lg:gap-0 max-lg:p-0 max-lg:pb-16">
             <div className="relative min-h-0 overflow-hidden max-lg:h-80">
-              {/* A cropped window onto the same mountain footage: "Contact" in Pine sits in the bright fog at the top,
-                  the eyebrow in Brass Light over the dark treeline, helped by a soft Pine grade at the foot. */}
+              {/* The mountain footage, cropped: "Contact" sits in the fog, the eyebrow over the graded treeline. */}
               <LoopingVideo {...MOUNTAIN_VIDEO} />
               <div aria-hidden className="absolute inset-0 z-20 bg-linear-to-t from-pine/70 to-pine/0 to-35%" />
               <Reveal rise={false} className="absolute inset-x-0 top-0 z-30 p-10 max-lg:p-page max-lg:pt-8">

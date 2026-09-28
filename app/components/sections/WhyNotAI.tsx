@@ -6,11 +6,10 @@ import { WHY_NOT_AI } from '~/data/home';
 import { STRIKE_SCROLL } from '~/styles/motion';
 
 export function WhyNotAI() {
-  // The strike follows the scroll: it draws across as "average" rises to the main spot in view,
-  // and undraws if you scroll back up. Reduced motion shows it already struck.
+  // The strike draws in as "average" scrolls up the screen and undraws on the way back. Reduced motion shows it struck.
   const ghost = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ghost, offset: STRIKE_SCROLL.offset });
+  const { scrollYProgress } = useScroll({ target: ghost, offset: [STRIKE_SCROLL.start, STRIKE_SCROLL.end] });
   const strike = useSpring(scrollYProgress, STRIKE_SCROLL.spring);
 
   return (
