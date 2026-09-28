@@ -1,4 +1,3 @@
-// @vitest-environment node
 import { afterAll, beforeEach, describe, expect, it } from 'vitest';
 import handler from '../api/contact.mjs';
 
