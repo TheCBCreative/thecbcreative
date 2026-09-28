@@ -1,37 +1,9 @@
-/**
- * api/contact.mjs — contact form webhook (Vercel Function, Node.js runtime)
- *
- * Receives the contact form POST (multipart/form-data, so image attachments
- * can ride along), re-validates it server-side, and emails the inquiry to
- * CONTACT_TO_EMAIL via Resend's REST API.
- *
- * Deliberately dependency-free. It uses the Web-standard function signature
- * Vercel recommends for /api routes, which means `request.formData()` parses
- * the multipart body natively and `fetch` talks to Resend directly — no
- * busboy/formidable, no Resend SDK, no node_modules for the whole project.
- * Named .mjs (not .js) so it's parsed as an ES module without having to set
- * "type": "module" in package.json, which would break scripts/build.js.
- *
- * Required environment variables (set these in the Vercel dashboard):
- *   RESEND_API_KEY     — API key from resend.com
- *   CONTACT_FROM_EMAIL — sender, must be on a Resend-verified domain
- *   CONTACT_TO_EMAIL   — where inquiries land (defaults to cait@thecbcreative.com)
- * See .env.example.
- */
+// Contact form webhook (Vercel Function): re-validates the form and emails it through Resend.
+// Needs RESEND_API_KEY, CONTACT_FROM_EMAIL and CONTACT_TO_EMAIL (see .env.example).
 
 const RESEND_ENDPOINT = 'https://api.resend.com/emails';
 
-/**
- * Reads an environment variable, trimming whitespace and stripping a matching
- * pair of surrounding quotes.
- *
- * A .env file needs quotes around a value containing spaces (`CONTACT_FROM_EMAIL=
- * "Name <a@b.com>"`) and the shell removes them. Pasting that same line into a
- * hosting dashboard keeps the quotes as literal characters, so the value
- * arrives as `"Name <a@b.com>"` — which Resend rejects with a 422 on the
- * `from` field. Tolerating both forms means the variable works wherever it's
- * set, rather than failing in a way that's only visible in the server logs.
- */
+// Strips surrounding quotes, which a dashboard keeps if a .env line is pasted in as-is (Resend rejects them).
 function env(name) {
   const raw = (process.env[name] || '').trim();
   return raw.replace(/^(["'])([\s\S]*)\1$/, '$2').trim();
@@ -40,25 +12,14 @@ function env(name) {
 const DEFAULT_TO = 'cait@thecbcreative.com';
 const DEFAULT_FROM = 'The CB Creative <inquiries@thecbcreative.com>';
 
-// Vercel caps a function's entire request body at 4.5 MB and returns a hard
-// 413 before our code ever runs if it's exceeded. Cap attachments a good
-// margin below that so the text fields and multipart overhead always fit,
-// and so we can return a friendly error rather than an opaque platform one.
-// The form enforces the same number client-side (app/data/contact.ts) — this is
-// the copy that actually counts, since a direct POST skips the browser.
+// Kept below Vercel's 4.5 MB request limit so we can answer with a friendly error.
+// The form applies the same limits (app/data/contact.ts); these are the ones that count.
 const MAX_TOTAL_ATTACHMENT_BYTES = 3.5 * 1024 * 1024;
 const MAX_FILES = 10;
 
 const IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.webp', '.gif', '.heic', '.heif', '.avif'];
 
-/**
- * Browsers usually set a real MIME type on an upload, but not reliably —
- * some send application/octet-stream or an empty type for less common
- * formats (webp and heic are frequent offenders), and non-browser clients
- * often send nothing useful at all. Rejecting on MIME alone would bounce
- * legitimate screenshots, so fall back to the file extension whenever the
- * declared type is missing or generic.
- */
+// Some browsers send no type (or octet-stream) for webp and heic, so fall back to the extension.
 function looksLikeImage(file) {
   const type = (file.type || '').toLowerCase();
   if (type.startsWith('image/')) return true;
@@ -67,9 +28,7 @@ function looksLikeImage(file) {
   return IMAGE_EXTENSIONS.some((ext) => name.endsWith(ext));
 }
 
-// Same two bot heuristics the form applies in the browser, re-checked here.
-// The client-side versions are a UX nicety; these are the real ones, since a
-// bot POSTing straight at this endpoint never runs our JS at all.
+// Bot checks: a filled honeypot, or a form sent faster than a person could.
 const MIN_SUBMIT_ELAPSED_MS = 1500;
 const HONEYPOT_FIELD = 'website';
 
@@ -82,15 +41,12 @@ const FIELD_LABELS = {
   links: 'Inspiration links',
 };
 
-// Brand colours, inlined — email clients don't support CSS custom properties
-// or external stylesheets, so these are copied from app/styles/tokens.css.
-// Keep in sync if the palette ever changes.
-const INK = '#1b2318'; // Pine
-const PAPER = '#f6f6f1'; // Snow
-const FOREST = '#1b2318'; // Pine (links)
-const SAGE = '#d1bd9e'; // Brass Light (eyebrow on Pine)
-const MUTED = '#85663a'; // Brass Deep (labels on Snow)
-const BORDER = '#e2e3dc'; // Mist
+// Palette from app/styles/tokens.css, inlined because email clients don't support CSS variables.
+const PINE = '#1b2318';
+const SNOW = '#f6f6f1';
+const MIST = '#e2e3dc';
+const BRASS_LIGHT = '#d1bd9e';
+const BRASS_DEEP = '#85663a';
 
 function escapeHtml(value) {
   return String(value)
@@ -114,17 +70,12 @@ function formatBytes(bytes) {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-/**
- * Deliberately loose — the goal is catching typos ("jane@smithco"), not
- * enforcing RFC 5322. Anything stricter reliably rejects addresses that
- * are in fact valid, and we'd rather let a bad address through than lose
- * a real inquiry.
- */
+// Deliberately loose: catches typos without risking a real address being rejected.
 function looksLikeEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value);
 }
 
-/** Multi-line free text -> HTML paragraphs, with each line escaped. */
+// Free text to escaped HTML paragraphs.
 function paragraphsHtml(text) {
   return text
     .split(/\n{2,}/)
@@ -132,7 +83,7 @@ function paragraphsHtml(text) {
     .filter(Boolean)
     .map(
       (block) =>
-        `<p style="margin:0 0 14px;font-size:15px;line-height:1.7;color:${INK};">${block}</p>`
+        `<p style="margin:0 0 14px;font-size:15px;line-height:1.7;color:${PINE};">${block}</p>`
     )
     .join('');
 }
@@ -140,13 +91,13 @@ function paragraphsHtml(text) {
 function detailRowHtml(label, value) {
   return `
     <tr>
-      <td style="padding:14px 0;border-bottom:1px solid ${BORDER};vertical-align:top;width:150px;">
-        <span style="font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:${MUTED};">${escapeHtml(
+      <td style="padding:14px 0;border-bottom:1px solid ${MIST};vertical-align:top;width:150px;">
+        <span style="font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:${BRASS_DEEP};">${escapeHtml(
           label
         )}</span>
       </td>
-      <td style="padding:14px 0;border-bottom:1px solid ${BORDER};vertical-align:top;">
-        <span style="font-family:Helvetica,Arial,sans-serif;font-size:15px;line-height:1.6;color:${INK};">${value}</span>
+      <td style="padding:14px 0;border-bottom:1px solid ${MIST};vertical-align:top;">
+        <span style="font-family:Helvetica,Arial,sans-serif;font-size:15px;line-height:1.6;color:${PINE};">${value}</span>
       </td>
     </tr>`;
 }
@@ -157,7 +108,7 @@ function buildEmailHtml({ fields, attachments, submittedAt }) {
   rows.push(
     detailRowHtml(
       FIELD_LABELS.email,
-      `<a href="mailto:${escapeHtml(fields.email)}" style="color:${FOREST};">${escapeHtml(
+      `<a href="mailto:${escapeHtml(fields.email)}" style="color:${PINE};">${escapeHtml(
         fields.email
       )}</a>`
     )
@@ -176,7 +127,7 @@ function buildEmailHtml({ fields, attachments, submittedAt }) {
       detailRowHtml(
         'Attachments',
         attachments
-          .map((a) => `${escapeHtml(a.filename)} <span style="color:${MUTED};">(${formatBytes(a.bytes)})</span>`)
+          .map((a) => `${escapeHtml(a.filename)} <span style="color:${BRASS_DEEP};">(${formatBytes(a.bytes)})</span>`)
           .join('<br>')
       )
     );
@@ -185,16 +136,16 @@ function buildEmailHtml({ fields, attachments, submittedAt }) {
   return `<!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="margin:0;padding:0;background:${PAPER};">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${PAPER};padding:32px 16px;">
+<body style="margin:0;padding:0;background:${SNOW};">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${SNOW};padding:32px 16px;">
     <tr>
       <td align="center">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border:1px solid ${BORDER};">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border:1px solid ${MIST};">
 
           <tr>
-            <td style="background:${INK};padding:28px 32px;">
-              <p style="margin:0 0 6px;font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:${SAGE};">New Inquiry</p>
-              <p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:26px;line-height:1.25;color:${PAPER};">${escapeHtml(
+            <td style="background:${PINE};padding:28px 32px;">
+              <p style="margin:0 0 6px;font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:${BRASS_LIGHT};">New Inquiry</p>
+              <p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:26px;line-height:1.25;color:${SNOW};">${escapeHtml(
                 fields.name
               )}</p>
             </td>
@@ -210,7 +161,7 @@ function buildEmailHtml({ fields, attachments, submittedAt }) {
 
           <tr>
             <td style="padding:0 32px 28px;">
-              <p style="margin:0 0 12px;font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:${MUTED};">${escapeHtml(
+              <p style="margin:0 0 12px;font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:${BRASS_DEEP};">${escapeHtml(
                 FIELD_LABELS.message
               )}</p>
               <div style="font-family:Helvetica,Arial,sans-serif;">${paragraphsHtml(fields.message)}</div>
@@ -218,11 +169,11 @@ function buildEmailHtml({ fields, attachments, submittedAt }) {
           </tr>
 
           <tr>
-            <td style="padding:20px 32px;background:${PAPER};border-top:1px solid ${BORDER};">
-              <p style="margin:0 0 4px;font-family:Helvetica,Arial,sans-serif;font-size:13px;color:${MUTED};">
+            <td style="padding:20px 32px;background:${SNOW};border-top:1px solid ${MIST};">
+              <p style="margin:0 0 4px;font-family:Helvetica,Arial,sans-serif;font-size:13px;color:${BRASS_DEEP};">
                 Reply directly to this email to reach ${escapeHtml(fields.name)}.
               </p>
-              <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:12px;color:${MUTED};">
+              <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:12px;color:${BRASS_DEEP};">
                 Sent from the contact form at thecbcreative.com &middot; ${escapeHtml(submittedAt)}
               </p>
             </td>
@@ -236,7 +187,7 @@ function buildEmailHtml({ fields, attachments, submittedAt }) {
 </html>`;
 }
 
-/** Plain-text alternative, for clients that don't render HTML. */
+// Plain-text version for clients that don't render HTML.
 function buildEmailText({ fields, attachments, submittedAt }) {
   const lines = [
     `NEW INQUIRY — ${fields.name}`,
@@ -264,8 +215,7 @@ async function handleContact(request) {
 
   const apiKey = env('RESEND_API_KEY');
   if (!apiKey) {
-    // Config problem on our side, not the sender's — log loudly, but don't
-    // leak the reason to the browser.
+    // Our config problem: log it, but don't tell the browser why.
     console.error('[contact] RESEND_API_KEY is not set.');
     return json({ ok: false, error: 'The form is temporarily unavailable.' }, 500);
   }
@@ -281,15 +231,11 @@ async function handleContact(request) {
   const text = (key) => {
     const value = form.get(key);
     if (typeof value !== 'string') return '';
-    // Browsers encode textarea line breaks as CRLF in multipart bodies.
-    // Normalize to \n up front so downstream splitting on blank lines
-    // works on real submissions, not just synthetic ones.
+    // Browsers send textarea line breaks as CRLF.
     return value.replace(/\r\n/g, '\n').trim();
   };
 
-  // ---- Bot heuristics ----------------------------------------------------
-  // Both failure modes return a normal-looking success so a bot can't tell
-  // its submission was discarded and start probing for what tripped it.
+  // Bots get a normal-looking success, so they can't tell they were caught.
   if (text(HONEYPOT_FIELD)) {
     console.warn('[contact] Blocked: honeypot filled.');
     return json({ ok: true });
@@ -301,7 +247,6 @@ async function handleContact(request) {
     return json({ ok: true });
   }
 
-  // ---- Field validation --------------------------------------------------
   const fields = {
     name: text('name'),
     business: text('business'),
@@ -318,7 +263,6 @@ async function handleContact(request) {
     return json({ ok: false, error: 'That email address doesn’t look quite right.' }, 400);
   }
 
-  // ---- Attachments -------------------------------------------------------
   const files = form.getAll('images').filter((f) => f && typeof f === 'object' && 'arrayBuffer' in f && f.size > 0);
 
   if (files.length > MAX_FILES) {
@@ -351,7 +295,6 @@ async function handleContact(request) {
     });
   }
 
-  // ---- Send --------------------------------------------------------------
   const submittedAt = new Date().toLocaleString('en-US', {
     timeZone: 'America/Los_Angeles',
     dateStyle: 'medium',
@@ -362,8 +305,7 @@ async function handleContact(request) {
   const payload = {
     from: env('CONTACT_FROM_EMAIL') || DEFAULT_FROM,
     to: [env('CONTACT_TO_EMAIL') || DEFAULT_TO],
-    // So hitting "reply" in the inbox goes straight back to the sender
-    // rather than to the no-reply sending address.
+    // Replying from the inbox goes straight to the sender.
     reply_to: fields.email,
     subject: `New Inquiry from ${fields.name}`,
     html: buildEmailHtml(view),
@@ -387,8 +329,7 @@ async function handleContact(request) {
   }
 
   if (!response.ok) {
-    // Log the provider's reason for debugging; never surface it to the
-    // browser, since it can echo back internal config details.
+    // Log Resend's reason; never pass it to the browser, as it can echo config details.
     const detail = await response.text().catch(() => '');
     console.error(`[contact] Resend returned ${response.status}: ${detail}`);
     return json({ ok: false, error: 'That message couldn’t be sent. Please try again in a moment.' }, 502);
