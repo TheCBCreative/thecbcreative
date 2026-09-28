@@ -8,4 +8,6 @@ module.exports = {
   server: { command: 'node scripts/serve-build.mjs', url: `${ORIGIN}/`, readyTimeout: 30000 },
   failOn: 'serious',
   reducedMotion: true,
+  // Long enough for the mobile menu's staggered fade-in to finish before it's audited.
+  interactiveStates: { settleDelay: 1500 },
 };
