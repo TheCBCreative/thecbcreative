@@ -21,7 +21,7 @@ export function Services() {
           </div>
           <p className="col-span-2 max-w-155 text-body-lg leading-copy">{SERVICES_INTRO.body}</p>
         </Reveal>
-        <ul className="mt-16 grid grid-cols-3 gap-8">
+        <ul className="mt-16 grid grid-cols-3 gap-16">
           {SERVICES.map((service, index) => (
             // Hidden while the flip overlay stands in for this card.
             <li key={service.slug} data-service={service.slug} className={cx(activeSlug === service.slug && 'invisible')}>
