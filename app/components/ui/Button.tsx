@@ -10,9 +10,10 @@ type ButtonProps = { variant?: Variant; children: ReactNode; className?: string 
 );
 
 // base: resting look · fill: colour that wipes in · label: text colour once filled
+// The Brass button keeps a Brass border so its shape still shows when Pine fills it on a Pine background.
 const variants: Record<Variant, { base: string; fill: string; label: string }> = {
   brass: {
-    base: 'bg-brass px-11 py-5 font-eyebrow text-eyebrow tracking-caps text-pine',
+    base: 'border border-brass bg-brass px-11 py-5 font-eyebrow text-eyebrow tracking-caps text-pine',
     fill: 'bg-pine',
     label: 'text-snow',
   },
