@@ -50,8 +50,8 @@ export function getService(slug: string | undefined) {
   return SERVICES.find((service) => service.slug === slug);
 }
 
-// The last service pages back to the first, as in the Figma folio.
+// The last service has no next one; its page offers to close instead.
 export function getNextService(slug: string) {
   const index = SERVICES.findIndex((service) => service.slug === slug);
-  return SERVICES[(index + 1) % SERVICES.length];
+  return SERVICES[index + 1];
 }

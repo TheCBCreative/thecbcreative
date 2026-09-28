@@ -1,5 +1,5 @@
 import { AnimatePresence, motion, type Variants } from 'motion/react';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, type ReactNode } from 'react';
 import { data, Link, useLocation } from 'react-router';
 import type { Route } from './+types/service';
 import { useFlip } from '~/components/flip/flip-context';
@@ -7,15 +7,16 @@ import { SkipLink } from '~/components/layout/SkipLink';
 import { GhostNumeral } from '~/components/service/GhostNumeral';
 import { Button } from '~/components/ui/Button';
 import { groupUnderline } from '~/styles/underline';
+import { cx } from '~/utils/cx';
 import { Wordmark } from '~/components/ui/Wordmark';
-import { getNextService, getService, SERVICES } from '~/data/services';
+import { getNextService, getService, SERVICES, type Service } from '~/data/services';
 import { SITE } from '~/data/site';
 import { DURATION, EASE_OUT, REVEAL_OFFSET } from '~/styles/motion';
 
 export function loader({ params }: Route.LoaderArgs) {
   const service = getService(params.slug);
   if (!service) throw data(null, { status: 404 });
-  return { service, next: getNextService(service.slug) };
+  return { service, next: getNextService(service.slug) ?? null };
 }
 
 export function meta({ loaderData }: Route.MetaArgs) {
@@ -81,19 +82,12 @@ export default function Service({ loaderData }: Route.ComponentProps) {
         initial="hidden"
         animate="shown"
       >
-        <Link
-          to="/#services"
-          onClick={(event) => {
-            event.preventDefault();
-            close(service, fromHome);
-          }}
-          className="group flex items-center gap-3 justify-self-start"
-        >
+        <CloseLink service={service} fromHome={fromHome} className="justify-self-start gap-3">
           <span aria-hidden className="font-body text-heading-xs leading-none font-extralight">
             ×
           </span>
           <span className={`${groupUnderline} eyebrow text-caption tracking-caps`}>Close</span>
-        </Link>
+        </CloseLink>
         <p className="justify-self-center eyebrow text-caption tracking-caps text-pine/(--opacity-muted-text)">Services</p>
         <Link to="/" aria-label={`${SITE.name} — home`} className="justify-self-end">
           <Wordmark className="h-10 w-32" />
@@ -153,17 +147,54 @@ export default function Service({ loaderData }: Route.ComponentProps) {
             Service {position} of {SERVICES.length}
           </span>
         </p>
-        <Link to={`/services/${next.slug}`} state={{ fromHome }} className="group flex items-center gap-4">
-          <span className={`${groupUnderline} eyebrow text-caption tracking-caps`}>
-            <span className="sr-only">Next service: </span>
-            <span aria-hidden>Next — </span>
-            {next.title}
-          </span>
-          <span aria-hidden className="font-body text-icon leading-none font-extralight text-brass">
-            →
-          </span>
-        </Link>
+        {next ? (
+          // Replace, so Close still goes straight back to the homepage.
+          <Link to={`/services/${next.slug}`} state={{ fromHome }} replace className="group flex items-center gap-4">
+            <span className={`${groupUnderline} eyebrow text-caption tracking-caps`}>
+              <span className="sr-only">Next service: </span>
+              <span aria-hidden>Next — </span>
+              {next.title}
+            </span>
+            <span aria-hidden className="font-body text-icon leading-none font-extralight text-brass">
+              →
+            </span>
+          </Link>
+        ) : (
+          <CloseLink service={service} fromHome={fromHome} className="gap-4">
+            <span className={`${groupUnderline} eyebrow text-caption tracking-caps`}>Close — All services</span>
+            <span aria-hidden className="font-body text-icon leading-none font-extralight text-brass">
+              ×
+            </span>
+          </CloseLink>
+        )}
       </motion.footer>
     </div>
+  );
+}
+
+// Closes the page with the reverse flip, landing back on the card in Services.
+function CloseLink({
+  service,
+  fromHome,
+  className,
+  children,
+}: {
+  service: Service;
+  fromHome: boolean;
+  className?: string;
+  children: ReactNode;
+}) {
+  const { close } = useFlip();
+  return (
+    <Link
+      to="/#services"
+      onClick={(event) => {
+        event.preventDefault();
+        close(service, fromHome);
+      }}
+      className={cx('group flex items-center', className)}
+    >
+      {children}
+    </Link>
   );
 }

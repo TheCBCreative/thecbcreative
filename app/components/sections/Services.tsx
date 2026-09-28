@@ -15,7 +15,7 @@ export function Services() {
         <Reveal className="grid grid-cols-3 items-end gap-8">
           <div>
             <p className="eyebrow text-eyebrow-lg tracking-eyebrow">{SERVICES_INTRO.eyebrow}</p>
-            <h2 id="services-title" className="mt-4 font-display text-heading-lg">
+            <h2 id="services-title" className="mt-4 font-display text-display-lg leading-tighter tracking-headline">
               {SERVICES_INTRO.headline}
             </h2>
           </div>
