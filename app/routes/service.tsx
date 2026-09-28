@@ -127,7 +127,7 @@ export default function Service({ loaderData }: Route.ComponentProps) {
               ))}
             </h1>
             <motion.div variants={draw} className="mt-flow-lg h-px w-12 origin-left bg-brass" />
-            <motion.div variants={fadeUp} className="mt-flow-sm max-w-135 space-y-flow-xs text-body-lg leading-airy text-pine/88">
+            <motion.div variants={fadeUp} className="mt-flow-sm max-w-172 space-y-flow-xs text-body-lg leading-airy text-pine/88">
               {service.description.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
               ))}

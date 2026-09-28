@@ -2,6 +2,9 @@
 // Coordinates sit in the numeral's 760px text box (height 895) so all three share a baseline.
 export const GHOST_NUMERAL_HEIGHT = 895;
 
+// How far the text box bleeds past the page's right and bottom edges in Figma (at 1440 × 1024).
+export const GHOST_NUMERAL_BLEED = { right: 150, bottom: 21 } as const;
+
 export const GHOST_NUMERALS: Record<string, { width: number; path: string }> = {
   '01': {
     width: 765,

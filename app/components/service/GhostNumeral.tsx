@@ -1,8 +1,9 @@
 import { motion, useReducedMotion } from 'motion/react';
-import { GHOST_NUMERAL_HEIGHT, GHOST_NUMERALS } from '~/data/ghost-numerals';
+import { GHOST_NUMERAL_BLEED, GHOST_NUMERAL_HEIGHT, GHOST_NUMERALS } from '~/data/ghost-numerals';
 import { DURATION, EASE_IN_OUT } from '~/styles/motion';
 
 // The oversized outlined number behind each service page; its outline draws itself in.
+// The viewBox stops at the page edges and the glyph overflows it, so the bleed scales with the numeral.
 export function GhostNumeral({ number }: { number: string }) {
   const reduce = useReducedMotion();
   const numeral = GHOST_NUMERALS[number];
@@ -11,8 +12,8 @@ export function GhostNumeral({ number }: { number: string }) {
   return (
     <svg
       aria-hidden
-      viewBox={`0 0 ${numeral.width} ${GHOST_NUMERAL_HEIGHT}`}
-      className="pointer-events-none absolute -right-37.5 -bottom-5.25 h-ghost-numeral fill-none stroke-brass/75 stroke-(length:--stroke-outline)"
+      viewBox={`0 0 ${numeral.width - GHOST_NUMERAL_BLEED.right} ${GHOST_NUMERAL_HEIGHT - GHOST_NUMERAL_BLEED.bottom}`}
+      className="pointer-events-none absolute right-0 bottom-0 h-ghost-numeral overflow-visible fill-none stroke-brass/75 stroke-(length:--stroke-outline)"
     >
       <motion.path
         d={numeral.path}
