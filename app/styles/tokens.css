@@ -28,18 +28,6 @@
   --color-rust: #9b3b2f; /* form errors only: 6.3:1 on Snow */
 
   /* Color — semantic */
-  --color-text-on-video: var(--color-snow);
-  --color-text-on-cream: var(--color-pine);
-  --color-accent-text-on-video: var(--color-brass-light);
-  --color-accent-text-on-cream: var(--color-brass-deep);
-  --color-surface-cream: var(--color-snow);
-  --color-surface-glass: var(--color-pine);
-  --color-scrim: var(--color-pine);
-  --color-hairline: var(--color-snow);
-  --color-cta-bg: var(--color-brass);
-  --color-cta-text: var(--color-pine);
-  --color-cta-hover-bg: var(--color-pine);
-  --color-cta-hover-text: var(--color-snow);
   --color-error-text: var(--color-rust);
 
   /* Opacity — use as color modifiers, e.g. bg-pine/(--opacity-nav-tint) */
@@ -49,7 +37,6 @@
   --opacity-nav-tint: 42%;
   --opacity-hairline-on-cream: 45%;
   --opacity-input-line: 55%;
-  --opacity-form-glass: 60%;
   --opacity-page-rule: 14%; /* hairlines on the cream service pages */
   --opacity-muted-text: 70%; /* quiet Pine text on cream, 5.8:1 on Snow */
 
@@ -62,7 +49,6 @@
   --font-weight-extralight: 200;
   --font-weight-light: 300;
   --font-weight-normal: 400;
-  --font-weight-medium: 500;
 
   /* Type — sizes (desktop comp values). Headings shrink with the window height below 1024px so each chapter fits. */
   --text-caption: 11px;
@@ -81,7 +67,6 @@
   --text-heading-sm: min(34px, 4svh);
   --text-heading: min(36px, 4svh);
   --text-heading-md: min(42px, 5svh);
-  --text-heading-lg: min(56px, 6svh);
   --text-display-xs: min(64px, 7svh);
   --text-display-sm: min(68px, 7svh);
   --text-display-md: min(74px, 8svh);
@@ -90,7 +75,6 @@
   --text-display-xl: min(128px, 13svh);
   --text-display-2xl: min(165px, 15svh);
   --text-ghost-word: min(330px, 33svh);
-  --text-ghost-numeral: min(760px, 75svh);
 
   /* Type — line height */
   --leading-tightest: 0.84;
@@ -108,11 +92,9 @@
   --leading-airy: 1.7;
 
   /* Type — letter spacing */
-  --tracking-ghost: -0.04em;
   --tracking-display: -0.02em;
   --tracking-headline: -0.015em;
   --tracking-tight: -0.01em;
-  --tracking-normal: 0;
   --tracking-hero: 0.005em;
   --tracking-label: 0.14em;
   --tracking-wide: 0.16em;
@@ -137,17 +119,12 @@
   --spacing-flow-sm: min(28px, 3svh);
   --spacing-flow-md: min(40px, 4svh);
   --spacing-flow-lg: min(44px, 5svh);
-  --container-content: 1248px; /* layout/content-width */
-  --container-frame: 1440px; /* layout/frame-width */
 
   /* Radius, stroke */
-  --radius-none: 0;
-  --radius-xs: 2px;
   --radius-sm: 6px;
   --radius-md: 8px;
 
   /* Effects */
-  --blur-modal: 10px;
   --blur-glass: 30px;
   --blur-nav: 36px;
   --shadow-nav: 0 8px 24px rgb(0 0 0 / 0.25);
@@ -169,7 +146,6 @@
     --text-heading-sm: 24px;
     --text-heading: 24px;
     --text-heading-md: 28px;
-    --text-heading-lg: 44px;
     --text-display-xs: 52px;
     --text-display-sm: 60px;
     --text-display-md: 64px;
