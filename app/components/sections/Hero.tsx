@@ -20,7 +20,7 @@ export function Hero() {
   const logoOpacity = useTransform(handoff, (value) => 1 - value);
 
   return (
-    <Chapter labelledBy="hero-title" grade className="px-page text-center">
+    <Chapter id="home" labelledBy="hero-title" grade className="px-page text-center">
       <motion.div
         className="mx-auto flex w-full max-w-250 flex-1 flex-col items-center justify-center"
         variants={container}

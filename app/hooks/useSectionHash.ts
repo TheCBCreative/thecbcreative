@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
+import { setActiveSection } from './active-section';
 
-// Keeps the URL hash in step with the chapter in the middle of the screen (#about, #services),
-// and clears it back in the hero or chapters without a nav link. Uses replaceState so scrolling adds no history.
+// Keeps the URL hash and the nav's current link in step with the chapter in the middle of the screen.
+// The hero ("home") clears the hash; chapters not listed clear both. replaceState, so scrolling adds no history.
 export function useSectionHash(ids: readonly string[]) {
   useEffect(() => {
     const sections = ids.map((id) => document.getElementById(id)).filter((el): el is HTMLElement => el !== null);
@@ -9,7 +10,8 @@ export function useSectionHash(ids: readonly string[]) {
 
     const update = () => {
       const current = ids.find((id) => inView.has(id));
-      const hash = current ? `#${current}` : '';
+      setActiveSection(current ?? null);
+      const hash = current && current !== 'home' ? `#${current}` : '';
       if (window.location.hash === hash) return;
       window.history.replaceState(window.history.state, '', `${window.location.pathname}${window.location.search}${hash}`);
     };
@@ -25,6 +27,9 @@ export function useSectionHash(ids: readonly string[]) {
       { rootMargin: '-50% 0px -50% 0px' },
     );
     sections.forEach((section) => observer.observe(section));
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      setActiveSection(null);
+    };
   }, [ids]);
 }

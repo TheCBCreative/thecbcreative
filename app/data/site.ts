@@ -8,7 +8,7 @@ export const SITE = {
   socialImage: '/brand/social-share.jpg',
 } as const;
 
-// Hash links scroll to homepage chapters; page links get aria-current.
+// Hash links scroll to homepage chapters. The underline marks the current page, or the chapter in view on the homepage.
 export const NAV_LINKS = [
   { label: 'Home', to: '/' },
   { label: 'About', to: '/#about' },
