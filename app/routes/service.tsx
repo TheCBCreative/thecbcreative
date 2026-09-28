@@ -110,7 +110,7 @@ export default function Service({ loaderData }: Route.ComponentProps) {
             <h1
               ref={heading}
               tabIndex={-1}
-              className="mt-flow-xs flex flex-col font-display text-display-2xl leading-tightest tracking-display focus:outline-none"
+              className="mt-flow-2xs flex flex-col font-display text-display-2xl leading-tightest tracking-display focus:outline-none"
             >
               {service.titleLines.map((line) => (
                 <span key={line} className="mask-line">

@@ -126,6 +126,7 @@
   /* Service pages: vertical rhythm that shrinks with short windows so the page fits without scrolling */
   --spacing-bar: min(100px, 10svh); /* header and footer bars, 100 at 1024 */
   --spacing-lede: min(72px, 8svh);
+  --spacing-flow-2xs: min(12px, 2svh);
   --spacing-flow-xs: min(20px, 2svh);
   --spacing-flow-sm: min(28px, 3svh);
   --spacing-flow-md: min(40px, 4svh);
