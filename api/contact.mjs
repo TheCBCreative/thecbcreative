@@ -44,7 +44,7 @@ const DEFAULT_FROM = 'The CB Creative <inquiries@thecbcreative.com>';
 // 413 before our code ever runs if it's exceeded. Cap attachments a good
 // margin below that so the text fields and multipart overhead always fit,
 // and so we can return a friendly error rather than an opaque platform one.
-// The form enforces the same number client-side (see contact.js) — this is
+// The form enforces the same number client-side (app/data/contact.ts) — this is
 // the copy that actually counts, since a direct POST skips the browser.
 const MAX_TOTAL_ATTACHMENT_BYTES = 3.5 * 1024 * 1024;
 const MAX_FILES = 10;
@@ -77,19 +77,20 @@ const FIELD_LABELS = {
   name: 'Name',
   business: 'Business',
   email: 'Email',
+  phone: 'Phone',
   message: 'Project details',
   links: 'Inspiration links',
 };
 
-// Brand tokens, inlined — email clients don't support CSS custom properties
-// or external stylesheets, so these are duplicated from common/styles/brand.css
-// rather than referenced. Keep in sync if the palette ever changes.
-const INK = '#1c1f16';
-const PAPER = '#f6f3ec';
-const FOREST = '#2f3a1f';
-const SAGE = '#93a876';
-const MUTED = '#6b6f60';
-const BORDER = '#ddd8cc';
+// Brand colours, inlined — email clients don't support CSS custom properties
+// or external stylesheets, so these are copied from app/styles/tokens.css.
+// Keep in sync if the palette ever changes.
+const INK = '#1b2318'; // Pine
+const PAPER = '#f6f6f1'; // Snow
+const FOREST = '#1b2318'; // Pine (links)
+const SAGE = '#d1bd9e'; // Brass Light (eyebrow on Pine)
+const MUTED = '#85663a'; // Brass Deep (labels on Snow)
+const BORDER = '#e2e3dc'; // Mist
 
 function escapeHtml(value) {
   return String(value)
@@ -161,6 +162,9 @@ function buildEmailHtml({ fields, attachments, submittedAt }) {
       )}</a>`
     )
   );
+  if (fields.phone) {
+    rows.push(detailRowHtml(FIELD_LABELS.phone, escapeHtml(fields.phone)));
+  }
   if (fields.business) {
     rows.push(detailRowHtml(FIELD_LABELS.business, escapeHtml(fields.business)));
   }
@@ -239,6 +243,7 @@ function buildEmailText({ fields, attachments, submittedAt }) {
     '',
     `${FIELD_LABELS.email}: ${fields.email}`,
   ];
+  if (fields.phone) lines.push(`${FIELD_LABELS.phone}: ${fields.phone}`);
   if (fields.business) lines.push(`${FIELD_LABELS.business}: ${fields.business}`);
   if (fields.links) lines.push(`${FIELD_LABELS.links}: ${fields.links}`);
   if (attachments.length) {
@@ -301,6 +306,7 @@ async function handleContact(request) {
     name: text('name'),
     business: text('business'),
     email: text('email'),
+    phone: text('phone'),
     message: text('message'),
     links: text('links'),
   };
