@@ -11,6 +11,9 @@ export const DURATION = {
 
 export const REVEAL_OFFSET = 24;
 
+// Scroll reveals wait until an element is 20% of the way up from the bottom of the screen, so the fade is seen.
+export const REVEAL_VIEWPORT = { once: true, margin: '0px 0px -20% 0px' } as const;
+
 // Lists that arrive item by item (About's 01–06): slower and further apart than D1 so each one lands.
 export const POINTS_REVEAL = { duration: 0.8, stagger: 0.15 } as const;
 

@@ -2,7 +2,7 @@ import { motion, type Variants } from 'motion/react';
 import { Chapter } from '~/components/ui/Chapter';
 import { Reveal } from '~/components/ui/Reveal';
 import { ABOUT } from '~/data/home';
-import { EASE_OUT, POINTS_REVEAL, REVEAL_OFFSET } from '~/styles/motion';
+import { EASE_OUT, POINTS_REVEAL, REVEAL_OFFSET, REVEAL_VIEWPORT } from '~/styles/motion';
 
 // The 01–06 points arrive one at a time as the list scrolls into view.
 const points: Variants = { shown: { transition: { staggerChildren: POINTS_REVEAL.stagger } } };
@@ -47,7 +47,7 @@ export function About() {
             variants={points}
             initial="hidden"
             whileInView="shown"
-            viewport={{ once: true, margin: '0px 0px -10% 0px' }}
+            viewport={REVEAL_VIEWPORT}
           >
             {ABOUT.points.map((text, index) => (
               <motion.li
