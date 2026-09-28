@@ -131,7 +131,7 @@ export function ContactForm({ onSent }: { onSent: () => void }) {
         <input id="images" type="file" accept="image/*" multiple onChange={onFiles} aria-describedby={describe('images')} className="peer sr-only" />
         <label
           htmlFor="images"
-          className="flex cursor-pointer items-end justify-between border-b border-pine/(--opacity-input-line) pb-2 text-label peer-focus-visible:border-pine peer-focus-visible:shadow-field-focus"
+          className="flex cursor-pointer items-end justify-between border-b border-pine/(--opacity-input-line) pb-2 text-label peer-focus:border-pine peer-focus:shadow-field-focus"
         >
           {CONTACT.fields.images}
           <span aria-hidden className="font-body text-heading-xs leading-none font-extralight text-brass-deep">
