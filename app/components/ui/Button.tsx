@@ -36,10 +36,12 @@ export function Button({ variant = 'brass', children, className, ...props }: But
         className={cx('absolute inset-0 origin-left scale-x-0 transition-[scale] group-hover:scale-x-100 group-focus-visible:scale-x-100 group-active:scale-x-100', fill, wipe)}
       />
       <span className="relative uppercase">{children}</span>
+      {/* The filled-colour copy of the label. It stays invisible (not just clipped) at rest, so it's never read
+          or contrast-checked against the resting fill; visibility holds through the wipe back out. */}
       <span
         aria-hidden
         className={cx(
-          'absolute inset-0 flex items-center justify-center uppercase transition-[clip-path] [clip-path:inset(0_100%_0_0)] group-hover:[clip-path:inset(0)] group-focus-visible:[clip-path:inset(0)] group-active:[clip-path:inset(0)]',
+          'invisible absolute inset-0 flex items-center justify-center uppercase transition-[clip-path,visibility] [clip-path:inset(0_100%_0_0)] group-hover:visible group-hover:[clip-path:inset(0)] group-focus-visible:visible group-focus-visible:[clip-path:inset(0)] group-active:visible group-active:[clip-path:inset(0)]',
           label,
           wipe,
         )}
