@@ -1,4 +1,4 @@
-import { motion, useAnimate, useReducedMotion } from 'motion/react';
+import { animate, useReducedMotion } from 'motion/react';
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { ServiceCard } from '~/components/sections/ServiceCard';
@@ -53,12 +53,16 @@ export function FlipProvider({ children }: { children: ReactNode }) {
 }
 
 function FlipOverlay({ flip, onDone }: { flip: Flip; onDone: () => void }) {
-  const [scope, animate] = useAnimate<HTMLDivElement>();
+  // Plain animate() rather than useAnimate, which stops its animations when Strict Mode re-runs effects.
+  const scope = useRef<HTMLDivElement>(null);
+  const turner = useRef<HTMLDivElement>(null);
+  const back = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { pathname, state } = useLocation();
   const target = flip.phase === 'open' ? servicePath(flip.service) : '/';
   const fromHome = useRef(Boolean((state as { fromHome?: boolean } | null)?.fromHome));
   const arrived = useRef<() => void>(undefined);
+  const started = useRef(false);
   const turn = { duration: FLIP.turn, ease: EASE_IN_OUT };
   const grow = { duration: FLIP.grow, ease: EASE_IN_OUT };
 
@@ -68,18 +72,23 @@ function FlipOverlay({ flip, onDone }: { flip: Flip; onDone: () => void }) {
   }, [pathname, target]);
 
   useEffect(() => {
+    // Strict Mode mounts effects twice in development; the sequence must only run (and navigate) once.
+    if (started.current) return;
+    started.current = true;
     const waitFor = (go: () => void) =>
       new Promise<void>((resolve) => {
         arrived.current = resolve;
         go();
       }).then(nextFrame);
     const fullScreen = { top: 0, left: 0, width: window.innerWidth, height: window.innerHeight };
-    const back = scope.current.querySelector('[data-back]')!;
+    const container = scope.current!;
+    const card = turner.current!;
+    const cream = back.current!;
 
     const run = async () => {
       if (flip.phase === 'open') {
-        await animate('[data-turn]', { rotateY: 180 }, turn);
-        await Promise.all([animate(scope.current, fullScreen, grow), animate(back, { borderRadius: 0 }, grow)]);
+        await animate(card, { rotateY: [0, 180], transformPerspective: FLIP.perspective }, turn);
+        await Promise.all([animate(container, fullScreen, grow), animate(cream, { borderRadius: 0 }, grow)]);
         await waitFor(() => navigate(servicePath(flip.service), { state: { fromHome: true } }));
       } else {
         // Jump, rather than smooth-scroll, back to the card so it can be measured where it will land.
@@ -94,9 +103,9 @@ function FlipOverlay({ flip, onDone }: { flip: Flip; onDone: () => void }) {
             cell.scrollIntoView({ block: 'center' });
             rect = cell.getBoundingClientRect();
           }
-          const card = { top: rect.top, left: rect.left, width: rect.width, height: rect.height };
-          await Promise.all([animate(scope.current, card, grow), animate(back, { borderRadius: FLIP.cardRadius }, grow)]);
-          await animate('[data-turn]', { rotateY: 0 }, turn);
+          const bounds = { top: rect.top, left: rect.left, width: rect.width, height: rect.height };
+          await Promise.all([animate(container, bounds, grow), animate(cream, { borderRadius: FLIP.cardRadius }, grow)]);
+          await animate(card, { rotateY: [180, 0], transformPerspective: FLIP.perspective }, turn);
         }
         root.style.scrollBehavior = '';
       }
@@ -117,20 +126,20 @@ function FlipOverlay({ flip, onDone }: { flip: Flip; onDone: () => void }) {
 
   return (
     <div ref={scope} aria-hidden className="pointer-events-none fixed z-[70]" style={start}>
-      <motion.div
-        data-turn
+      <div
+        ref={turner}
         className="relative size-full transform-3d"
-        style={{ transformPerspective: FLIP.perspective, rotateY: opening ? 0 : 180 }}
+        style={{ transform: `perspective(${FLIP.perspective}px) rotateY(${opening ? 0 : 180}deg)` }}
       >
         <div className="absolute inset-0 backface-hidden">
           <ServiceCard service={flip.service} face />
         </div>
         <div
-          data-back
+          ref={back}
           className="absolute inset-0 rotate-y-180 bg-snow backface-hidden"
           style={{ borderRadius: opening ? FLIP.cardRadius : 0 }}
         />
-      </motion.div>
+      </div>
     </div>
   );
 }
