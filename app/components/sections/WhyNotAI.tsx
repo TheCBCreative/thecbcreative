@@ -7,7 +7,7 @@ import { DURATION, EASE_OUT } from '~/styles/motion';
 export function WhyNotAI() {
   return (
     <Chapter id="why-not-ai" labelledBy="why-title" grade>
-      <div className="grid grid-cols-[32.5rem_1fr] gap-36 px-page pt-23 -mb-5">
+      <div className="grid grid-cols-[520px_1fr] gap-36 px-page pt-23 -mb-5">
         <div>
           <Reveal>
             <p className="eyebrow text-eyebrow tracking-caps text-brass-light">{WHY_NOT_AI.eyebrow}</p>
@@ -19,13 +19,13 @@ export function WhyNotAI() {
           </Reveal>
           <Reveal index={1}>
             <p className="mt-9 text-lead leading-relaxed">{WHY_NOT_AI.intro}</p>
-            <p className="mt-5.5 max-w-120 text-body-sm leading-airy">{WHY_NOT_AI.body}</p>
+            <p className="mt-6 max-w-120 text-body-sm leading-airy">{WHY_NOT_AI.body}</p>
           </Reveal>
         </div>
         <ol className="border-b border-snow/(--opacity-hairline-on-video)">
           {WHY_NOT_AI.points.map((point, index) => (
             <li key={point.numeral} className="border-t border-snow/(--opacity-hairline-on-video)">
-              <Reveal index={index} className="grid grid-cols-[64px_1fr] pt-5 pb-6.5">
+              <Reveal index={index} className="grid grid-cols-[64px_1fr] pt-5 pb-7">
                 <span aria-hidden className="font-display text-numeral leading-snug text-brass-light">
                   {point.numeral}
                 </span>
@@ -42,7 +42,7 @@ export function WhyNotAI() {
       {/* The closing line sits on the struck-through "average", as in Figma. */}
       {/* The parent watches the viewport: a scaleX(0) line has no area, so it can't. */}
       <motion.div
-        className="relative mt-auto -mb-17.5 flex justify-center"
+        className="relative mt-auto -mb-18 flex justify-center"
         initial="hidden"
         whileInView="shown"
         viewport={{ once: true }}
@@ -50,7 +50,7 @@ export function WhyNotAI() {
         <span aria-hidden className="relative font-display text-ghost-word leading-[normal] tracking-display text-outline text-brass/40">
           {WHY_NOT_AI.ghostWord}
           <motion.span
-            className="absolute -inset-x-10 top-[59%] h-0.5 origin-left bg-brass"
+            className="absolute -inset-x-10 top-[59%] h-[2px] origin-left bg-brass"
             variants={{ hidden: { scaleX: 0 }, shown: { scaleX: 1 } }}
             transition={{ duration: DURATION.draw, ease: EASE_OUT }}
           />

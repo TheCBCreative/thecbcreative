@@ -61,32 +61,32 @@
   --font-weight-medium: 500;
 
   /* Type — sizes (desktop comp values). Headings shrink with the window height below 1024px so each chapter fits. */
-  --text-caption: 0.6875rem; /* 11 */
-  --text-eyebrow: 0.75rem; /* 12 */
-  --text-eyebrow-lg: 0.8125rem; /* 13 */
-  --text-label: 0.875rem; /* 14 */
-  --text-body-sm: 0.9375rem; /* 15 */
-  --text-body: 1rem; /* 16 */
-  --text-body-lg: 1.0625rem; /* 17 */
-  --text-lead-sm: 1.125rem; /* 18 */
-  --text-lead: 1.1875rem; /* 19 */
-  --text-icon: 1.375rem; /* 22 */
-  --text-numeral-sm: 1.625rem; /* 26 */
-  --text-numeral: 1.75rem; /* 28 */
-  --text-heading-xs: min(1.875rem, 2.93svh); /* 30 */
-  --text-heading-sm: min(2.125rem, 3.32svh); /* 34 */
-  --text-heading: min(2.25rem, 3.516svh); /* 36 */
-  --text-heading-md: min(2.625rem, 4.102svh); /* 42 */
-  --text-heading-lg: min(3.5rem, 5.469svh); /* 56 */
-  --text-display-xs: min(4rem, 6.25svh); /* 64 */
-  --text-display-sm: min(4.25rem, 6.641svh); /* 68 */
-  --text-display-md: min(4.625rem, 7.227svh); /* 74 */
-  --text-display: min(5.5rem, 8.594svh); /* 88 */
-  --text-display-lg: min(5.75rem, 8.984svh); /* 92 */
-  --text-display-xl: min(8rem, 12.5svh); /* 128 */
-  --text-display-2xl: min(10.5rem, 16.406svh); /* 168 */
-  --text-ghost-word: min(20.625rem, 32.227svh); /* 330 */
-  --text-ghost-numeral: min(47.5rem, 74.219svh); /* 760 */
+  --text-caption: 11px;
+  --text-eyebrow: 12px;
+  --text-eyebrow-lg: 13px;
+  --text-label: 14px;
+  --text-body-sm: 15px;
+  --text-body: 16px;
+  --text-body-lg: 17px;
+  --text-lead-sm: 18px;
+  --text-lead: 19px;
+  --text-icon: 22px;
+  --text-numeral-sm: 26px;
+  --text-numeral: 28px;
+  --text-heading-xs: min(30px, 3svh);
+  --text-heading-sm: min(34px, 4svh);
+  --text-heading: min(36px, 4svh);
+  --text-heading-md: min(42px, 5svh);
+  --text-heading-lg: min(56px, 6svh);
+  --text-display-xs: min(64px, 7svh);
+  --text-display-sm: min(68px, 7svh);
+  --text-display-md: min(74px, 8svh);
+  --text-display: min(88px, 9svh);
+  --text-display-lg: min(92px, 9svh);
+  --text-display-xl: min(128px, 13svh);
+  --text-display-2xl: min(168px, 17svh);
+  --text-ghost-word: min(330px, 33svh);
+  --text-ghost-numeral: min(760px, 75svh);
 
   /* Type — line height */
   --leading-tightest: 0.84;
@@ -116,22 +116,22 @@
   --tracking-caps: 0.24em;
 
   /* Spacing — 4px base, so p-6 = 24px (space/24 in Figma) */
-  --spacing: 0.25rem;
-  --spacing-page: 6rem; /* layout/page-margin */
-  --spacing-edge: 3.5rem; /* layout/edge-margin */
-  --spacing-nav: 5.25rem; /* layout/nav-height */
-  --spacing-card: min(29rem, 45.313svh); /* service card height, 464 at 1024 */
-  --spacing-ghost-numeral: min(54.625rem, 85.352svh); /* ghost numeral, 874 at 1024 (its box minus the bottom bleed) */
-  --spacing-ghost-clear: 51rem; /* page margin + description column + 32px gap; the numeral never starts left of this */
+  --spacing: 4px;
+  --spacing-page: 96px; /* layout/page-margin */
+  --spacing-edge: 56px; /* layout/edge-margin */
+  --spacing-nav: 84px; /* layout/nav-height */
+  --spacing-card: min(464px, 50svh); /* service card height, 464 max */
+  --spacing-ghost-numeral: min(874px, 86svh); /* ghost numeral, 874 at 1024 (its box minus the bottom bleed) */
+  --spacing-ghost-clear: 816px; /* page margin + description column + 32px gap; the numeral never starts left of this */
   /* Service pages: vertical rhythm that shrinks with short windows so the page fits without scrolling */
-  --spacing-bar: min(6.25rem, 9.766svh); /* header and footer bars, 100 at 1024 */
-  --spacing-lede: min(4.5rem, 7.031svh); /* 72 */
-  --spacing-flow-xs: min(1.25rem, 1.953svh); /* 20 */
-  --spacing-flow-sm: min(1.75rem, 2.734svh); /* 28 */
-  --spacing-flow-md: min(2.5rem, 3.906svh); /* 40 */
-  --spacing-flow-lg: min(2.75rem, 4.297svh); /* 44 */
-  --container-content: 78rem; /* layout/content-width */
-  --container-frame: 90rem; /* layout/frame-width */
+  --spacing-bar: min(100px, 10svh); /* header and footer bars, 100 at 1024 */
+  --spacing-lede: min(72px, 8svh);
+  --spacing-flow-xs: min(20px, 2svh);
+  --spacing-flow-sm: min(28px, 3svh);
+  --spacing-flow-md: min(40px, 4svh);
+  --spacing-flow-lg: min(44px, 5svh);
+  --container-content: 1248px; /* layout/content-width */
+  --container-frame: 1440px; /* layout/frame-width */
 
   /* Radius, stroke */
   --radius-none: 0;

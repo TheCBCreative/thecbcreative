@@ -17,7 +17,7 @@ const variants: Record<Variant, { base: string; fill: string; label: string }> =
     label: 'text-snow',
   },
   outline: {
-    base: 'border border-snow/55 px-8.5 py-3.5 font-body text-eyebrow font-normal tracking-label text-snow hover:border-brass focus-visible:border-brass active:border-brass',
+    base: 'border border-snow/55 px-9 py-4 font-body text-eyebrow font-normal tracking-label text-snow hover:border-brass focus-visible:border-brass active:border-brass',
     fill: 'bg-brass',
     label: 'text-pine',
   },

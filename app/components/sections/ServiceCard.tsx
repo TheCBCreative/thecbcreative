@@ -36,10 +36,10 @@ export function ServiceCard({ service, face }: ServiceCardProps) {
         'group relative flex flex-col rounded-sm border border-brass/50 bg-pine/(--opacity-glass-tint) p-9 shadow-card backdrop-blur-glass',
         face
           ? 'h-full'
-          : 'h-card transition duration-(--duration-link-underline) ease-out-soft hover:-translate-y-1.5 hover:border-brass hover:shadow-card-hover has-focus-visible:-translate-y-1.5 has-focus-visible:border-brass has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-focus-visible:outline-(--focus-ring) motion-reduce:transition-none motion-reduce:hover:translate-y-0',
+          : 'h-card transition duration-(--duration-link-underline) ease-out-soft hover:-translate-y-2 hover:border-brass hover:shadow-card-hover has-focus-visible:-translate-y-2 has-focus-visible:border-brass has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-focus-visible:outline-(--focus-ring) motion-reduce:transition-none motion-reduce:hover:translate-y-0',
       )}
     >
-      <div className="flex items-center justify-between border-b border-brass/45 pb-3.5">
+      <div className="flex items-center justify-between border-b border-brass/45 pb-4">
         <span aria-hidden className="font-display text-numeral-sm text-brass-light">
           {service.number}
         </span>
@@ -59,7 +59,7 @@ export function ServiceCard({ service, face }: ServiceCardProps) {
             </Link>
           )}
         </h3>
-        <p className="mt-5.5 max-w-59 text-body-sm leading-body text-snow/80">{service.teaser}</p>
+        <p className="mt-6 max-w-59 text-body-sm leading-body text-snow/80">{service.teaser}</p>
         <span aria-hidden className="pointer-events-none absolute right-7 bottom-3 font-body text-display-xl leading-none font-extralight text-brass">
           +
         </span>
