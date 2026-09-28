@@ -92,6 +92,7 @@ function FlipOverlay({ flip, onDone }: { flip: Flip; onDone: () => void }) {
         await waitFor(() => navigate(servicePath(flip.service), { state: { fromHome: true } }));
       } else {
         // Jump, rather than smooth-scroll, back to the card so it can be measured where it will land.
+        // If the card isn't fully on screen, it lands with its bottom edge at the bottom of the screen.
         const root = document.documentElement;
         root.style.scrollBehavior = 'auto';
         await nextFrame();
@@ -100,7 +101,7 @@ function FlipOverlay({ flip, onDone }: { flip: Flip; onDone: () => void }) {
         if (cell) {
           let rect = cell.getBoundingClientRect();
           if (rect.top < 0 || rect.bottom > window.innerHeight) {
-            cell.scrollIntoView({ block: 'center' });
+            cell.scrollIntoView({ block: 'end' });
             rect = cell.getBoundingClientRect();
           }
           const bounds = { top: rect.top, left: rect.left, width: rect.width, height: rect.height };
