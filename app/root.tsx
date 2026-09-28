@@ -11,7 +11,7 @@ import './app.css';
 // Fonts and the video poster load first, so the page paints once in its final type instead of swapping.
 export const links: Route.LinksFunction = () => [
   ...[italiana, aboreto, workSans].map((href) => ({ rel: 'preload', href, as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' as const })),
-  { rel: 'preload', href: MOUNTAIN_VIDEO.poster, as: 'image', fetchPriority: 'high' as const },
+  ...[MOUNTAIN_VIDEO.phone, MOUNTAIN_VIDEO.desktop].map(({ poster, media }) => ({ rel: 'preload', href: poster, media, as: 'image', fetchPriority: 'high' as const })),
   { rel: 'icon', href: '/brand/favicon.ico', sizes: '48x48' },
   { rel: 'icon', href: '/brand/favicon.svg', type: 'image/svg+xml' },
   { rel: 'apple-touch-icon', href: '/brand/apple-touch-icon.png' },
