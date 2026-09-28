@@ -122,6 +122,7 @@
   --spacing-nav: 5.25rem; /* layout/nav-height */
   --spacing-card: min(27rem, 42.188svh); /* service card height, 432 at 1024 */
   --spacing-ghost-numeral: min(54.625rem, 85.352svh); /* ghost numeral, 874 at 1024 (its box minus the bottom bleed) */
+  --spacing-ghost-clear: 51rem; /* page margin + description column + 32px gap; the numeral never starts left of this */
   /* Service pages: vertical rhythm that shrinks with short windows so the page fits without scrolling */
   --spacing-bar: min(6.25rem, 9.766svh); /* header and footer bars, 100 at 1024 */
   --spacing-lede: min(4.5rem, 7.031svh); /* 72 */

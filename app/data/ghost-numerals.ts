@@ -3,7 +3,7 @@
 export const GHOST_NUMERAL_HEIGHT = 895;
 
 // How far the text box bleeds past the page's right and bottom edges in Figma (at 1440 × 1024).
-export const GHOST_NUMERAL_BLEED = { right: 65, bottom: 21 } as const;
+export const GHOST_NUMERAL_BLEED = { right: 76, bottom: 21 } as const;
 
 export const GHOST_NUMERALS: Record<string, { width: number; path: string }> = {
   '01': {
