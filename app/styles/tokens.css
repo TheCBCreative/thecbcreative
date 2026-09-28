@@ -84,7 +84,7 @@
   --text-display: min(88px, 9svh);
   --text-display-lg: min(92px, 9svh);
   --text-display-xl: min(128px, 13svh);
-  --text-display-2xl: min(168px, 17svh);
+  --text-display-2xl: min(165px, 15svh);
   --text-ghost-word: min(330px, 33svh);
   --text-ghost-numeral: min(760px, 75svh);
 
