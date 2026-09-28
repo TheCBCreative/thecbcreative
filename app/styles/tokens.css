@@ -19,7 +19,6 @@
 
   /* Color — primitives */
   --color-pine: #1b2318;
-  --color-fog: #7a8477; /* decorative only: 3.6:1 on Snow */
   --color-mist: #e2e3dc;
   --color-snow: #f6f6f1;
   --color-brass: #b08d57; /* lines, outlines, CTA fill — not small text */
@@ -67,7 +66,6 @@
   --text-heading-sm: min(34px, 4svh);
   --text-heading: min(36px, 4svh);
   --text-heading-md: min(42px, 5svh);
-  --text-display-xs: min(64px, 7svh);
   --text-display-sm: min(68px, 7svh);
   --text-display-md: min(74px, 8svh);
   --text-display: min(88px, 9svh);
@@ -122,7 +120,6 @@
 
   /* Radius, stroke */
   --radius-sm: 6px;
-  --radius-md: 8px;
 
   /* Effects */
   --blur-glass: 30px;
@@ -146,7 +143,6 @@
     --text-heading-sm: 24px;
     --text-heading: 24px;
     --text-heading-md: 28px;
-    --text-display-xs: 52px;
     --text-display-sm: 60px;
     --text-display-md: 64px;
     --text-display: 54px;
@@ -182,7 +178,6 @@
   --stroke-fine: 0.75px;
   --stroke-hairline: 1px;
   --stroke-outline: 1.25px;
-  --stroke-signature: 1.75px;
 
   --duration-cta-fill: 900ms;
   --duration-link-underline: 450ms;
