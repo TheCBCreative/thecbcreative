@@ -17,13 +17,13 @@ export const POINTS_REVEAL = { duration: 0.8, stagger: 0.15 } as const;
 // Hero entrance on load: each line clears in place like lifting fog.
 export const HERO_ENTRANCE = { delay: 0.4, duration: 2, stagger: 0.3, blur: 12 } as const;
 
-// The strike through "average" is tied to scroll: it starts once the word is ~15% into view
-// and is fully drawn when its centre reaches 70% down the screen. The spring smooths the scrub.
+// The strike through "average" is tied to scroll: it starts once the word's top is 70% down the screen
+// and is fully drawn when its centre reaches 55%. The spring smooths the scrub.
 export const STRIKE_SCROLL: {
-  offset: ['start 85%', 'center 70%'];
+  offset: ['start 70%', 'center 55%'];
   spring: { stiffness: number; damping: number; restDelta: number };
 } = {
-  offset: ['start 85%', 'center 70%'],
+  offset: ['start 70%', 'center 55%'],
   spring: { stiffness: 90, damping: 28, restDelta: 0.001 },
 };
 
