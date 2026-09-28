@@ -12,6 +12,10 @@
   --radius-*: initial;
   --shadow-*: initial;
   --blur-*: initial;
+  --breakpoint-*: initial;
+
+  /* One switch point: below it the layout stacks for phones and tablets (max-lg:). Under 1200px the desktop columns get too tight. */
+  --breakpoint-lg: 1200px;
 
   /* Color — primitives */
   --color-pine: #1b2318;
@@ -121,6 +125,7 @@
   --spacing-edge: 56px; /* layout/edge-margin */
   --spacing-nav: 84px; /* layout/nav-height */
   --spacing-card: min(464px, 50svh); /* service card height, 464 max */
+  --spacing-photo: 640px; /* tallest the About photo gets once it runs full width (tablets) */
   --spacing-ghost-numeral: min(874px, 86svh); /* ghost numeral, 874 at 1024 (its box minus the bottom bleed) */
   --spacing-ghost-clear: 816px; /* page margin + description column + 32px gap; the numeral never starts left of this */
   /* Service pages: vertical rhythm that shrinks with short windows so the page fits without scrolling */
@@ -151,6 +156,46 @@
 
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* Below the switch point, type and spacing are sized for the width (the 390px Figma frames), not the window height. */
+@media (width < 1200px) {
+  :root {
+    --text-heading-xs: 26px;
+    --text-heading-sm: 24px;
+    --text-heading: 24px;
+    --text-heading-md: 28px;
+    --text-heading-lg: 44px;
+    --text-display-xs: 52px;
+    --text-display-sm: 60px;
+    --text-display-md: 64px;
+    --text-display: 54px;
+    --text-display-lg: 80px;
+    --text-display-xl: 96px;
+    --text-display-2xl: 108px;
+    --text-ghost-word: 112px;
+
+    --spacing-page: 48px;
+    --spacing-edge: 48px;
+    --spacing-nav: 64px;
+    --spacing-card: 300px;
+    --spacing-ghost-numeral: 480px;
+    --spacing-bar: 64px;
+    --spacing-lede: 48px;
+    --spacing-flow-2xs: 12px;
+    --spacing-flow-xs: 16px;
+    --spacing-flow-sm: 24px;
+    --spacing-flow-md: 32px;
+    --spacing-flow-lg: 32px;
+  }
+}
+
+/* Phones: tighter side margins than tablets. */
+@media (width < 600px) {
+  :root {
+    --spacing-page: 24px;
+    --spacing-edge: 24px;
+  }
 }
 
 :root {

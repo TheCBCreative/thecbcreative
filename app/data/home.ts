@@ -35,7 +35,13 @@ export const SERVICES_INTRO = {
 
 export const WHY_NOT_AI = {
   eyebrow: 'Why human-built matters',
-  headlineLines: ['Why not just', 'use AI?'],
+  // Breaks differ by layout: "Why not just / use AI?" on desktop, "Why not / just use / AI?" on phones.
+  headline: [
+    { text: 'Why not', breakOn: 'mobile' },
+    { text: 'just', breakOn: 'desktop' },
+    { text: 'use', breakOn: 'mobile' },
+    { text: 'AI?' },
+  ] satisfies { text: string; breakOn?: 'mobile' | 'desktop' }[],
   intro: "AI can spin up a boilerplate template in seconds. But it can't sit with you, learn your values, find your distinction, or design for your actual target.",
   body: 'I use AI tools every single day — which means I know exactly where they fall short. Generic layouts. Off-brand copy. No real strategy. What I build for you is specific to you: your story, your market, your goals.',
   points: [

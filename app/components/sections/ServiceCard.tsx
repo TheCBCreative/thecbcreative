@@ -33,7 +33,7 @@ export function ServiceCard({ service, face }: ServiceCardProps) {
     <article
       ref={card}
       className={cx(
-        'group relative flex flex-col rounded-sm border border-brass/50 bg-pine/(--opacity-glass-tint) p-9 shadow-card backdrop-blur-glass',
+        'group relative flex flex-col rounded-sm border border-brass/50 bg-pine/(--opacity-glass-tint) p-9 shadow-card backdrop-blur-glass max-lg:p-7',
         face
           ? 'h-full'
           : 'h-card transition duration-(--duration-link-underline) ease-out-soft hover:-translate-y-2 hover:border-brass hover:shadow-card-hover has-focus-visible:-translate-y-2 has-focus-visible:border-brass has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-focus-visible:outline-(--focus-ring) motion-reduce:transition-none motion-reduce:hover:translate-y-0',

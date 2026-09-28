@@ -1,4 +1,5 @@
 import { motion } from 'motion/react';
+import { Fragment } from 'react';
 import { Chapter } from '~/components/ui/Chapter';
 import { Reveal } from '~/components/ui/Reveal';
 import { WHY_NOT_AI } from '~/data/home';
@@ -7,14 +8,16 @@ import { DURATION, EASE_OUT } from '~/styles/motion';
 export function WhyNotAI() {
   return (
     <Chapter id="why-not-ai" labelledBy="why-title" grade>
-      <div className="grid grid-cols-[520px_1fr] gap-36 px-page pt-23 -mb-5">
+      <div className="grid grid-cols-[minmax(0,520px)_1fr] gap-36 px-page pt-23 -mb-5 max-lg:grid-cols-1 max-lg:gap-10 max-lg:pt-0 max-lg:mb-0">
         <div>
           <Reveal>
             <p className="eyebrow text-eyebrow tracking-caps text-brass-light">{WHY_NOT_AI.eyebrow}</p>
             <h2 id="why-title" className="mt-5 font-display text-display-lg leading-tighter tracking-headline">
-              {WHY_NOT_AI.headlineLines[0]}
-              <br />
-              {WHY_NOT_AI.headlineLines[1]}
+              {WHY_NOT_AI.headline.map(({ text, breakOn }) => (
+                <Fragment key={text}>
+                  {text} {breakOn && <br className={breakOn === 'desktop' ? 'max-lg:hidden' : 'lg:hidden'} />}
+                </Fragment>
+              ))}
             </h2>
           </Reveal>
           <Reveal index={1}>
@@ -25,7 +28,7 @@ export function WhyNotAI() {
         <ol className="border-b border-snow/(--opacity-hairline-on-video)">
           {WHY_NOT_AI.points.map((point, index) => (
             <li key={point.numeral} className="border-t border-snow/(--opacity-hairline-on-video)">
-              <Reveal index={index} className="grid grid-cols-[64px_1fr] pt-5 pb-7">
+              <Reveal index={index} className="grid grid-cols-[64px_1fr] pt-5 pb-7 max-lg:grid-cols-[48px_1fr]">
                 <span aria-hidden className="font-display text-numeral leading-snug text-brass-light">
                   {point.numeral}
                 </span>
@@ -42,7 +45,7 @@ export function WhyNotAI() {
       {/* The closing line sits on the struck-through "average", as in Figma. */}
       {/* The parent watches the viewport: a scaleX(0) line has no area, so it can't. */}
       <motion.div
-        className="relative mt-auto -mb-18 flex justify-center"
+        className="relative mt-auto -mb-18 flex justify-center max-lg:mt-14 max-lg:mb-0 max-lg:flex-col max-lg:items-center"
         initial="hidden"
         whileInView="shown"
         viewport={{ once: true }}
@@ -50,12 +53,12 @@ export function WhyNotAI() {
         <span aria-hidden className="relative font-display text-ghost-word leading-[normal] tracking-display text-outline text-brass/40">
           {WHY_NOT_AI.ghostWord}
           <motion.span
-            className="absolute -inset-x-10 top-[59%] h-[2px] origin-left bg-brass"
+            className="absolute -inset-x-10 top-[59%] h-[2px] origin-left bg-brass max-lg:-inset-x-6"
             variants={{ hidden: { scaleX: 0 }, shown: { scaleX: 1 } }}
             transition={{ duration: DURATION.draw, ease: EASE_OUT }}
           />
         </span>
-        <p className="absolute inset-x-0 top-1/2 text-center font-accent text-heading-sm italic">{WHY_NOT_AI.closing}</p>
+        <p className="absolute inset-x-0 top-1/2 text-center font-accent text-heading-sm italic max-lg:static max-lg:mt-2 max-lg:px-page">{WHY_NOT_AI.closing}</p>
       </motion.div>
     </Chapter>
   );

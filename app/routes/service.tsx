@@ -77,7 +77,7 @@ export default function Service({ loaderData }: Route.ComponentProps) {
     <div className="relative flex min-h-svh flex-col overflow-clip surface-cream">
       <SkipLink />
       <motion.header
-        className="relative z-10 mx-edge grid h-bar grid-cols-3 items-center border-b border-pine/(--opacity-page-rule)"
+        className="relative z-10 mx-edge grid h-bar grid-cols-3 items-center border-b border-pine/(--opacity-page-rule) max-lg:grid-cols-2"
         variants={fade}
         initial="hidden"
         animate="shown"
@@ -88,7 +88,7 @@ export default function Service({ loaderData }: Route.ComponentProps) {
           </span>
           <span className={`${groupUnderline} eyebrow text-caption tracking-caps`}>Close</span>
         </CloseLink>
-        <p className="justify-self-center eyebrow text-caption tracking-caps text-pine/(--opacity-muted-text)">Services</p>
+        <p className="justify-self-center eyebrow text-caption tracking-caps text-pine/(--opacity-muted-text) max-lg:hidden">Services</p>
         <Link to="/" aria-label={`${SITE.name} — home`} className="justify-self-end">
           <Wordmark className="h-10 w-32" />
         </Link>

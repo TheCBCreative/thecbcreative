@@ -6,7 +6,7 @@ import { CLOSING } from '~/data/home';
 export function Closing() {
   return (
     <Chapter labelledBy="closing-title" grade withFooter className="items-center justify-center text-center">
-      <div className="flex flex-1 flex-col items-center justify-center px-page">
+      <div className="flex flex-1 flex-col items-center justify-center px-page max-lg:py-10">
         <Reveal>
           <h2 id="closing-title" className="mx-auto max-w-260 font-display text-display leading-display tracking-headline">
             {CLOSING.tagline[0]} <span className="text-brass-light">{CLOSING.tagline[1]}</span> {CLOSING.tagline[2]}
