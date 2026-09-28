@@ -11,6 +11,7 @@ import { cx } from '~/utils/cx';
 import { Wordmark } from '~/components/ui/Wordmark';
 import { getNextService, getService, SERVICES, type Service } from '~/data/services';
 import { SITE } from '~/data/site';
+import { absoluteUrl, businessRef, pageMeta } from '~/seo/meta';
 import { DURATION } from '~/styles/motion';
 import { pageDraw, pageFade, pageFadeUp, pageRise, pageStagger } from '~/styles/page-reveal';
 
@@ -22,10 +23,33 @@ export function loader({ params }: Route.LoaderArgs) {
 
 export function meta({ loaderData }: Route.MetaArgs) {
   if (!loaderData) return [];
-  return [
-    { title: `${loaderData.service.title} | ${SITE.name}` },
-    { name: 'description', content: loaderData.service.description[0] },
-  ];
+  const { service } = loaderData;
+  const path = `/services/${service.slug}`;
+  const description = service.description[0];
+  return pageMeta({
+    title: `${service.title} | ${SITE.name}`,
+    description,
+    path,
+    structuredData: [
+      {
+        '@type': 'Service',
+        name: service.title,
+        serviceType: service.tag,
+        description: service.description.join(' '),
+        url: absoluteUrl(path),
+        provider: businessRef,
+        areaServed: [`${SITE.locality}, ${SITE.region}`, SITE.areaServed],
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: absoluteUrl('/') },
+          { '@type': 'ListItem', position: 2, name: 'Services', item: absoluteUrl('/#services') },
+          { '@type': 'ListItem', position: 3, name: service.title, item: absoluteUrl(path) },
+        ],
+      },
+    ],
+  });
 }
 
 export default function Service({ loaderData }: Route.ComponentProps) {

@@ -7,9 +7,10 @@ import { ScrollHint } from '~/components/ui/ScrollHint';
 import { CONTACT } from '~/data/contact';
 import { MOUNTAIN_VIDEO } from '~/data/media';
 import { SITE } from '~/data/site';
+import { pageMeta } from '~/seo/meta';
 
 export function meta() {
-  return [{ title: `Contact | ${SITE.name}` }, { name: 'description', content: CONTACT.intro }];
+  return pageMeta({ title: `Contact | ${SITE.name}`, description: CONTACT.metaDescription, path: '/contact' });
 }
 
 // A cream panel inset over the video: the misty image window carries the headline, the form sits beside it.

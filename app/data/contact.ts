@@ -1,5 +1,7 @@
 // Contact page copy and form rules, mirroring the Figma contact frame and interaction states F2 / G.
 export const CONTACT = {
+  metaDescription:
+    'Get in touch with The CB Creative about a new website, a refresh, or a landing page. Based in Snoqualmie, WA — serving the greater Seattle area and beyond.',
   intro: "Tell me about your business, your idea, or your next big step. I'll get back to you personally.",
   eyebrow: "Let's build something beautiful",
   headline: 'Contact',
