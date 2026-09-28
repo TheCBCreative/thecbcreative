@@ -24,7 +24,15 @@ export const ABOUT = {
     'Your website should feel like you — I make sure it does',
     'Websites built to command presence, not just tick boxes',
   ],
-  photo: { src: '/images/about/headshot.webp', alt: 'Cait Burke, founder of The CB Creative', width: 1254, height: 1254 },
+  photo: {
+    src: '/images/about/headshot.webp',
+    srcSet: '/images/about/headshot-800.webp 800w, /images/about/headshot.webp 1254w',
+    // 400px column on desktop; full width once stacked.
+    sizes: '(width >= 1200px) 400px, 100vw',
+    alt: 'Cait Burke, founder of The CB Creative',
+    width: 1254,
+    height: 1254,
+  },
 };
 
 export const SERVICES_INTRO = {

@@ -3,6 +3,7 @@ import { Chapter } from '~/components/ui/Chapter';
 import { Reveal } from '~/components/ui/Reveal';
 import { ABOUT } from '~/data/home';
 import { EASE_OUT, POINTS_REVEAL, REVEAL_OFFSET, REVEAL_VIEWPORT } from '~/styles/motion';
+import { twoDigits } from '~/utils/format';
 
 // The 01–06 points arrive one at a time as the list scrolls into view.
 const points: Variants = { shown: { transition: { staggerChildren: POINTS_REVEAL.stagger } } };
@@ -19,14 +20,15 @@ export function About() {
           <div aria-hidden className="absolute inset-0 translate-x-5 translate-y-5 bg-brass max-lg:hidden" />
           <img
             src={ABOUT.photo.src}
+            srcSet={ABOUT.photo.srcSet}
+            sizes={ABOUT.photo.sizes}
             alt={ABOUT.photo.alt}
             width={ABOUT.photo.width}
             height={ABOUT.photo.height}
             loading="lazy"
             className="relative aspect-400/487 w-full object-cover max-lg:aspect-39/47 max-lg:max-h-photo max-lg:object-top max-lg:mask-t-from-85% max-lg:mask-b-from-60%"
           />
-          {/* On phones the photo runs edge to edge and dissolves into the video at both ends:
-              its edges fade out, soft blurs cover the seams, and a Pine wash keeps the heading legible. */}
+          {/* Phones: the photo fades into the video at both ends, with a Pine wash behind the heading. */}
           <div aria-hidden className="absolute inset-0 bg-linear-to-b from-pine/0 from-40% via-pine/60 via-75% to-pine/0 lg:hidden" />
           <div aria-hidden className="absolute inset-x-0 -top-16 h-32 backdrop-blur-glass mask-y-from-50% lg:hidden" />
           <div aria-hidden className="absolute inset-x-0 -bottom-24 h-64 backdrop-blur-glass mask-y-from-50% lg:hidden" />
@@ -57,7 +59,7 @@ export function About() {
                 className="grid grid-cols-[36px_1fr] border-t border-snow/(--opacity-hairline-on-video) pt-3 pb-3"
               >
                 <span aria-hidden className="font-display text-lead-sm text-brass-light">
-                  {String(index + 1).padStart(2, '0')}
+                  {twoDigits(index + 1)}
                 </span>
                 <span className="text-label leading-body">{text}</span>
               </motion.li>
