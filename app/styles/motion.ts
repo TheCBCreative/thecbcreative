@@ -40,3 +40,5 @@ export const FLIP = { turn: 0.5, grow: 0.6, perspective: 1600, cardRadius: 6 } a
 // The next copy starts VIDEO_LEAD early so it's already playing when the fade begins.
 export const VIDEO_CROSSFADE = 2.5;
 export const VIDEO_LEAD = 0.5;
+// The first time the footage plays, it fades in over the poster still so the switch doesn't cut.
+export const VIDEO_FADE_IN = 1.5;
