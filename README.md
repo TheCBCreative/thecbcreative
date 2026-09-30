@@ -6,7 +6,7 @@ Source for my web design & development studio site: an editorial, cinematic sing
 
 ## Stack
 
-- [React Router](https://reactrouter.com) in framework mode with TypeScript, **pre-rendered** to static HTML at build (`ssr: false`), so every page is fast, crawlable and works without JavaScript for search and AI engines
+- [React Router](https://reactrouter.com) in framework mode with TypeScript, **pre-rendered** to static HTML at build (`ssr: false`), so every page is fast and its content is already in the HTML for search and AI engines to crawl
 - Tailwind CSS v4, locked to the design tokens in `app/styles/tokens.css` — Tailwind's defaults are cleared, so only the brand's colors, type sizes and spacing can be used
 - [Motion](https://motion.dev) for the reveals, the card flip and the scroll-linked details, with `prefers-reduced-motion` respected throughout
 - Contact form backed by a Vercel Function (`api/contact.mjs`) that emails submissions through [Resend](https://resend.com)
