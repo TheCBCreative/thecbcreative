@@ -1,5 +1,8 @@
 // Contact form webhook (Vercel Function): re-validates the form and emails it through Resend.
 // Needs RESEND_API_KEY, CONTACT_FROM_EMAIL and CONTACT_TO_EMAIL (see .env.example).
+// GET hands the form a signed timestamp; POST checks it, then sends.
+
+import { createHmac, timingSafeEqual } from 'node:crypto';
 
 const RESEND_ENDPOINT = 'https://api.resend.com/emails';
 
@@ -17,20 +20,76 @@ const DEFAULT_FROM = 'The CB Creative <inquiries@thecbcreative.com>';
 const MAX_TOTAL_ATTACHMENT_BYTES = 3.5 * 1024 * 1024;
 const MAX_FILES = 10;
 
+// No SVG: it's a document that can carry script, not a photo.
 const IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.webp', '.gif', '.heic', '.heif', '.avif'];
 
-// Some browsers send no type (or octet-stream) for webp and heic, so fall back to the extension.
-function looksLikeImage(file) {
-  const type = (file.type || '').toLowerCase();
-  if (type.startsWith('image/')) return true;
-  if (type && type !== 'application/octet-stream') return false;
-  const name = (file.name || '').toLowerCase();
-  return IMAGE_EXTENSIONS.some((ext) => name.endsWith(ext));
+// HEIC, HEIF and AVIF share one container; the brand after "ftyp" says which.
+const HEIF_BRANDS = ['heic', 'heix', 'hevc', 'hevx', 'heim', 'heis', 'mif1', 'msf1', 'avif', 'avis'];
+
+// The browser's type is ignored (it's often blank for webp and heic, and easy to fake):
+// the name has to end in an image extension and the first bytes have to be a real image.
+function isImage(name, bytes) {
+  const lower = (name || '').toLowerCase();
+  if (!IMAGE_EXTENSIONS.some((ext) => lower.endsWith(ext))) return false;
+  const ascii = (start, end) => bytes.subarray(start, end).toString('latin1');
+  if (bytes.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))) return true;
+  if (bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) return true;
+  if (ascii(0, 6) === 'GIF87a' || ascii(0, 6) === 'GIF89a') return true;
+  if (ascii(0, 4) === 'RIFF' && ascii(8, 12) === 'WEBP') return true;
+  return ascii(4, 8) === 'ftyp' && HEIF_BRANDS.includes(ascii(8, 12));
 }
 
 // Bot checks: a filled honeypot, or a form sent faster than a person could.
-const MIN_SUBMIT_ELAPSED_MS = 1500;
+// The time is measured from a timestamp the server signed when the form opened, so it can't be faked.
+const MIN_SUBMIT_MS = 1500;
+const MAX_TOKEN_AGE_MS = 24 * 60 * 60 * 1000;
 const HONEYPOT_FIELD = 'website';
+
+// Signs with CONTACT_FORM_SECRET, or a key derived from RESEND_API_KEY when that isn't set.
+function signingKey() {
+  const secret = env('CONTACT_FORM_SECRET');
+  return secret || createHmac('sha256', env('RESEND_API_KEY')).update('contact-form-token').digest();
+}
+
+function sign(issuedAt) {
+  return createHmac('sha256', signingKey()).update(String(issuedAt)).digest('base64url');
+}
+
+function issueToken() {
+  const issuedAt = Date.now();
+  return `${issuedAt}.${sign(issuedAt)}`;
+}
+
+// The token's issue time, or null if it's missing or wasn't signed here.
+function tokenIssuedAt(token) {
+  const [issuedAt, signature = ''] = token.split('.');
+  if (!/^\d+$/.test(issuedAt || '')) return null;
+  const expected = Buffer.from(sign(issuedAt));
+  const given = Buffer.from(signature);
+  return given.length === expected.length && timingSafeEqual(given, expected) ? Number(issuedAt) : null;
+}
+
+// Longest each field can be. The form uses the same numbers (app/data/contact.ts).
+const MAX_LENGTH = { name: 100, business: 150, email: 254, phone: 40, message: 5000, links: 2000 };
+
+// A few sends per visitor per window. Each server instance counts on its own, so this slows a flood
+// rather than stopping it outright; Vercel's firewall rate limit is the hard backstop.
+const RATE_LIMIT = { max: 5, windowMs: 10 * 60 * 1000 };
+const recentSends = new Map();
+
+function rateLimited(ip, now = Date.now()) {
+  for (const [key, times] of recentSends) {
+    if (times.every((t) => now - t > RATE_LIMIT.windowMs)) recentSends.delete(key);
+  }
+  const times = (recentSends.get(ip) || []).filter((t) => now - t <= RATE_LIMIT.windowMs);
+  if (times.length >= RATE_LIMIT.max) return true;
+  recentSends.set(ip, [...times, now]);
+  return false;
+}
+
+function clientIp(request) {
+  return (request.headers.get('x-forwarded-for') || '').split(',')[0].trim() || request.headers.get('x-real-ip') || '';
+}
 
 const FIELD_LABELS = {
   name: 'Name',
@@ -209,7 +268,7 @@ function buildEmailText({ fields, attachments, submittedAt }) {
 }
 
 async function handleContact(request) {
-  if (request.method !== 'POST') {
+  if (request.method !== 'POST' && request.method !== 'GET') {
     return json({ ok: false, error: 'Method not allowed.' }, 405);
   }
 
@@ -218,6 +277,18 @@ async function handleContact(request) {
     // Our config problem: log it, but don't tell the browser why.
     console.error('[contact] RESEND_API_KEY is not set.');
     return json({ ok: false, error: 'The form is temporarily unavailable.' }, 500);
+  }
+
+  if (request.method === 'GET') {
+    return new Response(JSON.stringify({ token: issueToken() }), {
+      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
+    });
+  }
+
+  const ip = clientIp(request);
+  if (ip && rateLimited(ip)) {
+    console.warn(`[contact] Blocked: rate limit for ${ip}.`);
+    return json({ ok: false, error: 'That’s a lot of messages in a short time. Please try again in a few minutes.' }, 429);
   }
 
   let form;
@@ -241,10 +312,24 @@ async function handleContact(request) {
     return json({ ok: true });
   }
 
-  const elapsed = Number.parseInt(text('elapsed'), 10);
-  if (!Number.isFinite(elapsed) || elapsed < MIN_SUBMIT_ELAPSED_MS) {
-    console.warn(`[contact] Blocked: submitted too fast (elapsed=${text('elapsed')}).`);
+  // No token means a person whose form couldn't fetch one (or a page from before tokens): tell them, don't drop it.
+  if (!text('token')) {
+    console.warn('[contact] Rejected: no form token.');
+    return json({ ok: false, error: 'That submission could not be verified. Please reload the page and try again.' }, 400);
+  }
+  const issuedAt = tokenIssuedAt(text('token'));
+  if (issuedAt === null) {
+    console.warn('[contact] Blocked: forged form token.');
     return json({ ok: true });
+  }
+  const age = Date.now() - issuedAt;
+  if (age < MIN_SUBMIT_MS) {
+    console.warn(`[contact] Blocked: submitted too fast (${age}ms).`);
+    return json({ ok: true });
+  }
+  // A real person who left the tab open for a day: ask them to reload rather than dropping the message.
+  if (age > MAX_TOKEN_AGE_MS) {
+    return json({ ok: false, error: 'This form has expired. Please reload the page and send it again.' }, 400);
   }
 
   const fields = {
@@ -262,6 +347,13 @@ async function handleContact(request) {
   if (!looksLikeEmail(fields.email)) {
     return json({ ok: false, error: 'That email address doesn’t look quite right.' }, 400);
   }
+  const tooLong = Object.keys(MAX_LENGTH).find((key) => fields[key].length > MAX_LENGTH[key]);
+  if (tooLong) {
+    return json(
+      { ok: false, error: `${FIELD_LABELS[tooLong]} can be up to ${MAX_LENGTH[tooLong].toLocaleString('en-US')} characters.` },
+      400
+    );
+  }
 
   const files = form.getAll('images').filter((f) => f && typeof f === 'object' && 'arrayBuffer' in f && f.size > 0);
 
@@ -272,9 +364,6 @@ async function handleContact(request) {
   let totalBytes = 0;
   const attachments = [];
   for (const file of files) {
-    if (!looksLikeImage(file)) {
-      return json({ ok: false, error: 'Attachments need to be images (PNG, JPG, or WEBP).' }, 400);
-    }
     totalBytes += file.size;
     if (totalBytes > MAX_TOTAL_ATTACHMENT_BYTES) {
       return json(
@@ -288,6 +377,9 @@ async function handleContact(request) {
       );
     }
     const buffer = Buffer.from(await file.arrayBuffer());
+    if (!isImage(file.name, buffer)) {
+      return json({ ok: false, error: 'Attachments need to be images (PNG, JPG, or WEBP).' }, 400);
+    }
     attachments.push({
       filename: file.name || 'attachment',
       bytes: file.size,
@@ -307,7 +399,8 @@ async function handleContact(request) {
     to: [env('CONTACT_TO_EMAIL') || DEFAULT_TO],
     // Replying from the inbox goes straight to the sender.
     reply_to: fields.email,
-    subject: `New Inquiry from ${fields.name}`,
+    // The subject is an email header, so line breaks in the name are flattened.
+    subject: `New Inquiry from ${fields.name.replace(/\s+/g, ' ')}`,
     html: buildEmailHtml(view),
     text: buildEmailText(view),
     attachments: attachments.map((a) => ({ filename: a.filename, content: a.content })),

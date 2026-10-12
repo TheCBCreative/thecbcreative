@@ -58,4 +58,4 @@ CI (`.github/workflows/ci.yml`) runs all four on every push and pull request.
 
 ## Deploy
 
-Vercel builds with `npm run build` and serves `build/client` (see `vercel.json`, which also sets the redirects and cache headers). Set `RESEND_API_KEY`, `CONTACT_FROM_EMAIL` and `CONTACT_TO_EMAIL` under Project Settings → Environment Variables.
+Vercel builds with `npm run build` and serves `build/client` (see `vercel.json`, which also sets the redirects and cache headers). Set `RESEND_API_KEY`, `CONTACT_FROM_EMAIL` and `CONTACT_TO_EMAIL` (and optionally `CONTACT_FORM_SECRET`) under Project Settings → Environment Variables.

@@ -14,7 +14,19 @@ const item: Variants = {
   shown: { opacity: 1, y: 0, transition: { duration: DURATION.reveal, ease: EASE_OUT } },
 };
 
+// The HTML invoker commands open and close the dialog without JavaScript (React renders them as written).
+declare module 'react' {
+  interface ButtonHTMLAttributes<T> {
+    command?: 'show-modal' | 'close';
+    commandfor?: string;
+  }
+}
+
+const MENU_ID = 'site-menu';
+
 // Phones and small tablets: "Menu" opens a full-screen Pine panel. A modal <dialog> keeps focus inside and closes on Esc.
+// The buttons carry HTML commands too, so the menu still opens with JavaScript off in browsers that support them;
+// with JavaScript on, both routes check whether the dialog is already open, so they never clash.
 export function MobileMenu() {
   const dialog = useRef<HTMLDialogElement>(null);
   const [open, setOpen] = useState(false);
@@ -36,6 +48,8 @@ export function MobileMenu() {
       <button
         type="button"
         onClick={() => setOpen(true)}
+        command="show-modal"
+        commandfor={MENU_ID}
         aria-haspopup="dialog"
         aria-expanded={open}
         className="eyebrow text-caption tracking-caps text-snow lg:hidden"
@@ -43,6 +57,7 @@ export function MobileMenu() {
         Menu
       </button>
       <dialog
+        id={MENU_ID}
         ref={dialog}
         onClose={close}
         aria-label="Menu"
@@ -52,7 +67,7 @@ export function MobileMenu() {
           <Link to="/" aria-label={`${SITE.name} — home`} onClick={close}>
             <Wordmark />
           </Link>
-          <button type="button" onClick={close} className="flex items-center gap-3 eyebrow text-caption tracking-caps">
+          <button type="button" onClick={close} command="close" commandfor={MENU_ID} className="flex items-center gap-3 eyebrow text-caption tracking-caps">
             Close <span aria-hidden className="font-body text-icon leading-none font-extralight">×</span>
           </button>
         </div>

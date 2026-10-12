@@ -18,6 +18,8 @@ export const links: Route.LinksFunction = () => [
   { rel: 'manifest', href: '/site.webmanifest' },
 ];
 
+const NO_SCRIPT_STYLE = '<style>[style^="opacity:0;"],[style="opacity:0"]{opacity:1!important;transform:none!important}</style>';
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -27,6 +29,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="theme-color" content="#1b2318" />
         <Meta />
         <Links />
+        {/* Without JavaScript nothing runs the reveals, so show what they start hidden. Visibility is left alone,
+            so things meant to stay hidden (the home page's nav logo) still do. */}
+        <noscript dangerouslySetInnerHTML={{ __html: NO_SCRIPT_STYLE }} />
       </head>
       <body>
         {children}

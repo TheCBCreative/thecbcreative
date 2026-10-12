@@ -38,6 +38,9 @@ export const CONTACT = {
 
 // Kept in step with api/contact.mjs, which enforces the same limits server-side.
 export const ATTACHMENT_LIMITS = { files: 10, bytes: 3.5 * 1024 * 1024 } as const;
+export const MAX_LENGTH = { name: 100, business: 150, email: 254, phone: 40, message: 5000, links: 2000 } as const;
+export const IMAGE_TYPES = '.png,.jpg,.jpeg,.webp,.gif,.heic,.heif,.avif';
 
 // A hidden field people never fill; the API discards submissions that fill it (and ones sent too fast).
+// The form's open time comes from a token the API signs (GET /api/contact), so it can't be faked.
 export const HONEYPOT_FIELD = 'website';

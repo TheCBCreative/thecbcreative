@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ChangeEvent, type FocusEvent, type FormEvent } from 'react';
 import { Button } from '~/components/ui/Button';
-import { ATTACHMENT_LIMITS, CONTACT, HONEYPOT_FIELD } from '~/data/contact';
+import { ATTACHMENT_LIMITS, CONTACT, HONEYPOT_FIELD, IMAGE_TYPES, MAX_LENGTH } from '~/data/contact';
 import { Field, fieldInput } from './Field';
 
 type Status = 'idle' | 'sending' | 'failed';
@@ -11,7 +11,22 @@ const REQUIRED: Required[] = ['name', 'email', 'message'];
 const IMAGE_EXTENSIONS = /\.(png|jpe?g|webp|gif|heic|heif|avif)$/i;
 
 const looksLikeEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value);
-const isImage = (file: File) => file.type.startsWith('image/') || IMAGE_EXTENSIONS.test(file.name);
+// By name, not type: browsers report SVG as image/*, and the API turns it away.
+const isImage = (file: File) => IMAGE_EXTENSIONS.test(file.name);
+
+// The API only accepts a form that's been open a moment, timed from a token it signed.
+const MIN_OPEN_MS = 1600;
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+async function fetchToken() {
+  try {
+    const response = await fetch('/api/contact', { cache: 'no-store' });
+    const { token } = (await response.json()) as { token?: string };
+    return token ? { token, fetchedAt: Date.now() } : null;
+  } catch {
+    return null;
+  }
+}
 
 function formatBytes(bytes: number) {
   if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`;
@@ -29,13 +44,13 @@ function validate(name: Required, value: string) {
 // F2 / G from the interaction states: errors show on leaving a field and on submit (focus moves to the first),
 // the button reads "Sending…" while it posts, and success hands over to the thank-you card (onSent).
 export function ContactForm({ onSent }: { onSent: () => void }) {
-  const openedAt = useRef(0);
+  const token = useRef<ReturnType<typeof fetchToken>>(null);
   const [errors, setErrors] = useState<Errors>({});
   const [files, setFiles] = useState<File[]>([]);
   const [status, setStatus] = useState<Status>('idle');
 
   useEffect(() => {
-    openedAt.current = Date.now();
+    token.current = fetchToken();
   }, []);
 
   const onBlur = (event: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -80,10 +95,16 @@ export function ContactForm({ onSent }: { onSent: () => void }) {
 
     data.delete('images');
     files.forEach((file) => data.append('images', file));
-    data.set('elapsed', String(Date.now() - openedAt.current));
 
     setStatus('sending');
     try {
+      // A token that failed to load is fetched again now, then given the same moment to age.
+      let issued = await token.current;
+      if (!issued) issued = await (token.current = fetchToken());
+      if (!issued) return setStatus('failed');
+      await wait(MIN_OPEN_MS - (Date.now() - issued.fetchedAt));
+      data.set('token', issued.token);
+
       const response = await fetch('/api/contact', { method: 'POST', body: data });
       const result = (await response.json().catch(() => ({}))) as { ok?: boolean };
       if (response.ok && result.ok) return onSent();
@@ -91,6 +112,8 @@ export function ContactForm({ onSent }: { onSent: () => void }) {
     } catch {
       setStatus('failed');
     }
+    // A fresh token, so trying again works even if this one had expired.
+    token.current = fetchToken();
   };
 
   const describe = (name: keyof Errors) => (errors[name] ? `${name}-error` : undefined);
@@ -99,22 +122,23 @@ export function ContactForm({ onSent }: { onSent: () => void }) {
   return (
     <form noValidate onSubmit={onSubmit} className="grid grid-cols-2 gap-x-8 gap-y-6 max-lg:grid-cols-1">
       <Field id="name" label={CONTACT.fields.name} error={errors.name}>
-        <input id="name" name="name" autoComplete="name" required aria-invalid={Boolean(errors.name)} aria-describedby={describe('name')} onBlur={onBlur} onChange={onChange} className={fieldInput} />
+        <input id="name" name="name" autoComplete="name" maxLength={MAX_LENGTH.name} required aria-invalid={Boolean(errors.name)} aria-describedby={describe('name')} onBlur={onBlur} onChange={onChange} className={fieldInput} />
       </Field>
       <Field id="business" label={CONTACT.fields.business}>
-        <input id="business" name="business" autoComplete="organization" className={fieldInput} />
+        <input id="business" name="business" autoComplete="organization" maxLength={MAX_LENGTH.business} className={fieldInput} />
       </Field>
       <Field id="email" label={CONTACT.fields.email} error={errors.email}>
-        <input id="email" name="email" type="email" autoComplete="email" required aria-invalid={Boolean(errors.email)} aria-describedby={describe('email')} onBlur={onBlur} onChange={onChange} className={fieldInput} />
+        <input id="email" name="email" type="email" autoComplete="email" maxLength={MAX_LENGTH.email} required aria-invalid={Boolean(errors.email)} aria-describedby={describe('email')} onBlur={onBlur} onChange={onChange} className={fieldInput} />
       </Field>
       <Field id="phone" label={CONTACT.fields.phone}>
-        <input id="phone" name="phone" type="tel" autoComplete="tel" className={fieldInput} />
+        <input id="phone" name="phone" type="tel" autoComplete="tel" maxLength={MAX_LENGTH.phone} className={fieldInput} />
       </Field>
       <Field id="message" label={CONTACT.fields.message} error={errors.message} className="col-span-2 max-lg:col-span-1">
         <textarea
           id="message"
           name="message"
           rows={2}
+          maxLength={MAX_LENGTH.message}
           required
           aria-invalid={Boolean(errors.message)}
           aria-describedby={describe('message')}
@@ -124,11 +148,11 @@ export function ContactForm({ onSent }: { onSent: () => void }) {
         />
       </Field>
       <Field id="links" label={CONTACT.fields.links}>
-        <input id="links" name="links" autoComplete="url" className={fieldInput} />
+        <input id="links" name="links" autoComplete="url" maxLength={MAX_LENGTH.links} className={fieldInput} />
       </Field>
       <div>
         {/* The file input stays keyboard-reachable; its label is the visible "field". */}
-        <input id="images" type="file" accept="image/*" multiple onChange={onFiles} aria-describedby={describe('images')} className="peer sr-only" />
+        <input id="images" type="file" accept={IMAGE_TYPES} multiple onChange={onFiles} aria-describedby={describe('images')} className="peer sr-only" />
         <label
           htmlFor="images"
           className="flex cursor-pointer items-end justify-between border-b border-pine/(--opacity-input-line) pb-2 text-label peer-focus:border-pine peer-focus:shadow-field-focus"

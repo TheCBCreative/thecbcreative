@@ -1,8 +1,9 @@
-import { afterAll, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import handler from '../api/contact.mjs';
 
 // Drives the contact webhook with synthetic FormData and a stubbed Resend call, so nothing is emailed
 // and no API key is needed: happy path, both bot checks, validation, attachment limits and failure modes.
+// The clock is faked so each form token is issued a few seconds before the submission it's used in.
 
 type Sent = { url: string; init: RequestInit & { headers: Record<string, string> }; body: any };
 let sent: Sent | null = null;
@@ -20,7 +21,22 @@ afterAll(() => {
   globalThis.fetch = realFetch;
 });
 
-function post(fields: Record<string, string | undefined> = {}, files: File[] = [], { method = 'POST' } = {}) {
+const OPENED_AT = new Date('2026-09-30T17:00:00Z').getTime();
+let token = '';
+
+// A token from GET /api/contact, issued at `at`; the clock is then moved to five seconds after the form opened.
+async function tokenIssuedAt(at: number) {
+  vi.setSystemTime(at);
+  const { token } = await (await handler.fetch(new Request('https://thecbcreative.com/api/contact'))).json();
+  vi.setSystemTime(OPENED_AT + 5000);
+  return token as string;
+}
+
+function post(
+  fields: Record<string, string | undefined> = {},
+  files: File[] = [],
+  { method = 'POST', ip }: { method?: string; ip?: string } = {}
+) {
   const fd = new FormData();
   const defaults = {
     name: 'Jane Smith',
@@ -30,14 +46,27 @@ function post(fields: Record<string, string | undefined> = {}, files: File[] = [
     message: 'Hi! I need a new site.\n\nSecond paragraph here.',
     links: 'https://pinterest.com/board',
     website: '',
-    elapsed: '5000',
+    token,
   };
   for (const [k, v] of Object.entries({ ...defaults, ...fields })) if (v !== undefined) fd.set(k, v);
   for (const f of files) fd.append('images', f);
-  return new Request('https://thecbcreative.com/api/contact', { method, body: method === 'POST' ? fd : undefined });
+  const headers = ip ? { 'x-forwarded-for': ip } : undefined;
+  return new Request('https://thecbcreative.com/api/contact', { method, headers, body: method === 'POST' ? fd : undefined });
 }
 
-const imageFile = (name: string, bytes: number, type = 'image/png') => new File([new Uint8Array(bytes)], name, { type });
+// Real file signatures, padded out to the requested size.
+const SIGNATURES: Record<string, number[]> = {
+  png: [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a],
+  webp: [...Buffer.from('RIFF'), 0, 0, 0, 0, ...Buffer.from('WEBP')],
+  heic: [0, 0, 0, 0x18, ...Buffer.from('ftypheic')],
+};
+const bytesOf = (kind: string, size: number) => {
+  const bytes = new Uint8Array(size);
+  bytes.set(SIGNATURES[kind]);
+  return bytes;
+};
+const imageFile = (name: string, bytes: number, type = 'image/png') =>
+  new File([bytesOf(type === 'image/webp' ? 'webp' : 'png', bytes)], name, { type });
 
 describe('contact webhook', () => {
   beforeEach(() => {
@@ -46,6 +75,13 @@ describe('contact webhook', () => {
     process.env.RESEND_API_KEY = 're_test_key';
     process.env.CONTACT_TO_EMAIL = 'cait@thecbcreative.com';
     process.env.CONTACT_FROM_EMAIL = 'The CB Creative <inquiries@thecbcreative.com>';
+    vi.useFakeTimers({ toFake: ['Date'] });
+    return tokenIssuedAt(OPENED_AT).then((issued) => {
+      token = issued;
+    });
+  });
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
 
@@ -81,17 +117,46 @@ describe('contact webhook', () => {
   });
 
   it('Submitted too fast', async () => {
-    const res = await handler.fetch(post({ elapsed: '200' }));
+    const res = await handler.fetch(post({ token: await tokenIssuedAt(OPENED_AT + 4800) }));
     const body = await res.json();
     expect(res.status === 200, 'returns 200 (silent)').toBe(true);
     expect(body.ok === true, 'ok: true').toBe(true);
     expect(sent === null, 'no email sent').toBe(true);
   });
 
-  it('Missing elapsed field entirely', async () => {
-    const res = await handler.fetch(post({ elapsed: undefined }));
-    expect(sent === null, 'blocked, no email sent').toBe(true);
-    expect(res.status === 200, 'returns 200').toBe(true);
+  it('Missing token is refused out loud, so a stale page never loses a message silently', async () => {
+    const res = await handler.fetch(post({ token: undefined }));
+    const body = await res.json();
+    expect(res.status).toBe(400);
+    expect(body.ok).toBe(false);
+    expect(body.error).toMatch(/reload/i);
+    expect(sent).toBe(null);
+  });
+
+  it('Spoofed elapsed value is ignored', async () => {
+    const res = await handler.fetch(post({ token: undefined, elapsed: '999999' }));
+    expect(res.status === 400, 'refused: elapsed alone is not enough').toBe(true);
+    expect(sent === null, 'no email sent').toBe(true);
+  });
+
+  it('Forged token rejected', async () => {
+    const backdated = `${OPENED_AT - 60_000}.${token.split('.')[1]}`;
+    const res = await handler.fetch(post({ token: backdated }));
+    expect(res.status === 200, 'returns 200 (silent)').toBe(true);
+    expect(sent === null, 'no email sent').toBe(true);
+  });
+
+  it('Token older than a day asks for a reload', async () => {
+    const res = await handler.fetch(post({ token: await tokenIssuedAt(OPENED_AT - 25 * 60 * 60 * 1000) }));
+    const body = await res.json();
+    expect(res.status).toBe(400);
+    expect(body.error).toMatch(/reload/i);
+    expect(sent).toBe(null);
+  });
+
+  it('Token is not cached', async () => {
+    const res = await handler.fetch(new Request('https://thecbcreative.com/api/contact'));
+    expect(res.headers.get('Cache-Control')).toBe('no-store');
   });
 
   it('Missing required field (message)', async () => {
@@ -125,13 +190,13 @@ describe('contact webhook', () => {
     expect(sent === null, 'no email sent').toBe(true);
   });
 
-  it('Image with a generic MIME type is accepted via its extension', async () => {
+  it('Image with a generic MIME type is accepted via its extension and bytes', async () => {
     // Real-world case: some browsers/clients send application/octet-stream
     // or an empty type for .webp / .heic instead of a proper image/* type.
     const res = await handler.fetch(
       post({}, [
-        new File([new Uint8Array(64)], 'screenshot.webp', { type: 'application/octet-stream' }),
-        new File([new Uint8Array(64)], 'photo.HEIC', { type: '' }),
+        new File([bytesOf('webp', 64)], 'screenshot.webp', { type: 'application/octet-stream' }),
+        new File([bytesOf('heic', 64)], 'photo.HEIC', { type: '' }),
       ])
     );
     expect(res.status === 200, 'returns 200').toBe(true);
@@ -144,6 +209,65 @@ describe('contact webhook', () => {
     );
     expect(res.status === 400, 'returns 400').toBe(true);
     expect(sent === null, 'no email sent').toBe(true);
+  });
+
+  it('Fake image type rejected: image name and type, but not image bytes', async () => {
+    const res = await handler.fetch(post({}, [new File(['MZ fake program'], 'photo.png', { type: 'image/png' })]));
+    expect(res.status === 400, 'returns 400').toBe(true);
+    expect(sent === null, 'no email sent').toBe(true);
+  });
+
+  it('SVG rejected even with an image type', async () => {
+    const svg = '<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>';
+    const res = await handler.fetch(post({}, [new File([svg], 'logo.svg', { type: 'image/svg+xml' })]));
+    expect(res.status === 400, 'returns 400').toBe(true);
+    expect(sent === null, 'no email sent').toBe(true);
+  });
+
+  it('Real image bytes under a non-image name rejected', async () => {
+    const res = await handler.fetch(post({}, [new File([bytesOf('png', 64)], 'photo.html', { type: 'image/png' })]));
+    expect(res.status === 400, 'returns 400').toBe(true);
+    expect(sent === null, 'no email sent').toBe(true);
+  });
+
+  it.each([
+    ['name', 101],
+    ['business', 151],
+    ['phone', 41],
+    ['message', 5001],
+    ['links', 2001],
+  ])('Oversized %s rejected', async (field, length) => {
+    const res = await handler.fetch(post({ [field]: 'a'.repeat(length) }));
+    const body = await res.json();
+    expect(res.status).toBe(400);
+    expect(body.error).toMatch(/up to/);
+    expect(sent).toBe(null);
+  });
+
+  it('Oversized email rejected', async () => {
+    const res = await handler.fetch(post({ email: `${'a'.repeat(250)}@smithco.com` }));
+    expect(res.status).toBe(400);
+    expect(sent).toBe(null);
+  });
+
+  it('Fields at their limits are accepted', async () => {
+    const res = await handler.fetch(post({ name: 'a'.repeat(100), message: 'a'.repeat(5000) }));
+    expect(res.status).toBe(200);
+  });
+
+  it('Line breaks in the name are flattened out of the subject', async () => {
+    const res = await handler.fetch(post({ name: 'Jane\r\nBcc: victim@example.com' }));
+    expect(res.status).toBe(200);
+    expect(sent?.body.subject).toBe('New Inquiry from Jane Bcc: victim@example.com');
+  });
+
+  it('Sixth send from one IP in ten minutes is rate limited', async () => {
+    const statuses = [];
+    for (let i = 0; i < 6; i++) statuses.push((await handler.fetch(post({}, [], { ip: '203.0.113.7' }))).status);
+    expect(statuses).toEqual([200, 200, 200, 200, 200, 429]);
+    expect((await handler.fetch(post({}, [], { ip: '203.0.113.8' }))).status, 'other visitors unaffected').toBe(200);
+    vi.setSystemTime(OPENED_AT + 5000 + 10 * 60 * 1000 + 1);
+    expect((await handler.fetch(post({}, [], { ip: '203.0.113.7' }))).status, 'allowed again after the window').toBe(200);
   });
 
   it('Attachments just under the cap are accepted', async () => {
@@ -159,8 +283,8 @@ describe('contact webhook', () => {
     expect(!sent?.body.html.includes('>Attachments<'), 'html has no Attachments row').toBe(true);
   });
 
-  it('GET rejected', async () => {
-    const res = await handler.fetch(post({}, [], { method: 'GET' }));
+  it('PUT rejected', async () => {
+    const res = await handler.fetch(post({}, [], { method: 'PUT' }));
     expect(res.status === 405, 'returns 405').toBe(true);
     expect(sent === null, 'no email sent').toBe(true);
   });
