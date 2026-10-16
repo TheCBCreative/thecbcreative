@@ -25,7 +25,7 @@ export const CONTACT = {
     message: 'Please tell me a little about your project.',
     tooMany: 'Please attach 10 images or fewer.',
     tooLarge: 'Those images add up to more than 3.5 MB. Try fewer, or email them over directly.',
-    notImage: 'Attachments need to be images (PNG, JPG or WEBP).',
+    notImage: 'Attachments need to be images (PNG, JPG, WEBP, GIF, HEIC or AVIF).',
     failed: `Something went wrong sending that. Please try again, or email ${EMAIL} directly.`,
   },
   success: {

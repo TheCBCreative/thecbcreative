@@ -378,7 +378,7 @@ async function handleContact(request) {
     }
     const buffer = Buffer.from(await file.arrayBuffer());
     if (!isImage(file.name, buffer)) {
-      return json({ ok: false, error: 'Attachments need to be images (PNG, JPG, or WEBP).' }, 400);
+      return json({ ok: false, error: 'Attachments need to be images (PNG, JPG, WEBP, GIF, HEIC, or AVIF).' }, 400);
     }
     attachments.push({
       filename: file.name || 'attachment',

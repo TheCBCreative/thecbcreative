@@ -22,3 +22,4 @@ a11y-report.json
 
 # Files shared from Claude sessions
 Claude outputs/
+.env*
