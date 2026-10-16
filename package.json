@@ -5,7 +5,7 @@
   "description": "The CB Creative — studio site. React Router (pre-rendered) + TypeScript.",
   "type": "module",
   "scripts": {
-    "dev": "react-router dev",
+    "dev": "react-router dev --open",
     "build": "react-router build",
     "preview": "node scripts/serve-build.mjs",
     "typecheck": "react-router typegen && tsc",
