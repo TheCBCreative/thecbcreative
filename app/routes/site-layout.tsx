@@ -3,6 +3,7 @@ import { SiteFooter } from '~/components/layout/SiteFooter';
 import { SiteNav } from '~/components/layout/SiteNav';
 import { SkipLink } from '~/components/layout/SkipLink';
 import { VideoBackground } from '~/components/layout/VideoBackground';
+import { ScrollHint } from '~/components/ui/ScrollHint';
 
 export default function SiteLayout() {
   return (
@@ -14,6 +15,8 @@ export default function SiteLayout() {
         <Outlet />
       </main>
       <SiteFooter />
+      {/* Phones show a nudge whenever there's more page below. Wider screens only get it on Contact (see there). */}
+      <ScrollHint className="lg:hidden" />
     </div>
   );
 }

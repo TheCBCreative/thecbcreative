@@ -6,6 +6,7 @@ import { cameFromHome, useFlip } from '~/components/flip/flip-context';
 import { SkipLink } from '~/components/layout/SkipLink';
 import { GhostNumeral } from '~/components/service/GhostNumeral';
 import { Button } from '~/components/ui/Button';
+import { ScrollHint } from '~/components/ui/ScrollHint';
 import { Wordmark } from '~/components/ui/Wordmark';
 import { getNextService, getService, SERVICES, type Service } from '~/data/services';
 import { SITE } from '~/data/site';
@@ -69,7 +70,8 @@ export default function Service({ loaderData }: Route.ComponentProps) {
     return () => window.removeEventListener('keydown', onKey);
   }, [close, service, fromHome]);
 
-  // After an in-app navigation, focus the heading as it mounts (after the cross-fade on Next).
+  // After an in-app navigation (including the card flip), focus the heading as it mounts (after the cross-fade on Next).
+  // The top bar and footer are already in place then, so Close and the logo are there the moment the flip ends.
   const arrivedIn = location.key !== 'default';
   const heading = useCallback(
     (element: HTMLHeadingElement | null) => {
@@ -81,10 +83,12 @@ export default function Service({ loaderData }: Route.ComponentProps) {
   return (
     <div className="relative flex min-h-svh flex-col overflow-clip surface-cream">
       <SkipLink />
+      {/* Phones cut the page off mid-content with the CTA still on screen, so nudge that there's more below. */}
+      <ScrollHint tone="cream" className="lg:hidden" />
       <motion.header
         className="relative z-10 mx-edge grid h-bar grid-cols-3 items-center border-b border-pine/(--opacity-page-rule) max-lg:grid-cols-2"
         variants={pageFade}
-        initial="hidden"
+        initial={arrivedIn ? false : 'hidden'}
         animate="shown"
       >
         <CloseLink service={service} fromHome={fromHome} className="justify-self-start gap-3">
@@ -141,7 +145,7 @@ export default function Service({ loaderData }: Route.ComponentProps) {
       <motion.footer
         className="relative z-10 mx-edge flex h-bar items-center justify-between border-t border-pine/(--opacity-page-rule)"
         variants={pageFade}
-        initial="hidden"
+        initial={arrivedIn ? false : 'hidden'}
         animate="shown"
       >
         <p className="font-display text-lead-sm">

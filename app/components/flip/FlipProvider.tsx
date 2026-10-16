@@ -3,7 +3,8 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } fro
 import { useLocation, useNavigate } from 'react-router';
 import { ServiceCard } from '~/components/sections/ServiceCard';
 import type { Service } from '~/data/services';
-import { EASE_IN_OUT, FLIP } from '~/styles/motion';
+import { Wordmark } from '~/components/ui/Wordmark';
+import { DURATION, EASE_IN_OUT, FLIP } from '~/styles/motion';
 import { cameFromHome, FlipContext } from './flip-context';
 
 // Opening: the card turns over to its cream back, grows to fill the screen, then the service page takes over.
@@ -60,6 +61,7 @@ function FlipOverlay({ flip, onDone }: { flip: Flip; onDone: () => void }) {
   const scope = useRef<HTMLDivElement>(null);
   const turner = useRef<HTMLDivElement>(null);
   const back = useRef<HTMLDivElement>(null);
+  const bar = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { pathname, state } = useLocation();
   const target = flip.phase === 'open' ? servicePath(flip.service) : '/';
@@ -90,6 +92,8 @@ function FlipOverlay({ flip, onDone }: { flip: Flip; onDone: () => void }) {
       if (flip.phase === 'open') {
         await animate(card, { rotateY: [0, 180], transformPerspective: FLIP.perspective }, TURN);
         await Promise.all([animate(container, fullScreen, GROW), animate(cream, { borderRadius: 0 }, GROW)]);
+        // The cream is blank until the page underneath has rendered, so Close and the logo appear on it straight away.
+        if (bar.current) void animate(bar.current, { opacity: 1 }, { duration: DURATION.fade });
         await waitFor(() => navigate(servicePath(flip.service), { state: { fromHome: true } }));
       } else {
         // Jump (not smooth-scroll) back so the card can be measured where it lands; if it's cut off, align its bottom edge.
@@ -139,7 +143,25 @@ function FlipOverlay({ flip, onDone }: { flip: Flip; onDone: () => void }) {
           ref={back}
           className="absolute inset-0 rotate-y-180 bg-snow backface-hidden"
           style={{ borderRadius: opening ? FLIP.cardRadius : 0 }}
-        />
+        >
+          {opening && (
+            // Matches the service page's top bar, which takes over in the same place when the overlay goes.
+            <div
+              ref={bar}
+              className="absolute inset-x-0 top-0 mx-edge grid h-bar grid-cols-3 items-center border-b border-pine/(--opacity-page-rule) text-pine opacity-0 max-lg:grid-cols-2"
+            >
+              <span className="flex items-center justify-self-start gap-3">
+                <span aria-hidden className="font-body text-heading-xs leading-none font-extralight">
+                  ×
+                </span>
+                <span className="eyebrow text-caption tracking-caps">Close</span>
+              </span>
+              <span className="col-start-3 justify-self-end max-lg:col-start-2">
+                <Wordmark />
+              </span>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

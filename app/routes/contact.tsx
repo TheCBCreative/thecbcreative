@@ -57,7 +57,8 @@ export default function Contact() {
           <ThankYou />
         )}
       </div>
-      <ScrollHint />
+      {/* Phones already get the hint from the site layout. */}
+      <ScrollHint className="max-lg:hidden" />
     </section>
   );
 }
