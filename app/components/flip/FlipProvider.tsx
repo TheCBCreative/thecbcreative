@@ -94,7 +94,14 @@ function FlipOverlay({ flip, onDone }: { flip: Flip; onDone: () => void }) {
         await Promise.all([animate(container, fullScreen, GROW), animate(cream, { borderRadius: 0 }, GROW)]);
         // The cream is blank until the page underneath has rendered, so Close and the logo appear on it straight away.
         if (bar.current) void animate(bar.current, { opacity: 1 }, { duration: DURATION.fade });
+        // The site smooth-scrolls, which would otherwise glide the new page up from wherever the card was on the home page.
+        // Jump instead, so the service page is at its very top (Close and logo in view) when the overlay lifts.
+        const root = document.documentElement;
+        root.style.scrollBehavior = 'auto';
         await waitFor(() => navigate(servicePath(flip.service), { state: { fromHome: true } }));
+        window.scrollTo(0, 0);
+        await nextFrame();
+        root.style.scrollBehavior = '';
       } else {
         // Jump (not smooth-scroll) back so the card can be measured where it lands; if it's cut off, align its bottom edge.
         const root = document.documentElement;

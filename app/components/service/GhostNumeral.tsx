@@ -3,7 +3,8 @@ import { GHOST_NUMERAL_BLEED, GHOST_NUMERAL_HEIGHT, GHOST_NUMERALS } from '~/dat
 import { DURATION, EASE_IN_OUT } from '~/styles/motion';
 
 // The oversized outlined number behind each service page, drawn in on arrival. It bleeds off the bottom-right
-// corner, shrinks rather than run under the description, and sits faintly behind the headline on phones.
+// corner, shrinks rather than run under the description, and on phones stays fixed in the bottom-right corner of the
+// screen, fainter, with the copy scrolling over it.
 export function GhostNumeral({ number }: { number: string }) {
   const reduce = useReducedMotion();
   const numeral = GHOST_NUMERALS[number];
@@ -14,7 +15,7 @@ export function GhostNumeral({ number }: { number: string }) {
       aria-hidden
       preserveAspectRatio="xMaxYMax meet"
       viewBox={`0 0 ${numeral.width - GHOST_NUMERAL_BLEED.right} ${GHOST_NUMERAL_HEIGHT - GHOST_NUMERAL_BLEED.bottom}`}
-      className="pointer-events-none absolute right-0 bottom-0 h-ghost-numeral max-w-[calc(100%-var(--spacing-ghost-clear))] overflow-visible max-lg:top-6 max-lg:bottom-auto max-lg:max-w-none max-lg:opacity-45 fill-none stroke-brass/75 stroke-(length:--stroke-outline)"
+      className="pointer-events-none absolute right-0 bottom-0 h-ghost-numeral max-w-[calc(100%-var(--spacing-ghost-clear))] overflow-visible max-lg:fixed max-lg:max-w-none max-lg:opacity-35 fill-none stroke-brass/75 stroke-(length:--stroke-outline)"
     >
       <motion.path
         d={numeral.path}
