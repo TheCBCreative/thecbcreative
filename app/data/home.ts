@@ -25,8 +25,8 @@ export const ABOUT = {
     'Websites built to command presence, not just tick boxes',
   ],
   photo: {
-    src: '/images/about/headshot.webp',
-    srcSet: '/images/about/headshot-800.webp 800w, /images/about/headshot.webp 1254w',
+    src: '/static/headshot.8291f091.webp',
+    srcSet: '/static/headshot-800.96931618.webp 800w, /static/headshot.8291f091.webp 1254w',
     // 400px column on desktop; full width once stacked.
     sizes: '(width >= 1200px) 400px, 100vw',
     alt: 'Cait Burke, founder of The CB Creative',

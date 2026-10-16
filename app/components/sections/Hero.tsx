@@ -30,7 +30,7 @@ export function Hero() {
         <div className="flex flex-col items-center">
           <div className="hero-line" style={step(0)}>
             <motion.img
-              src="/brand/logo-mark.svg"
+              src="/static/logo-mark.4f38d8b9.svg"
               alt={SITE.name}
               width={80}
               height={80}

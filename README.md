@@ -23,7 +23,7 @@ Source for my web design & development studio site: an editorial, cinematic sing
 - `api/contact.mjs` — the contact form endpoint
 - `scripts/` — the dev-server hook that runs the contact endpoint locally, and a static server for previewing the build
 - `tests/` — tests for the contact endpoint
-- `public/` — brand assets, the headshot and the mountain video (a 720p version is served to phones)
+- `public/` — brand assets and `static/`: the headshot, logo mark and mountain video (a 720p version is served to phones). Files in `static/` are cached for a year, so their names carry a content hash (e.g. `headshot.8291f091.webp`): when you replace one, give the new file a new hash and update where it's used
 
 The build also writes `sitemap.xml`, `robots.txt`, `llms.txt` and `404.html` (see `react-router.config.ts`).
 
