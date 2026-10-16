@@ -14,37 +14,50 @@ const TONES = {
 
 interface ScrollHintProps {
   tone?: keyof typeof TONES;
+  // When the page scrolls inside an element instead of the document, that element's id.
+  scrollerId?: string;
   className?: string;
 }
 
 // A scrim and chevron along the bottom of the screen while there's more page below.
-export function ScrollHint({ tone = 'pine', className }: ScrollHintProps) {
+export function ScrollHint({ tone = 'pine', scrollerId, className }: ScrollHintProps) {
   const [more, setMore] = useState(false);
   const reduce = useReducedMotion();
 
   useEffect(() => {
+    const scroller = scrollerId ? document.getElementById(scrollerId) : null;
     const update = () => {
+      if (scroller) {
+        setMore(scroller.scrollHeight - scroller.clientHeight - scroller.scrollTop > END_THRESHOLD);
+        return;
+      }
       const root = document.documentElement;
       setMore(root.scrollHeight - window.innerHeight - window.scrollY > END_THRESHOLD);
     };
     update();
     const observer = new ResizeObserver(update);
-    observer.observe(document.body);
-    window.addEventListener('scroll', update, { passive: true });
+    if (scroller) {
+      observer.observe(scroller);
+      for (const child of scroller.children) observer.observe(child);
+    } else {
+      observer.observe(document.body);
+    }
+    const scrolled = scroller ?? window;
+    scrolled.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update);
     return () => {
       observer.disconnect();
-      window.removeEventListener('scroll', update);
+      scrolled.removeEventListener('scroll', update);
       window.removeEventListener('resize', update);
     };
-  }, []);
+  }, [scrollerId]);
 
   return (
     <AnimatePresence>
       {more && (
         <motion.div
           aria-hidden
-          className={cx('pointer-events-none fixed inset-x-0 bottom-0 z-40 flex h-16 items-end justify-center bg-linear-to-t pb-4', TONES[tone].scrim, className)}
+          className={cx('pointer-events-none fixed inset-x-0 bottom-0 z-40 flex h-scroll-hint items-end justify-center bg-linear-to-t pb-4', TONES[tone].scrim, className)}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

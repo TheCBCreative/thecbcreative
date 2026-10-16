@@ -150,26 +150,26 @@ function FlipOverlay({ flip, onDone }: { flip: Flip; onDone: () => void }) {
           ref={back}
           className="absolute inset-0 rotate-y-180 bg-snow backface-hidden"
           style={{ borderRadius: opening ? FLIP.cardRadius : 0 }}
-        >
-          {opening && (
-            // Matches the service page's top bar, which takes over in the same place when the overlay goes.
-            <div
-              ref={bar}
-              className="absolute inset-x-0 top-0 mx-edge grid h-bar grid-cols-3 items-center border-b border-pine/(--opacity-page-rule) text-pine opacity-0 max-lg:grid-cols-2"
-            >
-              <span className="flex items-center justify-self-start gap-3">
-                <span aria-hidden className="font-body text-heading-xs leading-none font-extralight">
-                  ×
-                </span>
-                <span className="eyebrow text-caption tracking-caps">Close</span>
-              </span>
-              <span className="col-start-3 justify-self-end max-lg:col-start-2">
-                <Wordmark />
-              </span>
-            </div>
-          )}
-        </div>
+        />
       </div>
+        {opening && (
+          // Matches the service page's top bar, which takes over in the same place when the overlay goes.
+          // Sits outside the 3D-flipped card: iOS WebKit can drop animated children of a backface-hidden face.
+          <div
+            ref={bar}
+            className="absolute inset-x-0 top-0 z-10 mx-edge grid h-bar grid-cols-3 items-center border-b border-pine/(--opacity-page-rule) text-pine opacity-0 max-lg:grid-cols-2"
+          >
+            <span className="flex items-center justify-self-start gap-3">
+              <span aria-hidden className="font-body text-heading-xs leading-none font-extralight">
+                ×
+              </span>
+              <span className="eyebrow text-caption tracking-caps">Close</span>
+            </span>
+            <span className="col-start-3 justify-self-end max-lg:col-start-2">
+              <Wordmark />
+            </span>
+          </div>
+        )}
     </div>
   );
 }

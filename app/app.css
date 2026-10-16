@@ -22,6 +22,13 @@
     }
   }
 
+  /* Phones show the scroll-hint scrim along the bottom edge; keep keyboard focus (and its ring) scrolled clear of it. */
+  @media (width < 1024px) {
+    html {
+      scroll-padding-bottom: calc(var(--spacing-scroll-hint) + var(--spacing-flow-sm));
+    }
+  }
+
   :root {
     --focus-ring: var(--color-brass-light);
     --underline: var(--color-brass-light);

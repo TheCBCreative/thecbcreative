@@ -5,6 +5,8 @@ interface ChapterProps {
   id?: string;
   labelledBy: string;
   grade?: boolean;
+  // For the first chapter: no chapter sits above it, so the grade starts dark at the top edge instead of easing in.
+  gradeFromTop?: boolean;
   withFooter?: boolean;
   // Below the switch point chapters take their natural height; `screen` keeps a full-screen chapter (the hero).
   screen?: boolean;
@@ -16,7 +18,7 @@ interface ChapterProps {
 
 // One full-viewport chapter scrolling over the sticky video; content sits below the fixed nav.
 // `grade` darkens the sky band so text on it passes AA; `withFooter` leaves room for the footer strip.
-export function Chapter({ id, labelledBy, grade, withFooter, screen, flush, className, children }: ChapterProps) {
+export function Chapter({ id, labelledBy, grade, gradeFromTop, withFooter, screen, flush, className, children }: ChapterProps) {
   return (
     <section
       id={id}
@@ -27,7 +29,12 @@ export function Chapter({ id, labelledBy, grade, withFooter, screen, flush, clas
         !screen && 'max-lg:min-h-0',
       )}
     >
-      {grade && <div aria-hidden className="pointer-events-none absolute inset-0 bg-(image:--scrim-top-grade)" />}
+      {grade && (
+        <div
+          aria-hidden
+          className={cx('pointer-events-none absolute inset-0', gradeFromTop ? 'bg-(image:--scrim-hero-grade)' : 'bg-(image:--scrim-top-grade)')}
+        />
+      )}
       <div className={cx('relative flex flex-1 flex-col pt-nav', !screen && 'max-lg:pb-18', !screen && !flush && 'max-lg:pt-30', className)}>
         {children}
       </div>

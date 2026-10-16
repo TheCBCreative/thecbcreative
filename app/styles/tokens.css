@@ -110,6 +110,7 @@
   --spacing-ghost-numeral: min(874px, 86svh); /* ghost numeral, 874 at 1024 (its box minus the bottom bleed) */
   --spacing-ghost-clear: 816px; /* page margin + description column + 32px gap; the numeral never starts left of this */
   /* Service pages: vertical rhythm that shrinks with short windows so the page fits without scrolling */
+  --spacing-scroll-hint: 64px; /* height of the phone scroll-hint scrim along the bottom edge */
   --spacing-bar: min(100px, 10svh); /* header and footer bars, 100 at 1024 */
   --spacing-lede: min(72px, 8svh);
   --spacing-flow-2xs: min(12px, 2svh);
@@ -191,4 +192,6 @@
   );
   /* Eases in over the first few percent so there's no hard line where one chapter meets the next. */
   --scrim-top-grade: linear-gradient(to bottom, rgb(27 35 24 / 0) 0%, rgb(27 35 24 / 0.65) 8%, rgb(27 35 24 / 0) 75%);
+  /* The hero has no chapter above it, so its grade starts dark at the very top (no bright fog behind the nav). */
+  --scrim-hero-grade: linear-gradient(to bottom, rgb(27 35 24 / 0.65) 0%, rgb(27 35 24 / 0.65) 8%, rgb(27 35 24 / 0) 75%);
 }

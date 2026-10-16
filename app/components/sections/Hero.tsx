@@ -21,7 +21,7 @@ export function Hero() {
   const logoOpacity = useTransform(handoff, (value) => 1 - value);
 
   return (
-    <Chapter id="home" labelledBy="hero-title" grade screen className="px-page text-center">
+    <Chapter id="home" labelledBy="hero-title" grade gradeFromTop screen className="px-page text-center">
       {/* Desktop centres everything; phones spread it top / middle / bottom so the hero fills the screen. */}
       <div
         className="mx-auto flex w-full max-w-250 flex-1 flex-col items-center justify-center max-lg:justify-start max-lg:pt-6 max-lg:pb-12"

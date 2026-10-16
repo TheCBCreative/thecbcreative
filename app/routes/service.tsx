@@ -17,6 +17,8 @@ import { groupUnderline } from '~/styles/underline';
 import { cx } from '~/utils/cx';
 import { twoDigits } from '~/utils/format';
 
+const SCROLLER_ID = 'service-scroller';
+
 export function loader({ params }: Route.LoaderArgs) {
   const service = getService(params.slug);
   if (!service) throw data(null, { status: 404 });
@@ -81,12 +83,17 @@ export default function Service({ loaderData }: Route.ComponentProps) {
   );
 
   return (
-    <div className="relative flex min-h-svh flex-col overflow-clip surface-cream">
+    // On phones the page scrolls inside its own fixed panel rather than the document, so it always opens at the top and
+    // iOS's collapsing toolbars can't leave it offset (hiding or mis-aiming Close).
+    <div
+      id={SCROLLER_ID}
+      className="relative flex min-h-svh flex-col overflow-clip surface-cream max-lg:fixed max-lg:inset-x-0 max-lg:top-0 max-lg:h-dvh max-lg:min-h-0 max-lg:overflow-x-hidden max-lg:overflow-y-auto max-lg:overscroll-contain max-lg:pb-flow-md"
+    >
       <SkipLink />
       {/* Phones cut the page off mid-content with the CTA still on screen, so nudge that there's more below. */}
-      <ScrollHint tone="cream" className="lg:hidden" />
+      <ScrollHint tone="cream" scrollerId={SCROLLER_ID} className="lg:hidden" />
       <motion.header
-        className="relative z-10 mx-edge grid h-bar grid-cols-3 items-center border-b border-pine/(--opacity-page-rule) max-lg:grid-cols-2"
+        className="relative z-10 mx-edge grid h-bar grid-cols-3 items-center border-b border-pine/(--opacity-page-rule) max-lg:sticky max-lg:top-0 max-lg:z-20 max-lg:grid-cols-2 max-lg:bg-snow"
         variants={pageFade}
         initial={arrivedIn ? false : 'hidden'}
         animate="shown"
