@@ -39,6 +39,33 @@
   }
 }
 
+/* Hero entrance: each line clears in place like lifting fog (timings are set on the hero by HERO_ENTRANCE).
+   Phones (below the 1200px switch point) get a lighter blur: animating a heavy blur on large type is costly there. */
+@keyframes hero-clear {
+  from {
+    opacity: 0;
+    filter: blur(var(--hero-blur));
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@utility hero-line {
+  --hero-blur: 12px;
+  animation: hero-clear var(--hero-duration) cubic-bezier(0.65, 0, 0.35, 1) both;
+  animation-delay: calc(var(--hero-delay) + var(--hero-index) * var(--hero-stagger));
+
+  @media (width < 1200px) {
+    --hero-blur: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    --hero-blur: 0px;
+  }
+}
+
 /* Cream panels and pages swap the accent colors that sit on them. */
 @utility surface-cream {
   background-color: var(--color-snow);

@@ -18,8 +18,8 @@ export const REVEAL_VIEWPORT = { once: true, margin: '0px 0px -20% 0px' } as con
 export const POINTS_REVEAL = { duration: 0.8, stagger: 0.15 } as const;
 
 // Hero entrance on load: each line clears in place like lifting fog.
-// Phones (below the 1200px switch point) get a lighter blur: animating a heavy blur on large type is costly there.
-export const HERO_ENTRANCE = { delay: 0.2, duration: 1.4, stagger: 0.12, blur: 12, blurPhone: 4, phoneQuery: '(width < 1200px)' } as const;
+// It runs in CSS (.hero-line in app.css) so it doesn't wait for JavaScript; the blur sizes (12px, 4px on phones) live there too.
+export const HERO_ENTRANCE = { delay: 0.2, duration: 1.0, stagger: 0.12 } as const;
 
 // The strike through "average" follows the scroll: it starts when the word's top is 70% down the screen
 // and is fully drawn when its centre reaches 55%. The spring smooths the scrub.
